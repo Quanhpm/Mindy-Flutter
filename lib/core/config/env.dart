@@ -1,18 +1,29 @@
 import 'dart:io' show Platform;
 
 /// Biến môi trường, truyền khi build:
-///   flutter run --dart-define-from-file=env/dev.json
+///   flutter run --dart-define-from-file=env/dev.json   (hoặc =.env)
 ///   flutter build apk --dart-define-from-file=env/prod.json
 ///
+/// Không truyền gì (bấm Run trong Xcode/Android Studio) => bản development dùng giá trị
+/// mặc định bên dưới = `.env` của dự án (server dev + APP_ORIGIN đã được owner xác nhận).
 /// Tương đương `src/config/env.ts` bên RN.
 class Env {
   Env._();
 
   static const _appEnv = String.fromEnvironment('APP_ENV');
   static const _apiUrl = String.fromEnvironment('API_URL');
-  static const appOrigin = String.fromEnvironment('APP_ORIGIN');
+  static const _appOrigin = String.fromEnvironment('APP_ORIGIN');
+  static const _debugMode = String.fromEnvironment('DEBUG_MODE');
 
-  static const _defaultDevApiUrl = 'http://localhost:3000/api/v1';
+  // Mặc định development = .env của dự án
+  static const _defaultDevApiUrl = 'https://api.quanh123.id.vn/api/v1';
+  static const _defaultDevOrigin = 'http://localhost:3003';
+
+  /// Origin gửi kèm mọi request ghi (phải nằm trong CORS_ORIGINS của backend).
+  static String get appOrigin => _appOrigin.isNotEmpty || isProduction ? _appOrigin : _defaultDevOrigin;
+
+  /// DEBUG_MODE=true: bật log/công cụ debug. Development mặc định bật.
+  static bool get debugMode => _debugMode.isEmpty ? !isProduction : _debugMode == 'true';
 
   static bool get isProduction =>
       _appEnv == 'production' ||

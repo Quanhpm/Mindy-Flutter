@@ -1,5 +1,6 @@
 {
-  "APP_ENV": "development",
   "API_URL": "https://api.quanh123.id.vn/api/v1",
+  "APP_ENV": "development",
+  "DEBUG_MODE": "true",
   "APP_ORIGIN": "http://localhost:3003"
 }

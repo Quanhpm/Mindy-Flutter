@@ -14,6 +14,35 @@ flutter run --dart-define-from-file=env/dev.json
 - `env/dev.json` lấy từ `.env` của RN (API_URL, APP_ORIGIN). Android emulator tự đổi `localhost` thành `10.0.2.2`.
 - Build release: `flutter build apk --dart-define-from-file=env/prod.json`. Bản prod thiếu `API_URL` thì app dừng ngay khi mở.
 
+## Chạy bằng Xcode (iOS 15.0 trở lên)
+
+Project dùng CocoaPods cho các plugin iOS, gồm `flutter_secure_storage`.
+
+```bash
+flutter pub get
+flutter build ios --simulator --debug --config-only --dart-define-from-file=env/dev.json
+cd ios
+pod install
+open Runner.xcworkspace
+```
+
+Trong Xcode, chọn scheme **Runner**, chọn một **iPhone Simulator**, rồi bấm **Run** (`⌘R`).
+Mở `Runner.xcworkspace` để Xcode nạp cả các plugin trong Pods.
+Nếu chạy trên iPhone thật, chọn Apple Development Team trong **Signing & Capabilities**.
+
+Nếu `xcode-select -p` trả về `/Library/Developer/CommandLineTools`, chọn Xcode đầy đủ một lần:
+
+```bash
+sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+```
+
+Lệnh này cần mật khẩu quản trị của máy. Sau khi đổi `env/dev.json`, chạy lại bước `--config-only`
+trước khi Run trong Xcode để cập nhật cấu hình Dart.
+
+Đã kiểm chứng ngày 02/11/2026: build iOS Simulator Debug thành công bằng Xcode 27.0,
+cài và mở tới màn Đăng nhập trên iPhone 17 Simulator (iOS 27.0). Analyzer sạch,
+17/17 test hiện có pass. Chưa kiểm chứng ký ứng dụng và chạy trên iPhone thật.
+
 ## Cấu trúc: mỗi feature là 1 thư mục, các file theo cùng một khuôn
 
 ```text

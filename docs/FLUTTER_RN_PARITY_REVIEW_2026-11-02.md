@@ -112,3 +112,12 @@ không phải lỗi Dart compile được analyzer phát hiện. Xcode chạy đ
 nhưng hook chạy với môi trường lọc biến; chưa thay cấu hình Xcode toàn máy hay dependency để sửa build.
 
 Đây là lượt review. Chưa sửa code nghiệp vụ; đã thêm test chẩn đoán và báo cáo để có bằng chứng trước khi sửa.
+
+## Cập nhật kiểm chứng iOS sau lượt review
+
+Ngày 02/11/2026: đã bổ sung CocoaPods, cấu hình riêng Debug/Profile/Release và gỡ tham chiếu
+Swift Package Manager cũ. Người dùng đã chọn Xcode đầy đủ thay Command Line Tools.
+Build iOS Simulator Debug hiện thành công bằng Xcode 27.0; đã cài và mở tới màn Đăng nhập
+trên iPhone 17 Simulator, iOS 27.0. Analyzer sạch và 17/17 test hiện có pass.
+Kết quả này thay thế giới hạn build iOS ở lượt review ban đầu; các lỗi nghiệp vụ đã ghi ở trên
+chưa được sửa trong lần cấu hình iOS này.
