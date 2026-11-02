@@ -22,46 +22,64 @@ final apiClientProvider = Provider<ApiClient>((ref) => ApiClient());
 /// - Mọi lỗi đều được chuẩn hoá thành [ApiError].
 class ApiClient {
   ApiClient({CookieJar? cookieJar})
-      : cookieJar = cookieJar ??
-            PersistCookieJar(storage: SecureCookieStorage(), ignoreExpires: false) {
-    dio = Dio(BaseOptions(
-      baseUrl: Env.apiUrl,
-      connectTimeout: const Duration(seconds: 20),
-      receiveTimeout: const Duration(seconds: 60),
-      contentType: Headers.jsonContentType,
-      // Tự xử lý status >= 400 trong onError
-      validateStatus: (s) => s != null && s >= 200 && s < 300,
-    ));
+    : cookieJar = cookieJar ?? PersistCookieJar(storage: SecureCookieStorage(), ignoreExpires: false) {
+    dio = Dio(
+      BaseOptions(
+        baseUrl: Env.apiUrl,
+        connectTimeout: const Duration(seconds: 20),
+        receiveTimeout: const Duration(seconds: 60),
+        contentType: Headers.jsonContentType,
+        // Tự xử lý status >= 400 trong onError
+        validateStatus: (s) => s != null && s >= 200 && s < 300,
+      ),
+    );
     dio.interceptors
+      // Chặn response cũ trước khi CookieManager có thể ghi đè cookie phiên mới.
+      ..add(
+        InterceptorsWrapper(
+          onRequest: _onRequest,
+          onResponse: (response, handler) {
+            if (response.requestOptions.extra['sessionEpoch'] != sessionEpoch) {
+              handler.reject(_sessionChanged(response.requestOptions));
+            } else {
+              handler.next(response);
+            }
+          },
+          onError: (error, handler) {
+            handler.next(
+              error.requestOptions.extra['sessionEpoch'] != sessionEpoch
+                  ? _sessionChanged(error.requestOptions)
+                  : error,
+            );
+          },
+        ),
+      )
       ..add(CookieManager(this.cookieJar))
-      ..add(InterceptorsWrapper(onRequest: _onRequest, onError: _onError));
+      ..add(InterceptorsWrapper(onError: _onError));
   }
 
   late final Dio dio;
   final CookieJar cookieJar;
 
-  /// Tăng mỗi khi phiên đổi (login/logout/refresh). Response của phiên cũ bị bỏ.
-  int generation = 0;
+  /// Chỉ đổi khi login/logout/đổi user. Refresh không phải một phiên mới.
+  int sessionEpoch = 0;
+  int refreshGeneration = 0;
   Future<void>? _refreshing;
-  ApiError? _lastRefreshError;
+  int? _refreshEpoch;
 
   /// Session gắn callback này để về màn Login khi refresh thất bại.
   void Function()? onSessionExpired;
 
   // ---------------------------------------------------------------- public API
 
-  Future<dynamic> get(
-    String path, {
-    Map<String, Object?>? query,
-    CancelToken? cancel,
-    Duration? timeout,
-  }) =>
-      _send(() => dio.get<dynamic>(
-            path,
-            queryParameters: _clean(query),
-            cancelToken: cancel,
-            options: timeout == null ? null : Options(receiveTimeout: timeout),
-          ));
+  Future<dynamic> get(String path, {Map<String, Object?>? query, CancelToken? cancel, Duration? timeout}) => _send(
+    () => dio.get<dynamic>(
+      path,
+      queryParameters: _clean(query),
+      cancelToken: cancel,
+      options: timeout == null ? null : Options(receiveTimeout: timeout),
+    ),
+  );
 
   Future<dynamic> post(
     String path, {
@@ -69,19 +87,31 @@ class ApiClient {
     Map<String, String>? headers,
     CancelToken? cancel,
     Duration? timeout,
-  }) =>
-      _send(() => dio.post<dynamic>(
-            path,
-            data: body,
-            cancelToken: cancel,
-            options: Options(receiveTimeout: timeout, headers: headers),
-          ));
+  }) => _send(
+    () => dio.post<dynamic>(
+      path,
+      data: body,
+      cancelToken: cancel,
+      options: Options(receiveTimeout: timeout, headers: headers),
+    ),
+  );
 
-  Future<dynamic> put(String path, {Object? body, Map<String, String>? headers, CancelToken? cancel}) =>
-      _send(() => dio.put<dynamic>(path, data: body, cancelToken: cancel, options: Options(headers: headers)));
+  Future<dynamic> put(String path, {Object? body, Map<String, String>? headers, CancelToken? cancel}) => _send(
+    () => dio.put<dynamic>(
+      path,
+      data: body,
+      cancelToken: cancel,
+      options: Options(headers: headers),
+    ),
+  );
 
-  Future<dynamic> patch(String path, {Object? body, Map<String, String>? headers}) =>
-      _send(() => dio.patch<dynamic>(path, data: body, options: Options(headers: headers)));
+  Future<dynamic> patch(String path, {Object? body, Map<String, String>? headers}) => _send(
+    () => dio.patch<dynamic>(
+      path,
+      data: body,
+      options: Options(headers: headers),
+    ),
+  );
 
   Future<dynamic> delete(String path, {Object? body, Map<String, Object?>? query}) =>
       _send(() => dio.delete<dynamic>(path, data: body, queryParameters: _clean(query)));
@@ -127,11 +157,13 @@ class ApiClient {
   static final _refreshPath = RegExp(r'(?:^|/)auth/refresh/?$');
 
   Future<void> _onRequest(RequestOptions o, RequestInterceptorHandler h) async {
+    o.extra['sessionEpoch'] ??= sessionEpoch;
+    o.extra['refreshGeneration'] ??= refreshGeneration;
     final net = await Connectivity().checkConnectivity();
+    if (o.extra['sessionEpoch'] != sessionEpoch) return h.reject(_sessionChanged(o));
     if (net.isNotEmpty && net.every((r) => r == ConnectivityResult.none)) {
       return h.reject(DioException(requestOptions: o, error: ApiError.network()));
     }
-    o.extra['gen'] ??= generation;
 
     // Mutation: gửi Origin (app mobile không tự có như trình duyệt). Route có guard thì bắt buộc.
     final path = o.path.replaceFirst(RegExp(r'^/'), '');
@@ -140,10 +172,12 @@ class ApiClient {
       if (Env.appOrigin.isNotEmpty) {
         o.headers['Origin'] = Env.appOrigin;
       } else if (_originRequired.hasMatch(path)) {
-        return h.reject(DioException(
-          requestOptions: o,
-          error: ApiError(status: 0, code: 'APP_ORIGIN_REQUIRED', message: 'APP_ORIGIN is required'),
-        ));
+        return h.reject(
+          DioException(
+            requestOptions: o,
+            error: ApiError(status: 0, code: 'APP_ORIGIN_REQUIRED', message: 'APP_ORIGIN is required'),
+          ),
+        );
       }
     }
     h.next(o);
@@ -152,6 +186,7 @@ class ApiClient {
   Future<void> _onError(DioException e, ErrorInterceptorHandler h) async {
     final err = _normalize(e);
     final o = e.requestOptions;
+    if (o.extra['sessionEpoch'] != sessionEpoch) return h.next(_sessionChanged(o));
     final isRefresh = _refreshPath.hasMatch(o.path);
     if (!err.isAuthRequired || isRefresh) {
       return h.next(e.copyWith(error: err));
@@ -163,13 +198,15 @@ class ApiClient {
     o.extra['retried'] = true;
 
     try {
-      if (o.extra['gen'] == generation) {
-        _refreshing ??= _refresh();
+      if (o.extra['refreshGeneration'] == refreshGeneration) {
+        if (_refreshing == null || _refreshEpoch != sessionEpoch) {
+          _refreshEpoch = sessionEpoch;
+          _refreshing = _refresh(sessionEpoch);
+        }
         await _refreshing;
-      } else if (_lastRefreshError != null) {
-        throw _lastRefreshError!;
       }
-      o.extra['gen'] = generation;
+      if (o.extra['sessionEpoch'] != sessionEpoch) return h.next(_sessionChanged(o));
+      o.extra['refreshGeneration'] = refreshGeneration;
       final res = await dio.fetch<dynamic>(o);
       h.resolve(res);
     } on ApiError catch (refreshError) {
@@ -179,20 +216,22 @@ class ApiClient {
     }
   }
 
-  Future<void> _refresh() async {
+  Future<void> _refresh(int epoch) async {
     try {
       await dio.post<dynamic>('auth/refresh');
-      _lastRefreshError = null;
-      generation++;
+      if (sessionEpoch == epoch) refreshGeneration++;
     } on DioException catch (e) {
-      _lastRefreshError = _normalize(e);
-      generation++;
-      _expire();
-      throw _lastRefreshError!;
+      if (sessionEpoch == epoch) _expire();
+      throw _normalize(e);
     } finally {
-      _refreshing = null;
+      if (_refreshEpoch == epoch) _refreshing = null;
     }
   }
+
+  DioException _sessionChanged(RequestOptions options) => DioException(
+    requestOptions: options,
+    error: ApiError(status: 401, code: 'SESSION_CHANGED', message: 'Session changed'),
+  );
 
   void _expire() {
     unawaited(clearCookies());

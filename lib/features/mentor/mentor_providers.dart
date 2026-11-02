@@ -7,12 +7,14 @@ import '../../core/session/session_controller.dart';
 import 'mentor_utilities.dart';
 
 /// true = mentor chỉ được giao dạy thay (không có lớp chính) -> ẩn tiện ích `primaryOnly`.
-/// Suy từ `GET /mentor/classes` (lớp dạy thay theo buổi không nằm trong danh sách này).
+/// Chỉ đếm lớp chính: backend mặc định assignment=ANY, gồm cả lớp dạy thay.
 /// Lỗi mạng -> coi như mentor chính (không ẩn gì; server vẫn tự chặn quyền).
 final mentorSubstituteOnlyProvider = FutureProvider.autoDispose<bool>((ref) async {
   ref.watch(sessionEpochProvider);
   try {
-    final res = await ref.watch(apiClientProvider).get('mentor/classes', query: {'page': 1, 'pageSize': 1});
+    final res = await ref
+        .watch(apiClientProvider)
+        .get('mentor/classes', query: {'assignment': 'PRIMARY', 'page': 1, 'pageSize': 1});
     return Json(res).integer('total') == 0;
   } catch (_) {
     return false;
@@ -20,8 +22,9 @@ final mentorSubstituteOnlyProvider = FutureProvider.autoDispose<bool>((ref) asyn
 });
 
 /// Tiện ích yêu thích người dùng tự thêm (ngoài 3 cố định). Lưu cục bộ theo user, không có API.
-final mentorFavoritesProvider =
-    AsyncNotifierProvider<MentorFavoritesController, List<MentorUtil>>(MentorFavoritesController.new);
+final mentorFavoritesProvider = AsyncNotifierProvider<MentorFavoritesController, List<MentorUtil>>(
+  MentorFavoritesController.new,
+);
 
 class MentorFavoritesController extends AsyncNotifier<List<MentorUtil>> {
   String get _key => 'mentor_favs_${ref.read(sessionProvider).user?.id ?? 'guest'}';

@@ -39,3 +39,4 @@ env/*.local.json
 # Log setup
 setup.log
 check.log
+run.log

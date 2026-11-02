@@ -14,27 +14,27 @@ class StaffBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => DecoratedBox(
-        decoration: const BoxDecoration(color: StaffColors.bg),
-        child: DecoratedBox(
-          decoration: const BoxDecoration(
-            gradient: RadialGradient(
-              center: Alignment(-1, -.1),
-              radius: .9,
-              colors: [StaffColors.bgGlowTeal, Color(0x00D7E9E5)],
-            ),
-          ),
-          child: DecoratedBox(
-            decoration: const BoxDecoration(
-              gradient: RadialGradient(
-                center: Alignment(1, .5),
-                radius: .9,
-                colors: [StaffColors.bgGlowSand, Color(0x00F2E4D0)],
-              ),
-            ),
-            child: child,
+    decoration: const BoxDecoration(color: StaffColors.bg),
+    child: DecoratedBox(
+      decoration: const BoxDecoration(
+        gradient: RadialGradient(
+          center: Alignment(-1, -.1),
+          radius: .9,
+          colors: [StaffColors.bgGlowTeal, Color(0x00D7E9E5)],
+        ),
+      ),
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment(1, .5),
+            radius: .9,
+            colors: [StaffColors.bgGlowSand, Color(0x00F2E4D0)],
           ),
         ),
-      );
+        child: child,
+      ),
+    ),
+  );
 }
 
 /// Header gradient teal bo 2 góc dưới 28px.
@@ -45,15 +45,18 @@ class StaffHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: StaffColors.headerGradient,
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(28)),
-          boxShadow: [BoxShadow(color: Color(0x59123236), blurRadius: 24, offset: Offset(0, 10), spreadRadius: -8)],
-        ),
-        padding: padding.add(EdgeInsets.only(top: MediaQuery.of(context).padding.top)),
-        child: DefaultTextStyle.merge(style: const TextStyle(color: Colors.white), child: child),
-      );
+    width: double.infinity,
+    decoration: const BoxDecoration(
+      gradient: StaffColors.headerGradient,
+      borderRadius: BorderRadius.vertical(bottom: Radius.circular(28)),
+      boxShadow: [BoxShadow(color: Color(0x59123236), blurRadius: 24, offset: Offset(0, 10), spreadRadius: -8)],
+    ),
+    padding: padding.add(EdgeInsets.only(top: MediaQuery.of(context).padding.top)),
+    child: DefaultTextStyle.merge(
+      style: const TextStyle(color: Colors.white),
+      child: child,
+    ),
+  );
 }
 
 /// Thẻ kính mờ (glass) trắng trong suốt, bo 20.
@@ -77,7 +80,7 @@ class GlassCard extends StatelessWidget {
         border: Border.all(color: const Color(0xF2FFFFFF)),
         boxShadow: const [BoxShadow(color: Color(0x1A1F4F55), blurRadius: 24, offset: Offset(0, 8))],
       ),
-      child: child,
+      child: Material(type: MaterialType.transparency, child: child),
     );
     return onTap == null ? card : Pressable(onTap: onTap, child: card);
   }
@@ -98,17 +101,20 @@ class InitialsAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        width: size,
-        height: size,
-        alignment: Alignment.center,
-        decoration: const BoxDecoration(color: StaffColors.avatarBg, shape: BoxShape.circle),
-        child: Text(initials(name),
-            style: TextStyle(
-                fontFamily: StaffText.family,
-                fontSize: size * .35,
-                fontWeight: FontWeight.w600,
-                color: StaffColors.teal700)),
-      );
+    width: size,
+    height: size,
+    alignment: Alignment.center,
+    decoration: const BoxDecoration(color: StaffColors.avatarBg, shape: BoxShape.circle),
+    child: Text(
+      initials(name),
+      style: TextStyle(
+        fontFamily: StaffText.family,
+        fontSize: size * .35,
+        fontWeight: FontWeight.w600,
+        color: StaffColors.teal700,
+      ),
+    ),
+  );
 }
 
 /// Chip trạng thái nhỏ (Đang dạy, Chờ duyệt...).
@@ -120,14 +126,19 @@ class StatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-        decoration: BoxDecoration(color: tone.bg, borderRadius: BorderRadius.circular(999)),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          if (icon != null) ...[Icon(icon, size: 14, color: tone.fg), const SizedBox(width: 4)],
-          Text(label,
-              style: TextStyle(fontFamily: StaffText.family, fontSize: 12, fontWeight: FontWeight.w600, color: tone.fg)),
-        ]),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+    decoration: BoxDecoration(color: tone.bg, borderRadius: BorderRadius.circular(999)),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (icon != null) ...[Icon(icon, size: 14, color: tone.fg), const SizedBox(width: 4)],
+        Text(
+          label,
+          style: TextStyle(fontFamily: StaffText.family, fontSize: 12, fontWeight: FontWeight.w600, color: tone.fg),
+        ),
+      ],
+    ),
+  );
 }
 
 /// Hàng chip lọc cuộn ngang (Đang dạy (3) · Sắp mở (1) ...).
@@ -139,33 +150,38 @@ class FilterChipsBar<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Row(children: [
-          for (final (value, label) in items)
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: Pressable(
-                onTap: () => onSelected(value),
-                selected: value == selected,
-                semanticLabel: label,
-                child: Container(
-                  constraints: const BoxConstraints(minHeight: 40),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-                  decoration: BoxDecoration(
-                    color: value == selected ? StaffColors.teal700 : const Color(0xCCFFFFFF),
-                    borderRadius: BorderRadius.circular(999),
-                    border: Border.all(color: value == selected ? StaffColors.teal700 : StaffColors.tealLine),
+    scrollDirection: Axis.horizontal,
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Row(
+      children: [
+        for (final (value, label) in items)
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Pressable(
+              onTap: () => onSelected(value),
+              selected: value == selected,
+              semanticLabel: label,
+              child: Container(
+                constraints: const BoxConstraints(minHeight: 40),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                decoration: BoxDecoration(
+                  color: value == selected ? StaffColors.teal700 : const Color(0xCCFFFFFF),
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(color: value == selected ? StaffColors.teal700 : StaffColors.tealLine),
+                ),
+                child: Text(
+                  label,
+                  style: StaffText.label.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: value == selected ? Colors.white : StaffColors.teal700,
                   ),
-                  child: Text(label,
-                      style: StaffText.label.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: value == selected ? Colors.white : StaffColors.teal700)),
                 ),
               ),
             ),
-        ]),
-      );
+          ),
+      ],
+    ),
+  );
 }
 
 /// Ô tiện ích tròn trên Home (icon + nhãn + badge MỚI / số đếm / dấu sửa).
@@ -211,52 +227,61 @@ class UtilityTile extends StatelessWidget {
       semanticLabel: label,
       child: SizedBox(
         width: 76,
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Stack(clipBehavior: Clip.none, children: [
-            circle,
-            if (isNew)
-              Positioned(
-                top: -6,
-                left: -8,
-                child: _badge('MỚI'),
-              ),
-            if (count > 0)
-              Positioned(top: -4, right: -4, child: _badge(count > 9 ? '9+' : '$count', round: true)),
-            if (mark != null)
-              Positioned(
-                top: -4,
-                right: -4,
-                child: Container(
-                  width: 22,
-                  height: 22,
-                  decoration: const BoxDecoration(color: StaffColors.teal700, shape: BoxShape.circle),
-                  child: Icon(mark, size: 14, color: Colors.white),
-                ),
-              ),
-          ]),
-          const SizedBox(height: 6),
-          Text(label,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                circle,
+                if (isNew) Positioned(top: -6, left: -8, child: _badge('MỚI')),
+                if (count > 0) Positioned(top: -4, right: -4, child: _badge(count > 9 ? '9+' : '$count', round: true)),
+                if (mark != null)
+                  Positioned(
+                    top: -4,
+                    right: -4,
+                    child: Container(
+                      width: 22,
+                      height: 22,
+                      decoration: const BoxDecoration(color: StaffColors.teal700, shape: BoxShape.circle),
+                      child: Icon(mark, size: 14, color: Colors.white),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(
+              label,
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: StaffText.small.copyWith(fontSize: 12.5, color: StaffColors.ink)),
-        ]),
+              style: StaffText.small.copyWith(fontSize: 12.5, color: StaffColors.ink),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _badge(String text, {bool round = false}) => Container(
-        constraints: BoxConstraints(minWidth: round ? 20 : 0, minHeight: 20),
-        padding: const EdgeInsets.symmetric(horizontal: 6),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: StaffColors.accent,
-          borderRadius: BorderRadius.circular(round ? 10 : 6),
-          border: Border.all(color: Colors.white, width: 2),
-        ),
-        child: Text(text,
-            style: const TextStyle(fontFamily: StaffText.family, fontSize: 10, fontWeight: FontWeight.w700, color: Colors.white)),
-      );
+    constraints: BoxConstraints(minWidth: round ? 20 : 0, minHeight: 20),
+    padding: const EdgeInsets.symmetric(horizontal: 6),
+    alignment: Alignment.center,
+    decoration: BoxDecoration(
+      color: StaffColors.accent,
+      borderRadius: BorderRadius.circular(round ? 10 : 6),
+      border: Border.all(color: Colors.white, width: 2),
+    ),
+    child: Text(
+      text,
+      style: const TextStyle(
+        fontFamily: StaffText.family,
+        fontSize: 10,
+        fontWeight: FontWeight.w700,
+        color: Colors.white,
+      ),
+    ),
+  );
 }
 
 /// Nút chính teal đặc (cao 52, bo tròn) và nút viền.
@@ -298,15 +323,23 @@ class StaffButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(999),
               border: outlined ? Border.all(color: StaffColors.line) : null,
             ),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              if (loading)
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2, color: fg)),
-                )
-              else if (icon != null) ...[Icon(icon, size: 20, color: fg), const SizedBox(width: 8)],
-              Flexible(child: Text(label, style: StaffText.button.copyWith(color: fg))),
-            ]),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (loading)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2, color: fg)),
+                  )
+                else if (icon != null) ...[
+                  Icon(icon, size: 20, color: fg),
+                  const SizedBox(width: 8),
+                ],
+                Flexible(
+                  child: Text(label, style: StaffText.button.copyWith(color: fg)),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -316,14 +349,7 @@ class StaffButton extends StatelessWidget {
 
 /// Trang con chuẩn của Mentor: header gradient (nút back, tiêu đề, phụ đề) + panel kem bo trên phủ lên.
 class StaffPage extends StatelessWidget {
-  const StaffPage({
-    super.key,
-    required this.title,
-    this.subtitle,
-    required this.body,
-    this.headerExtra,
-    this.onBack,
-  });
+  const StaffPage({super.key, required this.title, this.subtitle, required this.body, this.headerExtra, this.onBack});
 
   final String title;
   final String? subtitle;
@@ -335,42 +361,52 @@ class StaffPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: StaffColors.teal900,
-        body: Column(children: [
-          Container(
-            width: double.infinity,
-            decoration: const BoxDecoration(gradient: StaffColors.headerGradient),
-            padding: EdgeInsets.fromLTRB(8, MediaQuery.of(context).padding.top + 8, 16, 44),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                IconButton(
-                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                  icon: const Icon(Sym.arrowBack, color: Colors.white),
-                  onPressed: onBack ?? (() => context.canPop() ? context.pop() : null),
-                ),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(title, style: StaffText.pageTitle.copyWith(color: Colors.white)),
-                    if (subtitle != null && subtitle!.isNotEmpty)
-                      Text(subtitle!, style: StaffText.caption.copyWith(color: StaffColors.onTealMuted)),
-                  ]),
-                ),
-              ]),
-              if (headerExtra != null) ...[const SizedBox(height: 12), headerExtra!],
-            ]),
-          ),
-          Expanded(
-            child: Transform.translate(
-              offset: const Offset(0, -28),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-                child: StaffBackground(child: body),
+    backgroundColor: StaffColors.teal900,
+    body: Column(
+      children: [
+        Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(gradient: StaffColors.headerGradient),
+          padding: EdgeInsets.fromLTRB(8, MediaQuery.of(context).padding.top + 8, 16, 44),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                    icon: const Icon(Sym.arrowBack, color: Colors.white),
+                    onPressed: onBack ?? (() => context.canPop() ? context.pop() : null),
+                  ),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(title, style: StaffText.pageTitle.copyWith(color: Colors.white)),
+                        if (subtitle != null && subtitle!.isNotEmpty)
+                          Text(subtitle!, style: StaffText.caption.copyWith(color: StaffColors.onTealMuted)),
+                      ],
+                    ),
+                  ),
+                ],
               ),
+              if (headerExtra != null) ...[const SizedBox(height: 12), headerExtra!],
+            ],
+          ),
+        ),
+        Expanded(
+          child: Transform.translate(
+            offset: const Offset(0, -28),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+              child: StaffBackground(child: body),
             ),
           ),
-        ]),
-      );
+        ),
+      ],
+    ),
+  );
 }
 
 /// Bottom sheet kiểu staff (bo trên 28, tay kéo, tiêu đề + phụ đề).
@@ -379,27 +415,30 @@ Future<T?> showStaffSheet<T>(
   required String title,
   String? subtitle,
   required WidgetBuilder builder,
-}) =>
-    showModalBottomSheet<T>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      backgroundColor: StaffColors.surface,
-      showDragHandle: true,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: [
-            Text(title, style: StaffText.title.copyWith(fontSize: 18)),
-            if (subtitle != null) ...[const SizedBox(height: 2), Text(subtitle, style: StaffText.caption)],
-            const SizedBox(height: 16),
-            builder(ctx),
-          ]),
-        ),
+}) => showModalBottomSheet<T>(
+  context: context,
+  isScrollControlled: true,
+  useSafeArea: true,
+  backgroundColor: StaffColors.surface,
+  showDragHandle: true,
+  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
+  builder: (ctx) => Padding(
+    padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
+    child: SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(title, style: StaffText.title.copyWith(fontSize: 18)),
+          if (subtitle != null) ...[const SizedBox(height: 2), Text(subtitle, style: StaffText.caption)],
+          const SizedBox(height: 16),
+          builder(ctx),
+        ],
       ),
-    );
+    ),
+  ),
+);
 
 /// Toast nổi ở đáy màn, tự ẩn sau 2,2 giây.
 void showStaffToast(BuildContext context, String message) {
@@ -407,14 +446,16 @@ void showStaffToast(BuildContext context, String message) {
   if (messenger == null) return;
   messenger
     ..hideCurrentSnackBar()
-    ..showSnackBar(SnackBar(
-      content: Text(message, style: StaffText.label.copyWith(color: Colors.white)),
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: StaffColors.teal900,
-      duration: const Duration(milliseconds: 2200),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
-      margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-    ));
+    ..showSnackBar(
+      SnackBar(
+        content: Text(message, style: StaffText.label.copyWith(color: Colors.white)),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: StaffColors.teal900,
+        duration: const Duration(milliseconds: 2200),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+        margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      ),
+    );
 }
 
 /// Tránh cảnh báo unawaited khi gọi showStaffSheet không cần kết quả.
