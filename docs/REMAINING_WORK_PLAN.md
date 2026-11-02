@@ -32,9 +32,9 @@ Tài liệu liên quan (giữ để tra cứu, plan này là nguồn chính khi 
 | Mentor MF2: lịch, Home, phòng, dạy thay, thông báo | Đã triển khai UI + API, tự review theo ủy quyền; UAT backend còn thiếu |
 | Mentor MF3: điểm danh | Đã có UI + API/controller, test mô phỏng; UAT live còn thiếu |
 | Mentor MF4: lớp, học viên, báo cáo | UI + API, tự review và test mô phỏng; UAT live còn thiếu |
-| Mentor MF5: tài liệu, tải lên | Đang làm: model/API/provider + upload controller, còn UI/action/UAT |
+| Mentor MF5: tài liệu, tải lên | UI + API/controller, tự review, test/Simulator; còn UAT live/native picker |
 | Mentor MF6: hoàn thiện | Chưa triển khai |
-| Build | `flutter analyze` sạch, 137 test pass; iOS Simulator build thành công sau thêm plugin MF5 |
+| Build | `flutter analyze` sạch, 175 test pass; iOS Simulator build thành công với UI MF5 |
 
 Cập nhật triển khai 02/11: P0 đã sửa B1–B4, chuyển ca chẩn đoán vào
 `test/p0_regression_test.dart` và bổ sung ca response/cookie cũ, refresh đồng thời,
@@ -425,3 +425,18 @@ Tổng phần bắt buộc: **25–35,5 ngày công**, cộng dự phòng 20% th
   sửa rõ ràng thay vì tự PATCH nội dung không đổi. APPROVED khác published.
 - 18 test upload riêng đã pass; iOS build sau thêm file_picker/HTML core thành công.
 - Chưa nối UI/material actions. Trạng thái và việc tiếp theo: `MF5_STATUS.md`.
+
+### MF5 — UI và quản lý tài liệu 02/11
+
+- Đã nối hai bước chọn lớp/tải file, Unit/category, native picker stream, metadata,
+  progress/hủy/kiểm tra kết quả, viewer ARTICLE/file/ảnh inline/attachment.
+- Gửi/sửa/xóa với expectedRevision, chặn readonly/owner/scope; bulk DRAFT tuần tự,
+  REJECTED sửa trước. Unknown result chỉ GET, ack rồi reload lỗi không ghi lại.
+- Đã có 10 golden vi/en 320 chữ ×1,3, bridge picker, API và luồng UI; native preview
+  iPhone 17 build 22s. `MF5_REVIEW.md` ghi hành vi, bằng chứng và giới hạn.
+- UAT backend/MinIO chưa có tài khoản; UI automation không thao tác picker thật vì
+  Mac đang khóa. Không giả lập các gate này thành Done.
+- Tiếp theo: MF6 rà hoàn thiện/UAT checklist, S1–S5, MF7 và chuẩn bị phát hành.
+
+MF5 chốt code: **175 test pass**, analyze sạch. Editor conflict giữ input và yêu cầu
+xem snapshot mới trước khi dùng revision mới; xem `MF5_REVIEW.md`.

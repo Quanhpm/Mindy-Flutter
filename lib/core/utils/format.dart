@@ -8,6 +8,14 @@ void initTimeZones() => tzdata.initializeTimeZones();
 /// `1.500.000 VND` - `shared/utilities/formatVnd.ts`
 String formatVnd(int amount) => '${NumberFormat.decimalPattern('vi_VN').format(amount)} VND';
 
+String formatBytes(int bytes, String language) {
+  if (bytes < 1024) {
+    return '$bytes B';
+  }
+  final value = bytes < 1024 * 1024 ? bytes / 1024 : bytes / (1024 * 1024);
+  return '${NumberFormat('0.#', language).format(value)} ${bytes < 1024 * 1024 ? 'KiB' : 'MiB'}';
+}
+
 String formatPercent(double? value, String language) =>
     value == null ? '—' : '${NumberFormat('0.#', language).format(value)}%';
 

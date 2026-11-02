@@ -40,6 +40,10 @@ class Routes {
   static const mentorUtilities = '/mentor/utilities';
   static const mentorPagePath = '/mentor/page/:key';
   static const mentorClassDetailPath = '/mentor/classes/:classId';
+  static const mentorMaterialsPath = '/mentor/materials/:classId';
+  static const mentorUploadPath = '/mentor/upload/:classId';
+  static String mentorMaterials(String id) => '/mentor/materials/$id';
+  static String mentorUpload(String id) => '/mentor/upload/$id';
   static String mentorClassDetail(String id) => '/mentor/classes/$id';
   static String mentorStudents(String id) => '${mentorPage('students')}?classId=${Uri.encodeQueryComponent(id)}';
   static String mentorPage(String key) => '/mentor/page/$key';

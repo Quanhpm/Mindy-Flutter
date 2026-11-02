@@ -197,8 +197,8 @@ Trạng thái: **Khung** (chạy được, UI chưa port chi tiết) · **Đủ*
 | P3 | Chi tiết lớp | `/mentor/classes/:classId` | `features/mentor/classes/` | Tự review + API; UAT live còn thiếu | MF4 |
 | P4 | Báo cáo điểm danh | `/mentor/page/attendance` | `features/mentor/reports/` | Tự review + API; UAT live còn thiếu | MF4 |
 | P5 | Học viên + sheet lọc | `/mentor/page/students` | `features/mentor/students/` | Tự review + API; UAT live còn thiếu | MF4 |
-| P6 | Tài liệu | `/mentor/page/materials` | `features/mentor/materials/` | Chưa làm | MF5 |
-| P7 | Tải file lên (2 bước) | `/mentor/page/upload` | `features/mentor/materials/` | Chưa làm | MF5 |
+| P6 | Tài liệu | `/mentor/page/materials` | `features/mentor/materials/` | Tự review + API; UAT live còn thiếu | MF5 |
+| P7 | Tải file lên (2 bước) | `/mentor/page/upload` | `features/mentor/materials/` | Tự review + API; UAT live còn thiếu | MF5 |
 | ~~P8~~ | ~~Mở chương~~ | — | — | **Bỏ** (owner 02/11, backend đã gỡ) | — |
 
 ### 6.4. Quản lý (chưa trong phạm vi)
@@ -260,3 +260,7 @@ Review MF2: xem `docs/MF2_UI_REVIEW.md` và `test/goldens/mf2_*.png`. Đã kiể
 Review MF3: `docs/MF3_REVIEW.md`, golden `test/goldens/mf3_attendance_320_vi.png`. Sync không đoán danh sách học viên mới; số thêm lấy từ response.
 
 Review MF4: `docs/MF4_REVIEW.md`, 9 golden vi/en chữ lớn; lớp/chi tiết/báo cáo/học viên đã nối API. Không dùng số Unit làm tiến độ hoàn thành.
+
+Review MF5: `docs/MF5_REVIEW.md`, 10 golden vi/en chữ lớn và ảnh iPhone Simulator.
+Chọn Unit rõ ràng, ARTICLE lấy detail, published khác approved, sửa REJECTED trước
+khi gửi lại. UI có tiến độ, hủy, kiểm tra kết quả, sửa/xóa và gửi lô DRAFT.

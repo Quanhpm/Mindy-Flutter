@@ -9,10 +9,18 @@ import 'sym.dart';
 
 /// Trạng thái dữ liệu dùng đúng hệ Staff; lỗi một vùng không che cả màn.
 class StaffDataState extends ConsumerWidget {
-  const StaffDataState({super.key, required this.title, required this.description, this.error, this.onRetry});
+  const StaffDataState({
+    super.key,
+    required this.title,
+    required this.description,
+    this.error,
+    this.onRetry,
+    this.retryLabel,
+  });
   final String title, description;
   final Object? error;
   final VoidCallback? onRetry;
+  final String? retryLabel;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,7 +43,7 @@ class StaffDataState extends ConsumerWidget {
             ],
             if (onRetry != null) ...[
               const SizedBox(height: 16),
-              StaffButton(label: t('common.retry'), onPressed: onRetry, outlined: true),
+              StaffButton(label: retryLabel ?? t('common.retry'), onPressed: onRetry, outlined: true),
             ],
           ],
         ),

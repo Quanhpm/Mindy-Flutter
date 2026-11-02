@@ -1,8 +1,9 @@
-# MF5 — triển khai đang tiếp tục
+# MF5 — checkpoint tầng dữ liệu và trạng thái tiếp theo
 
 02/11/2026. Nhánh `flutter/mf5-materials`, kế thừa MF4 `060f71b`.
-**Chưa hoàn tất MF5:** đã có tầng dữ liệu và luồng upload; UI/chọn file/xem bài viết/
-gửi duyệt/sửa-xóa/golden/UAT vẫn còn ở các bước tiếp theo.
+Checkpoint kernel được giữ dưới đây để truy vết. Cập nhật: UI/chọn file/xem bài viết/
+gửi duyệt/sửa-xóa đã triển khai và có golden/test, xem `MF5_REVIEW.md`.
+**UAT thật chưa hoàn tất** (tài khoản backend, MinIO, thao tác picker/máy thật).
 
 ## Đã có
 
@@ -55,7 +56,7 @@ gửi duyệt/sửa-xóa/golden/UAT vẫn còn ở các bước tiếp theo.
    hạn. Kiểm tra scheme/host/userinfo, chặn đường dẫn local/script. File mở bằng
    trình duyệt trong app; nguồn backend canonical, không tự chạy HTML/script.
 
-## Việc tiếp theo
+## Danh sách triển khai ở checkpoint kernel (đã thực hiện ở MF5_REVIEW)
 
 - Picker native: chọn một file theo category, dùng cached XFile/openRead (không nạp
   video 200 MiB vào RAM), xác minh length và khai báo MIME canonical từ allowlist.

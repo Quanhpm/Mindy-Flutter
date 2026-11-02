@@ -143,10 +143,17 @@ class StatusChip extends StatelessWidget {
 
 /// Hàng chip lọc cuộn ngang (Đang dạy (3) · Sắp mở (1) ...).
 class FilterChipsBar<T> extends StatelessWidget {
-  const FilterChipsBar({super.key, required this.items, required this.selected, required this.onSelected});
+  const FilterChipsBar({
+    super.key,
+    required this.items,
+    required this.selected,
+    required this.onSelected,
+    this.enabled = true,
+  });
   final List<(T, String)> items;
   final T selected;
   final ValueChanged<T> onSelected;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
@@ -158,7 +165,7 @@ class FilterChipsBar<T> extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: Pressable(
-              onTap: () => onSelected(value),
+              onTap: enabled ? () => onSelected(value) : null,
               selected: value == selected,
               semanticLabel: label,
               child: Container(

@@ -29,6 +29,10 @@ import 'package:mindy_flutter/features/notifications/notifications_panel.dart';
 import 'preview/mentor_fixtures.dart';
 import 'preview/attendance_fixtures.dart';
 import 'preview/classes_fixtures.dart';
+import 'preview/materials_fixtures.dart';
+import 'package:mindy_flutter/features/mentor/materials/materials_screen.dart';
+import 'package:mindy_flutter/features/mentor/materials/upload_screen.dart';
+import 'package:mindy_flutter/features/mentor/materials/material_reader.dart';
 import 'package:mindy_flutter/features/mentor/classes/classes_screen.dart';
 import 'package:mindy_flutter/features/mentor/classes/class_detail_screen.dart';
 import 'package:mindy_flutter/features/mentor/reports/attendance_report_screen.dart';
@@ -49,6 +53,8 @@ Future<void> main() async {
         mentorSubstituteOnlyProvider.overrideWith((ref) async => false),
         mentorFavoritesProvider.overrideWith(_PreviewFavorites.new),
         ...classesPreviewOverrides(),
+        ...materialsPreviewOverrides(),
+        materialLauncherProvider.overrideWithValue((uri) async {}),
       ],
       child: const MentorPreviewApp(),
     ),
@@ -105,6 +111,14 @@ class _MentorPreviewAppState extends ConsumerState<MentorPreviewApp> {
     routes: [
       GoRoute(path: Routes.mentor, builder: (_, _) => _listen(_home)),
       GoRoute(
+        path: Routes.mentorMaterialsPath,
+        builder: (_, st) => MentorMaterialsScreen(classId: st.pathParameters['classId']!),
+      ),
+      GoRoute(
+        path: Routes.mentorUploadPath,
+        builder: (_, st) => MentorUploadScreen(classId: st.pathParameters['classId']!),
+      ),
+      GoRoute(
         path: Routes.mentorClassDetailPath,
         builder: (_, st) => MentorClassDetailScreen(classId: st.pathParameters['classId']!),
       ),
@@ -130,6 +144,8 @@ class _MentorPreviewAppState extends ConsumerState<MentorPreviewApp> {
             'classes' => const MentorClassesScreen(),
             'attendance' => const MentorAttendanceReportScreen(),
             'students' => MentorStudentsScreen(classId: state.uri.queryParameters['classId']),
+            'materials' => const MentorMaterialsScreen(),
+            'upload' => const MentorUploadScreen(),
             _ => MentorPlaceholderPage(utilKey: state.pathParameters['key']!),
           },
         ),
@@ -326,6 +342,14 @@ class _MentorPreviewAppState extends ConsumerState<MentorPreviewApp> {
                         },
                       ),
                       TextButton(onPressed: () => _router.go(Routes.mentor), child: Text(t('mentor.preview.home'))),
+                      TextButton(
+                        onPressed: () => _router.go(Routes.mentorPage('materials')),
+                        child: Text(t('mentor.materials.title')),
+                      ),
+                      TextButton(
+                        onPressed: () => _router.go(Routes.mentorPage('upload')),
+                        child: Text(t('mentor.materials.uploadTitle')),
+                      ),
                       TextButton(
                         key: const ValueKey('previewClasses'),
                         onPressed: () => _router.go(Routes.mentorPage('classes')),

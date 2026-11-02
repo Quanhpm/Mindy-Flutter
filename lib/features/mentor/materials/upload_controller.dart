@@ -5,6 +5,7 @@ import '../../../core/network/api_error.dart';
 import '../../../core/network/file_models.dart';
 import '../../../core/network/upload_client.dart';
 import '../../../core/session/session_controller.dart';
+import '../../../core/utils/await_provider.dart';
 import '../classes/classes_models.dart';
 import '../classes/classes_providers.dart';
 import '../schedule/schedule_providers.dart' show mentorClockProvider;
@@ -214,6 +215,9 @@ class MentorUploadController extends Notifier<UploadState> {
   void _finish(_UploadFlow flow, MentorMaterialDetail detail) {
     final material = detail.material;
     if (material.file?.id != flow.intent!.fileId ||
+        material.file?.size != flow.status?.size ||
+        material.file?.mimeType != flow.status?.mimeType ||
+        material.file?.kind != flow.status?.kind ||
         material.courseUnitId != flow.unit.courseUnitId ||
         material.classId != classId ||
         material.createdBy != flow.actorId) {
@@ -251,12 +255,12 @@ class MentorUploadController extends Notifier<UploadState> {
       }
       _step(UploadStep.permission);
       ref.invalidate(mentorPrimaryWorkspaceProvider(classId));
-      final workspace = await ref.read(mentorPrimaryWorkspaceProvider(classId).future);
+      final workspace = await awaitProvider(ref, mentorPrimaryWorkspaceProvider(classId).future);
       _assertRunning(epoch, cancel);
       if (workspace.readonly || !workspace.authorMaterials) {
         throw ApiError(status: 403, code: 'MATERIAL_ACCESS_DENIED');
       }
-      final units = await ref.read(mentorClassUnitsProvider(classId).future);
+      final units = await awaitProvider(ref, mentorClassUnitsProvider(classId).future);
       _assertRunning(epoch, cancel);
       if (!units.any(
         (unit) => unit.id == flow.unit.id && unit.classId == classId && unit.courseUnitId == flow.unit.courseUnitId,
@@ -368,7 +372,7 @@ class MentorUploadController extends Notifier<UploadState> {
       }
       _step(UploadStep.draft);
       ref.invalidate(mentorPrimaryWorkspaceProvider(classId));
-      final latestWorkspace = await ref.read(mentorPrimaryWorkspaceProvider(classId).future);
+      final latestWorkspace = await awaitProvider(ref, mentorPrimaryWorkspaceProvider(classId).future);
       _assertRunning(epoch, cancel);
       if (latestWorkspace.readonly || !latestWorkspace.authorMaterials) {
         throw ApiError(status: 403, code: 'MATERIAL_ACCESS_DENIED');

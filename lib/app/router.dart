@@ -16,6 +16,8 @@ import '../features/mentor/classes/classes_screen.dart';
 import '../features/mentor/classes/class_detail_screen.dart';
 import '../features/mentor/reports/attendance_report_screen.dart';
 import '../features/mentor/students/students_screen.dart';
+import '../features/mentor/materials/materials_screen.dart';
+import '../features/mentor/materials/upload_screen.dart';
 import '../features/mentor/mentor_pages.dart';
 import '../features/mentor/schedule/live_schedule_screen.dart';
 import '../features/mentor/substitute/live_substitute_screen.dart';
@@ -64,6 +66,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: Routes.mentor, builder: (_, _) => const LiveMentorHomeScreen()),
       GoRoute(path: Routes.mentorUtilities, builder: (_, _) => const MentorUtilitiesScreen()),
       GoRoute(
+        path: Routes.mentorMaterialsPath,
+        builder: (_, st) => MentorMaterialsScreen(classId: st.pathParameters['classId']!),
+      ),
+      GoRoute(
+        path: Routes.mentorUploadPath,
+        builder: (_, st) => MentorUploadScreen(classId: st.pathParameters['classId']!),
+      ),
+      GoRoute(
         path: Routes.mentorClassDetailPath,
         builder: (_, st) => MentorClassDetailScreen(classId: st.pathParameters['classId']!),
       ),
@@ -75,6 +85,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           'classes' => const MentorClassesScreen(),
           'attendance' => const MentorAttendanceReportScreen(),
           'students' => MentorStudentsScreen(classId: st.uri.queryParameters['classId']),
+          'materials' => const MentorMaterialsScreen(),
+          'upload' => const MentorUploadScreen(),
           _ => MentorPlaceholderPage(utilKey: st.pathParameters['key']!),
         },
       ),
