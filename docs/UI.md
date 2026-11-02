@@ -86,6 +86,8 @@ Liên quan: `docs/REMAINING_WORK_PLAN.md` (việc còn lại theo phase), `docs/
 | `MindyIcon` + `MindyIconName` | 32 icon nét, mặc định màu `muted` |
 | `AppTabBar` | 5 ô: Khoá học, Lịch học, Home (tròn giữa), Thông báo (luôn tắt), Tài khoản; tự giãn khi màn ≤ 360 px hoặc chữ ≥ ×1,3 |
 | `CoverImage` | Ảnh mạng có fallback nền banner + icon |
+| `AutoCarousel` | Tự chuyển 3 giây; pause/lifecycle/route/drag/reduced motion, chiều cao theo nội dung |
+| `PaperButton` / `FoldedPaper` | Nút viền đen bóng cứng và giấy ghi chú Home RN |
 | `showAppSheet` | Bottom sheet kéo được, né bàn phím |
 | `CourseTile` | Thẻ khoá học (`features/courses/course_tile.dart`) |
 | `FormFeedback`, `AuthShell` | Khung và hộp báo lỗi của Đăng ký/Welcome (`features/auth/auth_shell.dart`) |
@@ -164,7 +166,7 @@ Trạng thái: **Khung** (chạy được, UI chưa port chi tiết) · **Đủ*
 
 | Màn | Route | File | Nguồn RN | Trạng thái | Phase |
 | --- | --- | --- | --- | --- | --- |
-| Trang chủ | `/home` | `features/home/home_screen.dart` | `home/StudentHome.tsx`, `HomeCarousel`, `HomeCompiler` | Khung (thiếu carousel, compiler, về chúng tôi, footer) | S1 |
+| Trang chủ | `/home` | `features/home/home_screen.dart` | `home/StudentHome.tsx`, `HomeCarousel`, `HomeCompiler` | Tự review S1: đủ các khối, paging và lifecycle; còn UAT dev/Android | S1 |
 | Khoá học | `/home/courses` | `features/courses/courses_screen.dart` | `courses/CoursesScreen.tsx`, `Recommendations.tsx` | Khung | S2 |
 | Sheet khoá học / chọn lớp | sheet | `features/courses/course_sheet.dart` | `CourseSheet.tsx` | Khung | S2 |
 | Sheet bộ lọc | sheet | trong `courses_screen.dart` | `FilterSheet.tsx` | Khung | S2 |
@@ -275,3 +277,9 @@ trên thiết bị vẫn cần kiểm chứng riêng.
 MF6 bổ sung: picker iOS mở/hủy và chọn PDF tổng hợp 880 B thành công; ảnh ở
 `docs/design/mentor/review/mf6_ios_picker_selected.png`. Flutter controller/API cũng
 đã chạy upload/submit qua MinIO/worker/backend thật trong môi trường test riêng.
+
+
+Review S1: `docs/S1_REVIEW.md`, 9 golden `test/goldens/s1_*.png` và ảnh iPhone
+Simulator. Intro không dựng ba khung ảnh trắng khi RN chưa có artwork; mascot có
+sẵn vẫn giữ. Compiler chỉ minh họa, nút disabled như RN production. Thêm dừng tự
+chuyển và tắt autoplay khi giảm chuyển động/screen reader; bỏ số hỗ trợ mẫu ở footer.

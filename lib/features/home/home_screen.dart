@@ -9,13 +9,13 @@ import '../cart/cart_sheet.dart';
 import '../courses/course_sheet.dart';
 import '../courses/course_tile.dart';
 import 'home_providers.dart';
+import 'home_sections.dart';
 
 /// Trang chủ học viên - `home/ProductionStudentHome.tsx` + `StudentHome.tsx`.
 ///
 /// Các vùng: header (tên + giỏ) · buổi học tiếp theo · khoá học nổi bật ·
 /// carousel giới thiệu · compiler (chỉ giới thiệu) · về chúng tôi · footer.
-/// TODO(UI): port HomeCarousel (autoplay, dừng khi background), HomeCompiler (terminal
-/// minh hoạ), notes "Về chúng tôi", footer - xem `home/components/*` và Student Home.dc.html.
+/// Các carousel/terminal/notes/footer port từ home/components, không chạy code thật.
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -23,11 +23,44 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> with WidgetsBindingObserver {
   final _scroll = ScrollController();
+  bool _active = false, _seen = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncActive();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) => _syncActive();
+
+  void _syncActive() {
+    final lifecycle = WidgetsBinding.instance.lifecycleState;
+    final active =
+        (lifecycle == null || lifecycle == AppLifecycleState.resumed) && ModalRoute.of(context)?.isCurrent != false;
+    if (active == _active) return;
+    _active = active;
+    if (!active) return;
+    // ProductionStudentHome RN refresh khi focus; lần đầu đã có watch tải dữ liệu.
+    if (_seen) {
+      Future.microtask(() async {
+        if (mounted && _active) await _refresh();
+      });
+    }
+    _seen = true;
+  }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _scroll.dispose();
     super.dispose();
   }
@@ -52,7 +85,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       bottomNavigationBar: AppTabBar(
         selected: HomeTab.home,
-        onHomeTop: () => _scroll.animateTo(0, duration: Motion.base, curve: Motion.curve),
+        onHomeTop: () => Motion.reduced(context)
+            ? _scroll.jumpTo(0)
+            : _scroll.animateTo(0, duration: Motion.base, curve: Motion.curve),
       ),
       body: SafeArea(
         bottom: false,
@@ -70,8 +105,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(t('home.greeting', {'name': user?.displayName ?? ''}),
-                              style: AppText.label(AppColors.black)),
+                          Text(
+                            t('home.greeting', {'name': user?.displayName ?? ''}),
+                            style: AppText.label(AppColors.black),
+                          ),
                           Text(t('home.title'), style: AppText.title(AppColors.black)),
                         ],
                       ),
@@ -145,6 +182,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 padding: const EdgeInsets.only(bottom: 14),
                                 child: CourseTile(
                                   course: list[i],
+                                  loadOpenClass: false,
                                   index: i,
                                   onTap: () => showCourseSheet(context, list[i].id),
                                 ),
@@ -153,12 +191,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                 ),
                 MindyButton(label: t('home.actions.explore'), onPressed: () => context.go(Routes.courses)),
-                const SizedBox(height: 12),
-                MindyButton(
-                  label: t('home.footer.myClasses'),
-                  variant: ButtonVariant.outline,
-                  onPressed: () => context.push(Routes.myClasses('home')),
-                ),
+                const SizedBox(height: 44),
+                const HomeIntro(),
+                const SizedBox(height: 44),
+                HomeCompiler(name: user?.displayName ?? ''),
+                const SizedBox(height: 44),
+                const HomeAbout(),
+                const HomeFooter(),
               ],
             ),
           ),

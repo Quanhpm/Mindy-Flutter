@@ -27,14 +27,14 @@ Tài liệu liên quan (giữ để tra cứu, plan này là nguồn chính khi 
 | Hạng mục | Trạng thái |
 | --- | --- |
 | Nền app: network/cookie/refresh, session, router, i18n, theme | P0 đã sửa 2 lỗi P1, test hồi quy pass |
-| Học viên: auth, home, catalog, giỏ, thanh toán, lịch, tài khoản, lớp của tôi | Chức năng chạy được; nhiều UI còn dạng khung (`TODO(UI)`) |
+| Học viên: auth, home, catalog, giỏ, thanh toán, lịch, tài khoản, lớp của tôi | Home S1 đã có các khối/paging/lifecycle; S2–S4 còn phần UI theo RN |
 | Mentor MF1: login chung, phân luồng role, UI kit staff, Home khung, tiện ích yêu thích | P0 đã sửa 2 lỗi P2, test hồi quy pass |
 | Mentor MF2: lịch, Home, phòng, dạy thay, thông báo | UI/API; Flutter đọc lịch/context backend local pass; UAT thiết bị/thông báo/dev còn thiếu |
 | Mentor MF3: điểm danh | UI/API/controller; start/save/finalize backend local pass; UAT hai thiết bị còn thiếu |
 | Mentor MF4: lớp, học viên, báo cáo | UI/API; workspace HTTP và provider local pass; UAT dữ liệu lớn/thiết bị còn thiếu |
 | Mentor MF5: tài liệu, tải lên | UI/API, test và UAT local PDF/MinIO/iOS picker; còn thiết bị Android/nhiều loại file/server dev |
 | Mentor MF6: hoàn thiện | Đã sửa vòng đời/quyền/trợ năng, có checklist và smoke backend local; UAT thiết bị còn thiếu |
-| Build | Analyze sạch, 189 test pass; thêm smoke Flutter/backend local pass; iOS Simulator MF6 build 8,3 giây |
+| Build | Analyze sạch, 214 test pass; smoke Flutter/backend/MinIO local pass; iOS Simulator S1 main build 12,0 giây |
 
 Cập nhật triển khai 02/11: P0 đã sửa B1–B4, chuyển ca chẩn đoán vào
 `test/p0_regression_test.dart` và bổ sung ca response/cookie cũ, refresh đồng thời,
@@ -462,3 +462,22 @@ xem snapshot mới trước khi dùng revision mới; xem `MF5_REVIEW.md`.
   submit PENDING_REVIEW cũng pass. iOS picker mở/hủy/chọn PDF tổng hợp đọc đúng
   880 B; ảnh `docs/design/mentor/review/mf6_ios_picker_selected.png`.
   Gate còn lại gồm Android/nhiều loại file, app nền, nhiều thiết bị và server dev.
+
+
+### S1 — Home Học viên 02/11
+
+- Đã có intro carousel, Compiler minh họa, About notes và footer; đọc đủ trang
+  lớp để chọn khai giảng sớm nhất. Không tải metadata lần hai khi Home đã nhận null.
+- Carousel dừng khi nền/route bị che/đang vuốt; có pause, giữ qua scroll, reduced
+  motion/screen reader không tự chuyển. Dùng font monospace bundle và SVG check.
+- 25 test S1 (5 data, 6 carousel, 14 widget), 9 golden đã tự review vi/en chữ lớn;
+  preview iPhone 17 build 18,6 giây, đã thao tác pause/chọn note trên Simulator.
+- Nguồn/sai khác/giới hạn trong `S1_REVIEW.md`. Intro/Compiler CTA disabled như RN
+  production vì chưa có module đích; không biến mô phỏng thành chạy code thật.
+- Tiếp theo: S2 catalog/course sheet/cart; S3–S5, MF7 và phát hành vẫn trong scope.
+
+- S1 bổ sung refresh theo focus/foreground như RN, không tải khi Home bị che hoặc
+  tải lặp lần đầu; có test đỏ→xanh.
+
+S1 chốt code: **214 test pass**, 1 live test mặc định skip; analyze sạch; main
+iOS Simulator build **12,0 giây**. Chưa đánh dấu nghiệm thu toàn bộ Học viên.

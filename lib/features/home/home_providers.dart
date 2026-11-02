@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/session/session_controller.dart';
+import '../../core/network/api_error.dart';
 import '../courses/courses_api.dart';
 import '../courses/courses_models.dart';
 import '../my_classes/my_classes_models.dart';
@@ -14,16 +16,24 @@ import '../schedule/schedule_models.dart';
 /// 4 khoá nổi bật, kèm lớp mở sớm nhất (lỗi lớp thì vẫn hiện khoá).
 final homeCoursesProvider = FutureProvider.autoDispose<List<Course>>((ref) async {
   ref.watch(sessionEpochProvider);
+  final cancel = CancelToken();
+  ref.onDispose(cancel.cancel);
   final api = ref.watch(coursesApiProvider);
-  final page = await api.courses(page: 1, pageSize: 4);
-  // TODO(parity): RN đọc HẾT các trang lớp để tìm lớp sớm nhất; ở đây dùng trang 1 (100 lớp).
-  return Future.wait(page.items.map((c) async {
-    try {
-      return c.withOpenClass(await api.nextClass(c.id));
-    } catch (_) {
-      return c;
-    }
-  }));
+  final page = await api.courses(page: 1, pageSize: 4, cancel: cancel);
+  page.check(1, page.items.length, 'INVALID_CATALOG_RESPONSE');
+  if (page.pageSize != 4 || page.total < 0 || page.items.map((c) => c.id).toSet().length != page.items.length) {
+    throw ApiError.invalidResponse('INVALID_CATALOG_RESPONSE');
+  }
+  return Future.wait(
+    page.items.map((c) async {
+      try {
+        return c.withOpenClass(await api.nextClass(c.id, cancel: cancel));
+      } catch (_) {
+        if (cancel.isCancelled || !ref.mounted) rethrow;
+        return c;
+      }
+    }),
+  );
 });
 
 class HomeNextSession {
@@ -40,10 +50,12 @@ final homeNextSessionProvider = FutureProvider.autoDispose<HomeNextSession>((ref
   final week = await ref
       .watch(scheduleApiProvider)
       .range(now, now.add(const Duration(days: 7)), includeCancelled: false);
-  final next = week.items.where((s) =>
-      s.sessionStatus == SessionStatus.SCHEDULED &&
-      s.classStatus != ClassStatus.CANCELLED &&
-      s.access != ScheduleAccess.SESSION_MAKEUP &&
-      !s.startsAt.isBefore(week.asOf));
+  final next = week.items.where(
+    (s) =>
+        s.sessionStatus == SessionStatus.SCHEDULED &&
+        s.classStatus != ClassStatus.CANCELLED &&
+        s.access != ScheduleAccess.SESSION_MAKEUP &&
+        !s.startsAt.isBefore(week.asOf),
+  );
   return HomeNextSession(session: next.isEmpty ? null : next.first, timeZone: week.timeZone, asOf: week.asOf);
 });

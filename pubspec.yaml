@@ -53,7 +53,11 @@ flutter:
     - assets/i18n/
     - assets/images/
     - assets/illustrations/
+    - assets/fonts/RobotoMono-OFL.txt
   fonts:
+    - family: RobotoMono
+      fonts:
+        - asset: assets/fonts/RobotoMono.ttf
     - family: Nunito
       fonts:
         - asset: assets/fonts/Nunito-Regular.ttf

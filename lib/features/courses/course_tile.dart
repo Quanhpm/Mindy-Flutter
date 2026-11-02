@@ -8,18 +8,27 @@ import 'courses_providers.dart';
 /// Thẻ khoá học - `components/common/CourseTile.tsx`.
 /// TODO(UI): đối chiếu kích thước/bo góc/badge với CourseTile.tsx + Student Home.dc.html.
 class CourseTile extends ConsumerWidget {
-  const CourseTile({super.key, required this.course, required this.index, required this.onTap});
+  const CourseTile({
+    super.key,
+    required this.course,
+    required this.index,
+    required this.onTap,
+    this.loadOpenClass = true,
+  });
 
   final Course course;
   final int index;
   final VoidCallback onTap;
+
+  /// Home đã đọc metadata cả trường hợp không có lớp; không gửi request thứ hai.
+  final bool loadOpenClass;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = ref.watch(trProvider);
     final region = RegionColors.of(context);
     // Ưu tiên openClass có sẵn (Home), không thì tự tải (Courses)
-    final open = course.openClass ?? ref.watch(nextClassProvider(course.id)).value;
+    final open = course.openClass ?? (loadOpenClass ? ref.watch(nextClassProvider(course.id)).value : null);
     final (cover, coverSoft) = AppColors.covers[index % AppColors.covers.length];
 
     return Pressable(
@@ -54,10 +63,12 @@ class CourseTile extends ConsumerWidget {
                 children: [
                   Text(course.categoryName.toUpperCase(), style: AppText.eyebrow()),
                   const SizedBox(height: 4),
-                  Text(course.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: region.foreground)),
+                  Text(
+                    course.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: region.foreground),
+                  ),
                   const SizedBox(height: 6),
                   Text(
                     open == null

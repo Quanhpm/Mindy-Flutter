@@ -161,7 +161,9 @@
       "account": "Tài khoản"
     },
     "carousel": {
-      "goToSlide": "Xem mục {{index}}: {{title}}"
+      "goToSlide": "Xem mục {{index}}: {{title}}",
+      "pause": "Dừng tự chuyển",
+      "resume": "Tiếp tục tự chuyển"
     },
     "intro": {
       "first": {
@@ -202,7 +204,7 @@
           "oneBold": "Nạp kiến thức",
           "oneText": "(Input): hiểu rõ kiến thức đó dùng khi nào, dùng như thế nào.",
           "twoBold": "Ứng dụng kiến thức",
-          "twoText": "(Output): làm bài ngay trên compiler ⇒ mentor kiểm tra ⇒ học viên tự tin áp dụng vào dự án thật."
+          "twoText": "(Output): làm bài ngay trên compiler; mentor kiểm tra; học viên tự tin áp dụng vào dự án thật."
         },
         "second": {
           "title": "Lớp nhỏ, mentor kèm sát",

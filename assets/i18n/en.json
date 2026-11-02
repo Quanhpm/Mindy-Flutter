@@ -161,7 +161,9 @@
       "account": "Account"
     },
     "carousel": {
-      "goToSlide": "View item {{index}}: {{title}}"
+      "goToSlide": "View item {{index}}: {{title}}",
+      "pause": "Pause slideshow",
+      "resume": "Resume slideshow"
     },
     "intro": {
       "first": {
