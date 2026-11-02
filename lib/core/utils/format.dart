@@ -53,6 +53,9 @@ class Dates {
     return List.generate(7, (i) => shiftDay(monday, i));
   }
 
+  static String monthLabel(String day, String language) =>
+      DateFormat('MMMM yyyy', language).format(DateTime.parse('${day}T12:00:00Z'));
+
   /// `2026-11-02` -> `02/11/2026`
   static String displayDay(String day) => day.split('-').reversed.join('/');
 

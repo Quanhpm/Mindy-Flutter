@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 /// Dùng lại NGUYÊN file dịch của RN (`assets/i18n/vi.json`, `en.json`) với cùng key,
 /// nên port màn hình chỉ cần đổi `t('auth.login.title')` y như bên RN.
@@ -53,6 +54,8 @@ class I18n {
 
   /// Gọi 1 lần trong main() trước runApp.
   static Future<Locale> load() async {
+    // Header tháng dùng tên tháng theo locale, phải nạp trước mọi màn/preview.
+    await initializeDateFormatting();
     for (final l in supported) {
       final raw = await rootBundle.loadString('assets/i18n/${l.languageCode}.json');
       _bundles[l.languageCode] = jsonDecode(raw) as Map<String, dynamic>;

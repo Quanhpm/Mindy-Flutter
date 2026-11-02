@@ -19,6 +19,9 @@ import '../features/mentor/students/students_screen.dart';
 import '../features/mentor/materials/materials_screen.dart';
 import '../features/mentor/materials/upload_screen.dart';
 import '../features/mentor/mentor_pages.dart';
+import '../core/ui/session_sheet_guard.dart';
+import '../features/mentor/operations/leave_screens.dart';
+import '../features/mentor/operations/session_edit_screens.dart';
 import '../features/mentor/schedule/live_schedule_screen.dart';
 import '../features/mentor/substitute/live_substitute_screen.dart';
 import '../features/my_classes/class_detail_screen.dart';
@@ -62,6 +65,25 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, st) =>
             ClassDetailScreen(classId: st.pathParameters['classId']!, sessionId: st.uri.queryParameters['sessionId']),
       ),
+      GoRoute(
+        path: Routes.mentorLeaveCreate,
+        builder: (_, _) => const SessionBoundView(child: MentorLeaveCreateScreen()),
+      ),
+      GoRoute(
+        path: Routes.mentorLeaveDetailPath,
+        builder: (_, state) =>
+            SessionBoundView(child: MentorLeaveDetailScreen(requestId: state.pathParameters['requestId']!)),
+      ),
+      GoRoute(
+        path: Routes.mentorNotesPath,
+        builder: (_, state) =>
+            SessionBoundView(child: MentorNotesScreen(sessionId: state.pathParameters['sessionId']!)),
+      ),
+      GoRoute(
+        path: Routes.mentorMeetingPath,
+        builder: (_, state) =>
+            SessionBoundView(child: MentorMeetingScreen(sessionId: state.pathParameters['sessionId']!)),
+      ),
       // ---- Mentor
       GoRoute(path: Routes.mentor, builder: (_, _) => const LiveMentorHomeScreen()),
       GoRoute(path: Routes.mentorUtilities, builder: (_, _) => const MentorUtilitiesScreen()),
@@ -81,6 +103,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.mentorPagePath,
         builder: (_, st) => switch (st.pathParameters['key']) {
           'schedule' => const LiveMentorScheduleScreen(),
+          'leave' => const SessionBoundView(child: MentorLeaveScreen()),
           'substitute' => const LiveMentorSubstituteScreen(),
           'classes' => const MentorClassesScreen(),
           'attendance' => const MentorAttendanceReportScreen(),
@@ -92,9 +115,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.paymentPath,
-        builder: (_, st) => PaymentScreen(
-          orderId: st.pathParameters['orderId']!,
-          fromLearning: st.uri.queryParameters['origin'] == 'learning',
+        builder: (_, st) => SessionBoundView(
+          child: PaymentScreen(
+            orderId: st.pathParameters['orderId']!,
+            fromLearning: st.uri.queryParameters['origin'] == 'learning',
+          ),
         ),
       ),
     ],

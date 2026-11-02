@@ -121,7 +121,13 @@ class Paged<T> {
   /// Kiểm tra metadata giống `checkPage` bên RN.
   /// [count] = tổng số item đã đọc tính đến trang này.
   void check(int expectedPage, int count, String errorCode) {
-    if (page != expectedPage || items.length > pageSize || count > total || (items.isEmpty && count < total)) {
+    if (page < 1 ||
+        pageSize < 1 ||
+        total < 0 ||
+        page != expectedPage ||
+        items.length > pageSize ||
+        count > total ||
+        (items.isEmpty && count < total)) {
       throw ApiError.invalidResponse(errorCode);
     }
   }

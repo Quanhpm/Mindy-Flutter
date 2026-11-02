@@ -16,6 +16,7 @@ enum MentorUtil {
   materials(Sym.folderOpen, 'mentor.util.materials', primaryOnly: true, phase: 'MF5'),
   upload(Sym.uploadFile, 'mentor.util.upload', primaryOnly: true, isNew: true, phase: 'MF5'),
   substitute(Sym.swapHoriz, 'mentor.util.substitute', isNew: true, phase: 'MF2'),
+  leave(Sym.eventNote, 'mentor.util.leave', isNew: true, phase: 'MF7'),
   sync(Sym.sync, 'mentor.util.sync', isNew: true, sessionOnly: true, phase: 'MF3');
 
   const MentorUtil(
@@ -61,7 +62,7 @@ const utilityGroups = <(String, List<MentorUtil>)>[
       MentorUtil.upload,
     ],
   ),
-  ('mentor.home.new', [MentorUtil.substitute, MentorUtil.sync]),
+  ('mentor.home.new', [MentorUtil.substitute, MentorUtil.sync, MentorUtil.leave]),
 ];
 
 /// Tiện ích được thấy theo loại mentor.

@@ -26,6 +26,7 @@ class MentorScheduleScreen extends ConsumerWidget {
     required this.onRetry,
     required this.onRoom,
     required this.onAttendance,
+    this.onTools,
     this.onBack,
   });
   final AsyncValue<TeachingSchedule> value;
@@ -36,6 +37,7 @@ class MentorScheduleScreen extends ConsumerWidget {
   final Future<void> Function() onRefresh;
   final VoidCallback onRetry;
   final ValueChanged<TeachingEntry> onRoom, onAttendance;
+  final ValueChanged<TeachingEntry>? onTools;
   final VoidCallback? onBack;
 
   @override
@@ -133,6 +135,7 @@ class MentorScheduleScreen extends ConsumerWidget {
                             timeZone: data.timeZone,
                             onRoom: onRoom,
                             onAttendance: onAttendance,
+                            onTools: onTools,
                           ),
                         ),
                     ],

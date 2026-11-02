@@ -23,12 +23,14 @@ class MentorSessionCard extends ConsumerWidget {
     required this.timeZone,
     required this.onRoom,
     required this.onAttendance,
+    this.onTools,
     this.substitutePage = false,
   });
   final TeachingEntry entry;
   final DateTime now;
   final String timeZone;
   final ValueChanged<TeachingEntry> onRoom, onAttendance;
+  final ValueChanged<TeachingEntry>? onTools;
   final bool substitutePage;
 
   @override
@@ -52,6 +54,8 @@ class MentorSessionCard extends ConsumerWidget {
           : null,
       attendanceLabel: t('mentor.session.attendance'),
       roomLabel: t('mentor.session.enterRoom'),
+      toolsLabel: t('mentor.operations.tools'),
+      onTools: onTools == null ? null : () => onTools!(entry),
       onAttendance: status == TeachingDisplayStatus.live ? () => onAttendance(entry) : null,
       onRoom: status == TeachingDisplayStatus.live ? () => onRoom(entry) : null,
     );

@@ -8,6 +8,7 @@ import '../../../core/ui/staff/staff_widgets.dart';
 import '../schedule/schedule_models.dart';
 import '../schedule/schedule_providers.dart';
 import 'room_sheet.dart';
+import '../operations/session_edit_screens.dart';
 import 'session_context_api.dart';
 
 Future<void> launchTeachingRoom(Uri uri) async {
@@ -27,23 +28,39 @@ void showMentorRoom(BuildContext outerContext, WidgetRef ref, TeachingEntry entr
     title: t('mentor.room.title'),
     subtitle: entry.className,
     builder: (_) => Consumer(
-      builder: (context, ref, _) {
+      builder: (context, sheetRef, _) {
         final provider = mentorRoomProvider(entry.session.id);
-        ref.listen(provider, (_, next) {
+        sheetRef.listen(provider, (_, next) {
           final error = next.error;
           if (error is ApiError && error.status == 403) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (!context.mounted) return;
               ref.invalidate(mentorScheduleProvider);
               Navigator.of(context).pop();
-              if (outerContext.mounted) showStaffToast(outerContext, t('mentor.session.accessLost'));
+              if (outerContext.mounted) {
+                showStaffToast(outerContext, t('mentor.session.accessLost'));
+              }
             });
           }
         });
-        return MentorRoomContent(
-          value: ref.watch(provider),
-          onRetry: () => ref.invalidate(provider),
-          onOpen: launchTeachingRoom,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            MentorRoomContent(
+              value: sheetRef.watch(provider),
+              onRetry: () => ref.invalidate(provider),
+              onOpen: launchTeachingRoom,
+            ),
+            const SizedBox(height: 12),
+            StaffButton(
+              label: t('mentor.operations.tools'),
+              outlined: true,
+              onPressed: () {
+                Navigator.pop(context);
+                showMentorSessionTools(outerContext, ref, entry);
+              },
+            ),
+          ],
         );
       },
     ),

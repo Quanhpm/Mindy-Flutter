@@ -18,11 +18,11 @@ class Payment {
   final int amount;
 
   Payment copyWith({PaymentStatus? status, String? qrCode, bool clearQr = false}) => Payment(
-        status: status ?? this.status,
-        qrCode: clearQr ? null : (qrCode ?? this.qrCode),
-        expiresAt: expiresAt,
-        amount: amount,
-      );
+    status: status ?? this.status,
+    qrCode: clearQr ? null : (qrCode ?? this.qrCode),
+    expiresAt: expiresAt,
+    amount: amount,
+  );
 
   factory Payment.fromJson(Json j) {
     final qr = j.strOrNull('qrCode');
@@ -59,15 +59,15 @@ class Order {
   final Payment? payment;
 
   Order withPayment(Payment? p) => Order(
-        id: id,
-        orderCode: orderCode,
-        paymentType: paymentType,
-        status: status,
-        totalAmount: totalAmount,
-        expiresAt: expiresAt,
-        details: details,
-        payment: p,
-      );
+    id: id,
+    orderCode: orderCode,
+    paymentType: paymentType,
+    status: status,
+    totalAmount: totalAmount,
+    expiresAt: expiresAt,
+    details: details,
+    payment: p,
+  );
 
   bool get inReview => status != OrderStatus.PAID && payment?.status == PaymentStatus.REQUIRES_REVIEW;
 
@@ -90,13 +90,13 @@ class Order {
   }
 
   factory Order.fromJson(Json j) => Order(
-        id: j.uuid('id'),
-        orderCode: j.nonEmpty('orderCode'),
-        paymentType: j.enumOf('paymentType', PaymentType.values),
-        status: j.enumOf('status', OrderStatus.values),
-        totalAmount: j.amount('totalAmount'),
-        expiresAt: j.dateTime('expiresAt'),
-        details: j.list('details', (d) => (classId: d.uuid('classId'), courseTitle: d.str('courseTitle'))),
-        payment: j.has('payment') ? Payment.fromJson(j.obj('payment')) : null,
-      );
+    id: j.uuid('id'),
+    orderCode: j.nonEmpty('orderCode'),
+    paymentType: j.enumOf('paymentType', PaymentType.values),
+    status: j.enumOf('status', OrderStatus.values),
+    totalAmount: j.amount('totalAmount'),
+    expiresAt: j.dateTime('expiresAt'),
+    details: j.list('details', (d) => (classId: d.uuid('classId'), courseTitle: d.str('courseTitle'))),
+    payment: j.has('payment') ? Payment.fromJson(j.obj('payment')) : null,
+  );
 }

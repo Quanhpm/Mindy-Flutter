@@ -25,14 +25,16 @@ class AuthApi {
     required String email,
     required String password,
     String? phone,
-  }) =>
-      _api.post('auth/register', body: {
-        'displayName': displayName,
-        'email': email.trim(),
-        'password': password,
-        // Field rỗng thì bỏ hẳn, gửi field lạ backend trả 422
-        if (phone != null && phone.isNotEmpty) 'phone': phone,
-      });
+  }) => _api.post(
+    'auth/register',
+    body: {
+      'displayName': displayName.trim(),
+      'email': email.trim(),
+      'password': password,
+      // Field rỗng thì bỏ hẳn, gửi field lạ backend trả 422
+      if (phone != null && phone.trim().isNotEmpty) 'phone': phone.trim(),
+    },
+  );
 
   Future<void> resend(String email) => _api.post('auth/email/resend', body: {'email': email});
 

@@ -48,10 +48,12 @@ class _Favorites extends MentorFavoritesController {
 }
 
 void main() {
-  testWidgets('Badge chỉ poll khi Home đang hiện và foreground; trở lại thì đọc mới', (tester) async {
+  setUpAll(() async {
     initTimeZones();
     SharedPreferences.setMockInitialValues({});
     await I18n.load();
+  });
+  testWidgets('Badge chỉ poll khi Home đang hiện và foreground; trở lại thì đọc mới', (tester) async {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);

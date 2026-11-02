@@ -38,6 +38,13 @@ class Routes {
   // ---- Mentor (MENTOR_PLAN.md). Không có tab bar: Home + trang con mở bằng push.
   static const mentor = '/mentor';
   static const mentorUtilities = '/mentor/utilities';
+  static const mentorLeaveCreate = '/mentor/leave/new';
+  static const mentorLeaveDetailPath = '/mentor/leave/:requestId';
+  static String mentorLeaveDetail(String id) => '/mentor/leave/$id';
+  static const mentorNotesPath = '/mentor/sessions/:sessionId/notes';
+  static const mentorMeetingPath = '/mentor/sessions/:sessionId/meeting';
+  static String mentorNotes(String id) => '/mentor/sessions/$id/notes';
+  static String mentorMeeting(String id) => '/mentor/sessions/$id/meeting';
   static const mentorPagePath = '/mentor/page/:key';
   static const mentorClassDetailPath = '/mentor/classes/:classId';
   static const mentorMaterialsPath = '/mentor/materials/:classId';

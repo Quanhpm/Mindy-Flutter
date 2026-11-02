@@ -37,16 +37,16 @@ class Course {
   final OpenClass? openClass;
 
   Course withOpenClass(OpenClass? c) => Course(
-        id: id,
-        code: code,
-        title: title,
-        description: description,
-        imgUrl: imgUrl,
-        priceAmount: priceAmount,
-        categoryId: categoryId,
-        categoryName: categoryName,
-        openClass: c,
-      );
+    id: id,
+    code: code,
+    title: title,
+    description: description,
+    imgUrl: imgUrl,
+    priceAmount: priceAmount,
+    categoryId: categoryId,
+    categoryName: categoryName,
+    openClass: c,
+  );
 
   factory Course.fromJson(Json j) {
     final img = j.strOrNull('imgUrl');

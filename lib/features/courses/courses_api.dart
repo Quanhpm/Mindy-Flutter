@@ -5,6 +5,7 @@ import '../../core/network/api_client.dart';
 import '../../core/network/api_error.dart';
 import '../../core/network/json.dart';
 import '../../core/network/pagination.dart';
+import '../../core/utils/concurrent.dart';
 import 'courses_models.dart';
 
 final coursesApiProvider = Provider((ref) => CoursesApi(ref.watch(apiClientProvider)));
@@ -13,6 +14,7 @@ final coursesApiProvider = Provider((ref) => CoursesApi(ref.watch(apiClientProvi
 class CoursesApi {
   CoursesApi(this._api);
   final ApiClient _api;
+  final _reads = AsyncGate(6);
   static const _err = 'INVALID_CATALOG_RESPONSE';
 
   Future<Paged<T>> _page<T>(String path, Map<String, Object?> q, T Function(Json) parse, {CancelToken? cancel}) async {
@@ -39,19 +41,32 @@ class CoursesApi {
     cancel: cancel,
   );
 
-  Future<Course> course(String courseId, {CancelToken? cancel}) async =>
-      Course.fromJson(Json(await _api.get('courses/$courseId', cancel: cancel), _err));
+  Future<Course> course(String courseId, {CancelToken? cancel}) => _reads.run(() async {
+    final course = Course.fromJson(Json(await _api.get('courses/$courseId', cancel: cancel), _err));
+    if (course.id != courseId) throw ApiError.invalidResponse(_err);
+    return course;
+  });
 
-  /// Lớp đang mở của khoá (sheet chi tiết) - 20 lớp đầu như RN
-  Future<List<CourseClass>> classes(String courseId, {int pageSize = 20, CancelToken? cancel}) async => (await _page(
-    'courses/$courseId/classes',
-    {'page': 1, 'pageSize': pageSize},
-    CourseClass.fromJson,
-    cancel: cancel,
-  )).items;
+  /// Đọc đủ các lớp để sheet không bỏ mất lựa chọn ở trang sau.
+  Future<List<CourseClass>> classes(String courseId, {int pageSize = 100, CancelToken? cancel}) => readAllPages(
+    (page) async {
+      final result = await _page(
+        'courses/$courseId/classes',
+        {'page': page, 'pageSize': pageSize},
+        CourseClass.fromJson,
+        cancel: cancel,
+      );
+      if (result.items.any((c) => c.courseId != courseId)) {
+        throw ApiError.invalidResponse(_err);
+      }
+      return result;
+    },
+    idOf: (c) => c.id,
+    errorCode: _err,
+  );
 
   /// Lớp khai giảng sớm nhất (contract không đảm bảo thứ tự nên tự chọn)
-  Future<OpenClass?> nextClass(String courseId, {CancelToken? cancel}) async {
+  Future<OpenClass?> nextClass(String courseId, {CancelToken? cancel}) => _reads.run(() async {
     // home.service.ts: thứ tự/trang đầu không bảo đảm chứa lớp mở sớm nhất.
     final items = await readAllPages(
       (page) async {
@@ -72,12 +87,12 @@ class CoursesApi {
     if (items.isEmpty) return null;
     final first = items.reduce((a, b) => a.startDate.compareTo(b.startDate) <= 0 ? a : b);
     return OpenClass(startDate: first.startDate, deliveryMode: first.deliveryMode);
-  }
+  });
 
   /// Giờ bắt đầu các buổi của 1 lớp (tóm tắt lịch trong sheet)
   Future<List<DateTime>> classSessions(String classId, {CancelToken? cancel}) async {
     final j = Json(await _api.get('classes/$classId', cancel: cancel), _err);
-    j.uuid('id');
+    if (j.uuid('id') != classId) j.fail();
     return [
       for (final unit in j.list('units', (u) => u))
         for (final s in unit.list('sessions', (s) => s)) s.dateTime('startsAt'),

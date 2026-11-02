@@ -9,7 +9,8 @@ import 'payment_models.dart';
 /// Người dùng rời màn / app vào background / logout -> dừng im lặng.
 class PaymentCancelled implements Exception {}
 
-ApiError _timeout() => ApiError(status: 0, code: 'PAYMENT_CONFIRMATION_TIMEOUT', message: 'Confirmation time limit reached');
+ApiError _timeout() =>
+    ApiError(status: 0, code: 'PAYMENT_CONFIRMATION_TIMEOUT', message: 'Confirmation time limit reached');
 
 /// Token huỷ 1 phiên theo dõi: huỷ cả HTTP đang chạy lẫn các lần chờ.
 class WatchToken {
@@ -109,7 +110,7 @@ class PaymentWatcher {
 
     Payment missing(Payment p) => p.copyWith(status: PaymentStatus.PENDING, clearQr: true);
 
-    for (var attempt = 0;; attempt++) {
+    for (var attempt = 0; ; attempt++) {
       _assertActive();
       final rem = _linkLimit - elapsed();
       if (rem <= Duration.zero && last != null) return missing(last);
@@ -170,7 +171,9 @@ class PaymentWatcher {
           try {
             final payment = await _waitForLink();
             _assertActive();
-            if (payment.status == PaymentStatus.REQUIRES_REVIEW) onOrder(order.withPayment(payment));
+            if (payment.status == PaymentStatus.REQUIRES_REVIEW) {
+              onOrder(order.withPayment(payment));
+            }
             onPayment(payment);
             if (payment.status == PaymentStatus.SUCCEEDED || payment.status == PaymentStatus.REQUIRES_REVIEW) {
               order = await _read(payment);
@@ -187,7 +190,7 @@ class PaymentWatcher {
         }
       }
 
-      for (var attempt = 0;; attempt++) {
+      for (var attempt = 0; ; attempt++) {
         final delay = attempt < _pollDelays.length ? _pollDelays[attempt] : _pollDefault;
         final rem = _remaining();
         await token.sleep(delay < rem ? delay : rem);

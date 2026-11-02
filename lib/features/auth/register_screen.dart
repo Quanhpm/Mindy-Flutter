@@ -56,12 +56,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     setState(() => _pending = true);
     try {
-      await ref.read(authApiProvider).register(
-            displayName: _name.text,
-            email: _email.text,
-            password: _password.text,
-            phone: _phone.text,
-          );
+      await ref
+          .read(authApiProvider)
+          .register(displayName: _name.text, email: _email.text, password: _password.text, phone: _phone.text);
       if (!mounted) return;
       setState(() => _sentTo = _email.text.trim());
       for (final c in [_name, _email, _phone, _password, _confirm]) {
@@ -147,8 +144,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         if (_failure != null) FormFeedback(message: t(errorKey(_failure!)), requestId: requestIdOf(_failure!)),
         MindyButton(label: t('auth.register.submit'), loading: _pending, onPressed: _submit),
         const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text(t('auth.register.loginPrompt'), style: AppText.caption(AppColors.inkGray)),
             const SizedBox(width: 4),
@@ -160,20 +158,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   Widget _checkEmail(Translator t) => AuthShell(
-        title: t('auth.register.checkEmailTitle'),
-        description: t('auth.register.checkEmailDescription'),
-        children: [
-          if (_resent) FormFeedback(message: t('auth.register.resendSuccess'), success: true),
-          if (_resendError != null)
-            FormFeedback(message: t(errorKey(_resendError!)), requestId: requestIdOf(_resendError!)),
-          MindyButton(label: t('auth.register.backToLogin'), onPressed: () => context.go(Routes.login)),
-          const SizedBox(height: 12),
-          MindyButton(
-            label: t('auth.register.resend'),
-            variant: ButtonVariant.outline,
-            loading: _resending,
-            onPressed: _resend,
-          ),
-        ],
-      );
+    title: t('auth.register.checkEmailTitle'),
+    description: t('auth.register.checkEmailDescription'),
+    children: [
+      if (_resent) FormFeedback(message: t('auth.register.resendSuccess'), success: true),
+      if (_resendError != null)
+        FormFeedback(message: t(errorKey(_resendError!)), requestId: requestIdOf(_resendError!)),
+      MindyButton(label: t('auth.register.backToLogin'), onPressed: () => context.go(Routes.login)),
+      const SizedBox(height: 12),
+      MindyButton(
+        label: t('auth.register.resend'),
+        variant: ButtonVariant.outline,
+        loading: _resending,
+        onPressed: _resend,
+      ),
+    ],
+  );
 }

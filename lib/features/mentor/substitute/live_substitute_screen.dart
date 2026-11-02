@@ -5,6 +5,7 @@ import '../classes/classes_providers.dart';
 import '../attendance/attendance_sheet.dart';
 import '../schedule/schedule_providers.dart';
 import '../session/live_room_sheet.dart';
+import '../operations/session_edit_screens.dart';
 import 'substitute_screen.dart';
 
 class LiveMentorSubstituteScreen extends ConsumerWidget {
@@ -23,6 +24,7 @@ class LiveMentorSubstituteScreen extends ConsumerWidget {
       onRefresh: () async => refresh(),
       onRoom: (entry) => showMentorRoom(context, ref, entry),
       onAttendance: (entry) => showMentorAttendance(context, ref, entry),
+      onTools: (entry) => showMentorSessionTools(context, ref, entry),
     );
   }
 }

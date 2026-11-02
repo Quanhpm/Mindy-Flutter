@@ -1,3 +1,4 @@
+import '../operations/session_edit_screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -165,6 +166,14 @@ class _MentorClassDetailScreenState extends ConsumerState<MentorClassDetailScree
                             if (row.readContext && w.readReports && s.status == TeachingStatus.COMPLETED) ...[
                               const SizedBox(height: 8),
                               MentorSessionAttendanceTotals(classId: w.id, sessionId: s.id),
+                            ],
+                            if (row.readContext) ...[
+                              const SizedBox(height: 8),
+                              StaffButton(
+                                label: t('mentor.operations.tools'),
+                                outlined: true,
+                                onPressed: () => showMentorSessionTools(context, ref, entry(row)),
+                              ),
                             ],
                             if (todayAccessible && !w.readonly) ...[
                               const SizedBox(height: 12),

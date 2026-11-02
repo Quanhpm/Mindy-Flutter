@@ -11,6 +11,7 @@ import '../../../core/utils/format.dart';
 import '../classes/classes_providers.dart';
 import '../attendance/attendance_sheet.dart';
 import '../session/live_room_sheet.dart';
+import '../operations/session_edit_screens.dart';
 import 'schedule_providers.dart';
 import 'schedule_screen.dart';
 
@@ -77,6 +78,7 @@ class _LiveMentorScheduleScreenState extends ConsumerState<LiveMentorScheduleScr
           onRetry: refresh,
           onRoom: (entry) => showMentorRoom(context, ref, entry),
           onAttendance: (entry) => showMentorAttendance(context, ref, entry),
+          onTools: (entry) => showMentorSessionTools(context, ref, entry),
         );
       },
     );

@@ -30,7 +30,7 @@ void main() {
     await I18n.load();
   });
 
-  final fullEnrollment = Enrollment(
+  final fullEnrollment = const Enrollment(
     enrollmentId: 'enr-full',
     enrollmentStatus: EnrollmentStatus.ACTIVE,
     isHoldExpired: false,
@@ -53,7 +53,7 @@ void main() {
     order: null,
   );
 
-  final cashPreviewEnrollment = Enrollment(
+  final cashPreviewEnrollment = const Enrollment(
     enrollmentId: 'enr-cash',
     enrollmentStatus: EnrollmentStatus.PENDING_PAYMENT,
     isHoldExpired: false,
@@ -73,7 +73,7 @@ void main() {
     accessReason: AccessReason.PENDING_CASH,
     canViewClass: true,
     canViewSchedule: true,
-    order: const EnrollmentOrder(
+    order: EnrollmentOrder(
       orderId: 'ord-cash-1',
       orderCode: 'ORD-CASH',
       orderStatus: OrderStatus.PENDING,

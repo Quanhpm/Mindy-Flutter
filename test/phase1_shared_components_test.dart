@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mindy_flutter/core/i18n/i18n.dart';
-import 'package:mindy_flutter/core/router/routes.dart';
-import 'package:mindy_flutter/core/theme/app_colors.dart';
 import 'package:mindy_flutter/core/ui/ui.dart';
 import 'package:mindy_flutter/features/courses/course_tile.dart';
 import 'package:mindy_flutter/features/courses/courses_models.dart';
@@ -185,10 +182,10 @@ void main() {
     testWidgets('LearningLayout hiển thị BrandBar khi không có onBack và title khi có', (tester) async {
       await pumpScreen(
         tester,
-        LearningLayout(
+        const LearningLayout(
           prefix: 'test-learning',
           title: 'Lịch học',
-          children: const Text('Nội dung học tập'),
+          children: Text('Nội dung học tập'),
         ),
       );
       await tester.pumpAndSettle();
