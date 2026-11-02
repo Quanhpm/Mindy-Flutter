@@ -71,10 +71,10 @@ class LearningLayout extends ConsumerWidget {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: overlayStyle,
-      child: Container(
+      child: Scaffold(
         key: Key('$prefix-screen'),
-        color: AppColors.canvas,
-        child: SafeArea(
+        backgroundColor: AppColors.canvas,
+        body: SafeArea(
           top: true,
           bottom: true,
           child: Stack(
