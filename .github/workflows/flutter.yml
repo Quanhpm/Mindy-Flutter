@@ -1,0 +1,35 @@
+name: Flutter checks
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: flutter-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.4'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze --no-pub
+      - run: flutter test --no-pub
+      # Bản development nội bộ; không gắn URL/chữ ký production vào PR.
+      - run: flutter build apk --debug --no-pub --dart-define-from-file=env/dev.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mindy-android-development
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 7

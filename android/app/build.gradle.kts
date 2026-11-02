@@ -1,7 +1,26 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+// Không bao giờ dùng debug key cho release. File này bị .gitignore.
+val releaseKeysFile = rootProject.file("key.properties")
+val releaseKeys = Properties().apply {
+    if (releaseKeysFile.exists()) releaseKeysFile.inputStream().use { load(it) }
+}
+val signingFields = listOf("storeFile", "storePassword", "keyAlias", "keyPassword")
+val hasReleaseKeys = signingFields.all { !releaseKeys.getProperty(it).isNullOrBlank() }
+if (releaseKeysFile.exists() && !hasReleaseKeys) {
+    throw GradleException("Incomplete Android key.properties; fill all four signing fields.")
+}
+gradle.taskGraph.whenReady {
+    if (allTasks.any { it.project == project && it.name.endsWith("Release") } && !hasReleaseKeys &&
+        providers.gradleProperty("allowUnsignedRelease").orNull != "true") {
+        throw GradleException("Release signing is missing. Configure android/key.properties. For an explicitly unsigned verification build, set ORG_GRADLE_PROJECT_allowUnsignedRelease=true.")
+    }
 }
 
 android {
@@ -15,7 +34,7 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        // Giữ ID riêng để cài song song với bản React Native.
         applicationId = "vn.mindy.mindy_flutter"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
@@ -29,11 +48,19 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        if (hasReleaseKeys) {
+            create("release") {
+                storeFile = rootProject.file(releaseKeys.getProperty("storeFile"))
+                storePassword = releaseKeys.getProperty("storePassword")
+                keyAlias = releaseKeys.getProperty("keyAlias")
+                keyPassword = releaseKeys.getProperty("keyPassword")
+            }
+        }
+    }
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            if (hasReleaseKeys) signingConfig = signingConfigs.getByName("release")
         }
     }
 }

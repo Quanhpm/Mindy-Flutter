@@ -40,3 +40,6 @@ env/*.local.json
 setup.log
 check.log
 run.log
+
+# Ảnh chẩn đoán golden test, giữ baseline trong test/goldens/
+/test/failures/

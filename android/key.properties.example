@@ -1,0 +1,6 @@
+# Copy thành android/key.properties; không commit file thật hoặc keystore.
+# storeFile tính từ thư mục android/.
+storeFile=release.jks
+storePassword=
+keyAlias=mindy
+keyPassword=
