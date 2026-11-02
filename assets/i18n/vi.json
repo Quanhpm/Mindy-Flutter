@@ -1,0 +1,688 @@
+{
+  "boilerplate": {
+    "common_appName": {
+      "full": "Mindy Center",
+      "initials": "Mindy"
+    },
+    "common_error": "Đã xảy ra lỗi. Vui lòng thử lại.",
+    "screen_example": {
+      "hello_user": "Xin chào, tôi là {{name}}",
+      "title": "Chào mừng đến với $t(boilerplate.common_appName.full)",
+      "description": "Khám phá các chức năng mẫu bên dưới: gọi API, thay đổi giao diện và chuyển ngôn ngữ.",
+      "explore_features": "Khám phá chức năng",
+      "features": {
+        "api_integration": {
+          "title": "Kết nối API",
+          "description": "Kiểm tra kết nối đến máy chủ Mindy",
+          "button": "Thử kết nối API"
+        },
+        "theme_toggle": {
+          "title": "Giao diện",
+          "description": "Sử dụng giao diện sáng mặc định",
+          "button": "Dùng giao diện sáng"
+        },
+        "language_switch": {
+          "title": "Ngôn ngữ",
+          "description": "Chuyển đổi giữa tiếng Việt và tiếng Anh",
+          "button": "Đổi ngôn ngữ"
+        }
+      },
+      "api_messages": {
+        "success_title": "Thành công!",
+        "success_message": "Kết nối API thành công. Máy chủ Mindy đang hoạt động.",
+        "success_button": "Đồng ý",
+        "error_title": "Lỗi",
+        "error_message": "Không thể kết nối API ({{code}}, HTTP {{status}}). Vui lòng thử lại.",
+        "error_button": "Đồng ý"
+      },
+      "stats": {
+        "title": "Thông tin ứng dụng mẫu",
+        "components": "Thành phần",
+        "utilities": "Tiện ích",
+        "languages": "Ngôn ngữ",
+        "possibilities": "Khả năng"
+      }
+    },
+    "error_boundary": {
+      "title": "Đã xảy ra lỗi.",
+      "description": "Vui lòng thử lại sau.",
+      "cta": "Tải lại màn hình"
+    }
+  },
+  "common": {
+    "retry": "Thử lại",
+    "loading": "Đang tải",
+    "showPassword": "Hiện mật khẩu",
+    "hidePassword": "Ẩn mật khẩu",
+    "back": "Quay lại",
+    "requestId": "Mã hỗ trợ: {{id}}",
+    "close": "Đóng"
+  },
+  "errors": {
+    "generic": "Đã xảy ra lỗi. Vui lòng thử lại.",
+    "INVALID_CREDENTIALS": "Email hoặc mật khẩu không đúng.",
+    "MAIL_DELIVERY_UNAVAILABLE": "Dịch vụ email tạm ngừng. Vui lòng thử lại.",
+    "NETWORK_UNAVAILABLE": "Không có kết nối mạng. Kiểm tra kết nối rồi thử lại.",
+    "RATE_LIMIT_EXCEEDED": "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau."
+  },
+  "auth": {
+    "brandName": "Mindy Coding",
+    "integrationUnavailable": "Tính năng này sẽ khả dụng khi hoàn tất kết nối xác thực.",
+    "welcome": {
+      "title": "Chào mừng bạn!",
+      "description": "Mindy Coding đồng hành cùng bạn học lập trình.\nĐăng nhập hoặc tạo tài khoản để bắt đầu.",
+      "register": "Tạo tài khoản",
+      "login": "Đăng nhập"
+    },
+    "fields": {
+      "displayName": "Tên hiển thị",
+      "email": "Email",
+      "phone": "Điện thoại (tuỳ chọn)",
+      "password": "Mật khẩu",
+      "confirmPassword": "Xác nhận mật khẩu"
+    },
+    "validation": {
+      "required": "Vui lòng điền thông tin này.",
+      "email": "Nhập email hợp lệ, tối đa 320 ký tự.",
+      "passwordMin": "Mật khẩu cần ít nhất 6 ký tự.",
+      "passwordMax": "Mật khẩu tối đa 128 ký tự.",
+      "nameMax": "Tên hiển thị tối đa 150 ký tự.",
+      "phone": "Điện thoại cần từ 7 đến 32 ký tự.",
+      "confirmPassword": "Mật khẩu xác nhận chưa khớp.",
+      "serverField": "Thông tin chưa hợp lệ. Vui lòng kiểm tra lại."
+    },
+    "login": {
+      "title": "Đăng nhập",
+      "submit": "Đăng nhập",
+      "registerLink": "Chưa có tài khoản? Đăng ký",
+      "registerPrompt": "Chưa có tài khoản?",
+      "registerAction": "Đăng ký",
+      "slogan": "Khởi đầu nhỏ. Bứt phá lớn.",
+      "subtitle": "Đăng nhập bằng tài khoản Mindy của bạn",
+      "remember": "Ghi nhớ đăng nhập",
+      "submitting": "Đang đăng nhập…"
+    },
+    "register": {
+      "title": "Tạo tài khoản",
+      "description": "Học lập trình. Mở thế giới của bạn.",
+      "submit": "Đăng ký",
+      "loginLink": "Đã có tài khoản? Đăng nhập",
+      "checkEmailTitle": "Kiểm tra email",
+      "checkEmailDescription": "Nếu địa chỉ có thể đăng ký, email xác thực đã được gửi. Hãy kiểm tra hộp thư và thư rác.",
+      "backToLogin": "Về đăng nhập",
+      "resend": "Gửi lại email",
+      "resendSuccess": "Nếu địa chỉ có thể nhận email xác thực, email đã được gửi lại.",
+      "loginPrompt": "Đã có tài khoản?",
+      "loginAction": "Đăng nhập",
+      "ready": "Bạn đã sẵn sàng chưa?"
+    },
+    "placeholders": {
+      "email": "ten@email.com",
+      "password": "••••••••",
+      "displayName": "Họ và tên",
+      "loginEmail": "ten@mindy.vn",
+      "loginPassword": "Nhập mật khẩu"
+    },
+    "session": {
+      "error": "Chưa thể kiểm tra phiên đăng nhập. Vui lòng thử lại.",
+      "logout": "Đăng xuất",
+      "staff": "Sai tài khoản hoặc mật khẩu."
+    }
+  },
+  "home": {
+    "title": "Cứ thử. Bạn sẽ làm được.",
+    "greeting": "Xin chào, {{name}}",
+    "sections": {
+      "nextSession": "Buổi học tiếp theo",
+      "courses": "Khoá học nổi bật",
+      "compiler": "Viết code ngay trên điện thoại",
+      "about": "Về chúng tôi"
+    },
+    "actions": {
+      "join": "Vào lớp",
+      "explore": "Khám phá khoá học",
+      "course": "Xem khoá học {{title}}",
+      "cart": "Giỏ hàng",
+      "unavailable": "Tính năng sẽ có trong phiên bản sau.",
+      "previewClass": "Xem trước lớp"
+    },
+    "empty": {
+      "title": "Chưa có khoá học",
+      "description": "Các khoá học sẽ xuất hiện ở đây khi có dữ liệu."
+    },
+    "errorTitle": "Chưa thể tải nội dung",
+    "tabs": {
+      "courses": "Khoá học",
+      "schedule": "Lịch học",
+      "home": "Trang chủ",
+      "notifications": "Thông báo",
+      "account": "Tài khoản"
+    },
+    "carousel": {
+      "goToSlide": "Xem mục {{index}}: {{title}}"
+    },
+    "intro": {
+      "first": {
+        "title": "Khởi đầu của riêng bạn.",
+        "description": "Ai cũng có một điểm xuất phát. Bắt đầu từ điều cơ bản và đi theo nhịp học của mình.",
+        "action": "Cách bắt đầu"
+      },
+      "second": {
+        "title": "Không ai phải học một mình.",
+        "description": "Lớp tối đa 20 học viên, mentor theo sát từng bài tập và trả lời trong 24 giờ.",
+        "action": "Gặp mentor"
+      },
+      "third": {
+        "title": "Dự án đầu tiên sau 4 tuần.",
+        "description": "Mỗi khoá học kết thúc bằng một sản phẩm bạn có thể khoe với bạn bè.",
+        "action": "Xem dự án"
+      },
+      "headingBefore": "Có ",
+      "headingAccent": "nhiều cách",
+      "headingAfter": "\nđể bắt đầu.",
+      "slides": {
+        "start": {
+          "imageAlt": "Khởi đầu học lập trình"
+        },
+        "mentor": {
+          "imageAlt": "Học cùng mentor"
+        },
+        "project": {
+          "imageAlt": "Dự án của học viên"
+        }
+      }
+    },
+    "about": {
+      "notes": {
+        "first": {
+          "title": "Sáng học, tối dùng luôn",
+          "description": "Mỗi buổi học tại Mindy đều chia làm 2 phần:",
+          "oneBold": "Nạp kiến thức",
+          "oneText": "(Input): hiểu rõ kiến thức đó dùng khi nào, dùng như thế nào.",
+          "twoBold": "Ứng dụng kiến thức",
+          "twoText": "(Output): làm bài ngay trên compiler ⇒ mentor kiểm tra ⇒ học viên tự tin áp dụng vào dự án thật."
+        },
+        "second": {
+          "title": "Lớp nhỏ, mentor kèm sát",
+          "description": "Mỗi lớp tối đa 20 học viên để không ai bị bỏ lại phía sau:",
+          "oneBold": "Mentor theo sát",
+          "oneText": "chấm bài và góp ý cho từng dòng code.",
+          "twoBold": "Hỏi đáp trong 24 giờ",
+          "twoText": "mọi thắc mắc đều được trả lời trong vòng một ngày."
+        },
+        "third": {
+          "title": "Học theo cách của bạn",
+          "description": "Chọn hình thức phù hợp với lịch của mình:",
+          "oneBold": "Online",
+          "oneText": "học mọi lúc, mọi nơi qua lớp trực tuyến.",
+          "twoBold": "Offline",
+          "twoText": "gặp mentor và bạn học trực tiếp tại lớp."
+        }
+      },
+      "dash": "– "
+    },
+    "compiler": {
+      "action": "Thử compiler",
+      "illustration": "Kết quả minh hoạ, không chạy mã thật.",
+      "terminal": "mindy — zsh",
+      "benefits": {
+        "one": "Chạy code ngay, không cần cài đặt",
+        "two": "Chấm bài tự động sau mỗi lần nộp",
+        "three": "Gợi ý sửa lỗi dễ hiểu"
+      },
+      "running": "Đang chạy…",
+      "hello": "Xin chào, {{name}}!",
+      "complete": "Hoàn thành · 3/3 đạt",
+      "command": "$ mindy run main.py",
+      "test1": "✓ test 1   0.12s",
+      "test2": "✓ test 2   0.09s",
+      "test3": "✓ test 3   0.21s",
+      "prompt": "$ "
+    },
+    "footer": {
+      "tagline": "Học lập trình. Mở thế giới của bạn.",
+      "learn": "Học tập",
+      "contact": "hotro@mindycoding.vn · 1900 0000",
+      "copyright": "© 2026 Mindy Coding",
+      "myClasses": "Lớp của tôi"
+    },
+    "authRequired": "Đăng nhập với tài khoản học viên để mở trang chủ.",
+    "delivery": {
+      "ONLINE": "Online",
+      "OFFLINE": "Offline"
+    },
+    "starts": " · KG {{date}}",
+    "brand": {
+      "name": "Mindy",
+      "initial": "M",
+      "subtitle": "CODING"
+    }
+  },
+  "preview": {
+    "open": "Xem thử UI (development)",
+    "title": "Xem thử giao diện",
+    "description": "Dữ liệu minh hoạ; không tạo phiên đăng nhập hay gọi API.",
+    "auth": "Thử form Auth",
+    "home": "Student Home 2a",
+    "foundation": "Kiểm tra Foundation",
+    "success": "Thành công",
+    "loading": "Đang tải",
+    "empty": "Trống",
+    "error": "Lỗi",
+    "failure": "Mô phỏng lỗi",
+    "signedIn": "Đã kiểm tra callback đăng nhập ({{role}}). Không tạo phiên.",
+    "fixtureName": "Minh Anh",
+    "status": "Trạng thái: {{status}}",
+    "nextSession": "Buổi 3 · HTML & CSS",
+    "className": "Web cơ bản · WEB101-A",
+    "course0": "Web cơ bản: HTML, CSS",
+    "course1": "Python cho người mới",
+    "course2": "JavaScript thực chiến",
+    "course3": "Cấu trúc dữ liệu & giải thuật",
+    "action": "Đã nhận thao tác: {{name}}",
+    "reset": "Chọn lại màn hình",
+    "tools": "Công cụ xem thử",
+    "closeTools": "Thu gọn công cụ",
+    "toolsShort": "UI",
+    "courses": "Khoá học · Giỏ · QR"
+  },
+  "courses": {
+    "recommend": {
+      "title": "Gợi ý cho bạn",
+      "label": "Gợi ý: {{title}}",
+      "badge": "RECOMMEND",
+      "view": "Xem khoá học"
+    },
+    "meta": {
+      "startsAndPrice": "Khai giảng {{date}} · {{price}}"
+    },
+    "categories": {
+      "title": "Danh mục",
+      "all": "Tất cả"
+    },
+    "filter": {
+      "title": "Bộ lọc",
+      "mode": "Hình thức",
+      "all": "Tất cả",
+      "ONLINE": "Online",
+      "OFFLINE": "Offline",
+      "apply": "Xem {{count}} khoá học",
+      "reset": "Đặt lại"
+    },
+    "grid": {
+      "empty": "Không có khoá học phù hợp bộ lọc.",
+      "clearFilter": "Đặt lại bộ lọc"
+    },
+    "pagination": {
+      "page": "Trang {{page}}",
+      "previous": "Trang trước",
+      "next": "Trang sau",
+      "ellipsis": "…"
+    }
+  },
+  "courseSheet": {
+    "openClasses": "Lớp đang mở",
+    "classCount": "{{count}} lớp",
+    "seats": "còn {{count}} chỗ",
+    "full": "Hết chỗ",
+    "mentor": "Mentor {{name}}",
+    "pick": "Chọn lớp",
+    "picked": "✓ Đã chọn",
+    "empty": "Khoá học chưa có lớp mở.",
+    "more": "Xem thêm",
+    "buy": "Mua ngay",
+    "added": "Đã thêm lớp {{name}} vào giỏ",
+    "removed": "Đã bỏ {{name}} khỏi giỏ",
+    "unpickHint": "Bấm để bỏ chọn lớp",
+    "buyHint": "Thêm lớp vào giỏ và mở giỏ hàng",
+    "addToCart": "Thêm lớp đã chọn vào giỏ hàng"
+  },
+  "cart": {
+    "title": "Giỏ hàng ({{count}})",
+    "empty": "Giỏ hàng đang trống.",
+    "total": "Tổng cộng",
+    "checkout": "Thanh toán",
+    "checkoutPending": "Đang tạo đơn…",
+    "checkoutUnknown": "Không rõ đơn đã tạo chưa.",
+    "checkoutVerify": "Kiểm tra lại",
+    "item": {
+      "meta": "{{name}} · {{mode}} · KG {{date}}",
+      "priceChanged": "Giá đã thay đổi",
+      "unavailable": "Lớp không còn mở đăng ký — hãy xoá khỏi giỏ.",
+      "remove": "Xoá",
+      "removeLabel": "Xoá {{course}} {{name}} khỏi giỏ"
+    },
+    "errors": {
+      "CART_ITEM_ALREADY_EXISTS": "Lớp đã có trong giỏ.",
+      "CART_LIMIT_EXCEEDED": "Giỏ đã đủ 20 lớp.",
+      "CLASS_FULL": "Lớp đã hết chỗ.",
+      "CLASS_NOT_OPEN": "Lớp không còn mở đăng ký.",
+      "CLASS_NOT_FOUND": "Lớp không còn mở đăng ký.",
+      "CLASS_ALREADY_ENROLLED": "Bạn đã đăng ký hoặc đang được giữ chỗ ở lớp này.",
+      "CART_EMPTY": "Giỏ hàng đã trống.",
+      "unavailable": "Vui lòng xoá lớp không còn mua được trước khi thanh toán.",
+      "generic": "Không thực hiện được. Vui lòng thử lại."
+    }
+  },
+  "payment": {
+    "title": "Thanh toán",
+    "amountLabel": "Số tiền cần thanh toán",
+    "expiresIn": "Hết hạn sau {{time}}",
+    "expired": "Đã hết hạn",
+    "qr": {
+      "label": "Mã QR thanh toán {{amount}}",
+      "caption": "Quét mã bằng app ngân hàng",
+      "creating": "Đang tạo mã thanh toán…",
+      "missing": "Chưa có mã QR cho đơn này.",
+      "expired": "Mã đã hết hạn"
+    },
+    "info": {
+      "courses": "Khoá học",
+      "bank": "Ngân hàng",
+      "account": "Số tài khoản",
+      "owner": "Chủ tài khoản",
+      "amount": "Số tiền",
+      "note": "Nội dung",
+      "copy": "Sao chép"
+    },
+    "note": "Vui lòng giữ nguyên nội dung chuyển khoản để hệ thống tự xác nhận đơn hàng.",
+    "copied": "Đã sao chép {{label}}",
+    "goCourses": "Về trang Khoá học",
+    "leave": {
+      "title": "Rời trang thanh toán?",
+      "message": "Đơn vẫn giữ chỗ tới {{time}}. Hiện chưa mở lại được mã QR sau khi rời trang.",
+      "stay": "Ở lại",
+      "confirm": "Rời đi"
+    },
+    "errors": {
+      "PAYMENT_UNAVAILABLE": "Cổng thanh toán tạm ngưng, thử lại sau.",
+      "PAYMENT_AMOUNT_INVALID": "Không tạo được mã thanh toán.",
+      "ORDER_NOT_FOUND": "Không tìm thấy đơn hàng.",
+      "ORDER_ACCESS_DENIED": "Bạn không có quyền xem đơn hàng.",
+      "generic": "Không tải được thông tin thanh toán.",
+      "PAYMENT_REQUIRES_REVIEW": "Giao dịch đang được đối soát. Vui lòng không thanh toán lại.",
+      "PAYMENT_CONFIRMATION_TIMEOUT": "Chưa nhận được xác nhận thanh toán. Nếu đã chuyển khoản, vui lòng không thanh toán lại; hãy thử kiểm tra trạng thái đơn."
+    },
+    "minute": "Mã QR còn hiệu lực 1 phút.",
+    "result": {
+      "PAID": {
+        "title": "Thanh toán thành công",
+        "description": "Đơn hàng đã được xác nhận. Cảm ơn bạn đã đồng hành cùng Mindy!"
+      },
+      "CANCELLED": {
+        "title": "Thanh toán không thành công",
+        "description": "Đơn hàng đã được huỷ. Bạn có thể chọn lớp và tạo đơn mới."
+      },
+      "EXPIRED": {
+        "title": "Đơn thanh toán đã hết hạn",
+        "description": "Đơn hàng đã hết hạn giữ chỗ. Bạn có thể chọn lớp và tạo đơn mới."
+      },
+      "actions": {
+        "home": "Về trang chủ",
+        "retry": "Thử lại"
+      },
+      "retryHint": "Giữ chỗ đã kết thúc. Giá và số chỗ sẽ được cập nhật khi bạn chọn lại lớp.",
+      "orderLabel": "Mã đơn hàng",
+      "totalLabel": "Tổng thanh toán",
+      "preview": "Kết quả thanh toán (dữ liệu mẫu)",
+      "previewDescription": "Bản xem trước dùng dữ liệu mẫu, không xác nhận thanh toán thật.",
+      "previewExit": "Về menu xem trước"
+    }
+  },
+  "learning": {
+    "back": "Quay lại",
+    "cancel": "Huỷ",
+    "stale": "Đang hiển thị dữ liệu cũ",
+    "refreshing": "Đang làm mới…",
+    "delivery": {
+      "ONLINE": "Trực tuyến",
+      "OFFLINE": "Tại trung tâm"
+    },
+    "sessionStatus": {
+      "SCHEDULED": "Đã lên lịch",
+      "IN_PROGRESS": "Đang diễn ra",
+      "COMPLETED": "Đã kết thúc",
+      "CANCELLED": "Đã huỷ"
+    },
+    "classStatus": {
+      "DRAFT": "Đang chuẩn bị",
+      "OPEN": "Đang mở",
+      "IN_PROGRESS": "Đang học",
+      "COMPLETED": "Đã kết thúc",
+      "CANCELLED": "Đã huỷ"
+    }
+  },
+  "schedule": {
+    "month": "Tháng {{month}}, {{year}}",
+    "goToday": "Chạm để về tuần hiện tại và chọn hôm nay",
+    "classCode": "Mã lớp",
+    "delivery": {
+      "ONLINE": "Online",
+      "OFFLINE": "Offline"
+    },
+    "room": "Phòng: {{room}}",
+    "mentor": "Giảng viên: {{name}}",
+    "timeSeparator": "–",
+    "weekdays": [
+      "Thứ 2",
+      "Thứ 3",
+      "Thứ 4",
+      "Thứ 5",
+      "Thứ 6",
+      "Thứ 7",
+      "Chủ nhật"
+    ],
+    "title": "Lịch học",
+    "previous": "‹",
+    "previousWeek": "Tuần trước",
+    "next": "›",
+    "nextWeek": "Tuần sau",
+    "week": "{{from}} – {{to}}",
+    "today": "Hôm nay",
+    "dayLabel": "{{day}}, {{count}} buổi học. {{today}}",
+    "count": "{{count}} buổi",
+    "days": [
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7",
+      "CN"
+    ],
+    "noSessionsOnDay": "Không có buổi học ngày {{day}}.",
+    "state": {
+      "empty": "Tuần này chưa có buổi học",
+      "description": "Lịch sẽ xuất hiện khi lớp có buổi học được cấp quyền."
+    }
+  },
+  "account": {
+    "orders": "Đơn hàng của tôi",
+    "editProfile": "Chỉnh sửa hồ sơ",
+    "certificates": "Chứng chỉ",
+    "attendance": "Lịch sử điểm danh",
+    "push": "Thông báo đẩy",
+    "help": "Trợ giúp",
+    "policy": "Điều khoản & chính sách",
+    "changeAvatar": "Thay ảnh đại diện",
+    "unavailable": "Tính năng chưa khả dụng",
+    "title": "Tài khoản",
+    "avatar": "Ảnh đại diện bằng chữ của {{name}}",
+    "profile": "Thông tin cá nhân",
+    "notUpdated": "Chưa cập nhật",
+    "language": "Ngôn ngữ",
+    "languages": {
+      "vi-VN": "Tiếng Việt",
+      "en-EN": "English"
+    },
+    "fields": {
+      "displayName": "Họ và tên",
+      "email": "Email",
+      "phone": "Điện thoại",
+      "role": "Vai trò"
+    },
+    "roles": {
+      "STUDENT": "Học viên",
+      "MENTOR": "Giảng viên",
+      "MANAGER": "Quản lý",
+      "ADMIN": "Quản trị viên"
+    },
+    "logout": "Đăng xuất",
+    "confirmLogout": "Bạn muốn đăng xuất?",
+    "state": {
+      "empty": "Không có thông tin tài khoản",
+      "description": "Vui lòng tải lại thông tin phiên."
+    }
+  },
+  "myClasses": {
+    "count": "{{count}} lớp",
+    "historyTitle": "Lịch sử lớp học",
+    "switchView": "Chuyển giữa lớp hiện tại và lịch sử",
+    "collapseSymbol": "⌄",
+    "title": "Lớp của tôi",
+    "view": {
+      "current": "Hiện tại",
+      "history": "Lịch sử"
+    },
+    "loaded": "{{count}} lớp đã tải",
+    "open": "Xem lớp học",
+    "preview": "Xem trước",
+    "resume": "Tiếp tục thanh toán",
+    "review": "Đang đối soát",
+    "expires": "Thời hạn: {{date}}",
+    "explore": "Khám phá khoá học",
+    "loadMore": "Tải thêm",
+    "moreError": "Chưa tải đủ danh sách. Vui lòng thử lại.",
+    "state": {
+      "empty": "Chưa có lớp trong danh sách",
+      "description": "Lớp được nhóm theo khoá học bạn đăng ký."
+    },
+    "empty": {
+      "current": "Bạn chưa có lớp trong danh sách hiện tại.",
+      "history": "Bạn chưa có lịch sử đăng ký."
+    },
+    "access": {
+      "ACTIVE_ENROLLMENT": "Được truy cập đầy đủ",
+      "PENDING_CASH": "Chờ xác nhận tiền mặt — chỉ xem trước",
+      "PENDING_PAYOS": "Chờ thanh toán",
+      "HOLD_EXPIRED": "Hết hạn giữ chỗ",
+      "ENROLLMENT_CANCELLED": "Đã huỷ đăng ký",
+      "ENROLLMENT_COMPLETED": "Đã hoàn thành",
+      "CLASS_CANCELLED": "Lớp đã huỷ",
+      "STATE_MISMATCH": "Thông tin lớp chưa đồng bộ. Vui lòng liên hệ trung tâm."
+    }
+  },
+  "classDetail": {
+    "session": {
+      "date": "Ngày học",
+      "time": "Thời gian",
+      "room": "Phòng",
+      "heading": "{{code}} · Buổi {{number}}/{{total}}",
+      "unit": "Chương: {{title}}",
+      "content": "Nội dung buổi học",
+      "noContent": "Nội dung chi tiết của buổi học chưa được cung cấp.",
+      "objectives": "Mục tiêu",
+      "noObjectives": "Mục tiêu buổi học chưa được cung cấp.",
+      "materials": "Tài liệu"
+    },
+    "sessionsLabel": "Buổi học",
+    "startDate": "Bắt đầu",
+    "endDate": "Kết thúc",
+    "deliveryLabel": "Hình thức",
+    "mentorLabel": "Giảng viên",
+    "participants": {
+      "open": "Xem giáo viên và học viên",
+      "mentorClass": "Giảng viên lớp {{code}}",
+      "students": "Học viên",
+      "pending": "Danh sách học viên hiện chưa được cung cấp."
+    },
+    "more": "Xem thêm",
+    "less": "Thu gọn",
+    "title": "Chi tiết lớp học",
+    "preview": "Đang chờ xác nhận thanh toán tiền mặt — chỉ xem trước",
+    "noMentor": "Chưa có giảng viên",
+    "noRoom": "Chưa có thông tin phòng",
+    "sessionCount": "{{count}} buổi học",
+    "sessionNumber": "Buổi {{number}}",
+    "rowToday": "Hôm nay",
+    "rowUpcoming": "Sắp học",
+    "noUnits": "Lớp chưa có chương hoặc buổi học.",
+    "missingSession": "Buổi học không còn trong lịch lớp.",
+    "join": "Vào Google Meet",
+    "linkError": "Không mở được liên kết. Vui lòng thử lại.",
+    "denied": "Bạn chưa được truy cập lớp này",
+    "notFound": "Không tìm thấy lớp",
+    "returnToList": "Vui lòng quay về danh sách để tải lại quyền truy cập.",
+    "state": {
+      "empty": "Chưa có chi tiết lớp",
+      "description": "Vui lòng quay lại danh sách lớp."
+    }
+  },
+  "learningPreview": {
+    "nextCourse": "Lập trình web nâng cao",
+    "title": "Xem thử Phase 3",
+    "schedule": "Lịch học",
+    "account": "Tài khoản",
+    "classes": "Lớp của tôi",
+    "success": "Có dữ liệu",
+    "loading": "Đang tải",
+    "empty": "Trống",
+    "error": "Lỗi",
+    "course": "Lập trình ứng dụng web",
+    "class": "Lớp Web buổi tối",
+    "unit": "Nền tảng lập trình",
+    "session": "Làm quen với ứng dụng web",
+    "mentor": "Giảng viên mẫu",
+    "name": "Học viên Mindy",
+    "exit": "Về menu xem thử",
+    "openTools": "Trạng thái",
+    "logoutError": "Mô phỏng lỗi đăng xuất"
+  },
+  "staff": {
+    "close": "Đóng",
+    "comingSoon": "Tính năng đang được phát triển",
+    "comingSoonDescription": "Màn hình này sẽ có trong giai đoạn {{phase}} của kế hoạch Mentor."
+  },
+  "mentor": {
+    "roleChip": "Mentor",
+    "notifications": "Thông báo",
+    "account": {
+      "title": "Tài khoản",
+      "logout": "Đăng xuất",
+      "logoutError": "Chưa đăng xuất được. Vui lòng thử lại."
+    },
+    "home": {
+      "nextTitle": "Lịch dạy hôm nay",
+      "nextDescription": "Buổi dạy tiếp theo và nút vào Google Meet sẽ hiện ở đây.",
+      "viewSchedule": "Xem lịch",
+      "favorites": "Tiện ích yêu thích",
+      "edit": "Sửa",
+      "done": "Xong",
+      "favCount": "{{count}}/6 · chạm để thêm/bớt",
+      "recent": "Tính năng gần đây",
+      "new": "Tính năng mới",
+      "viewAll": "Xem tất cả",
+      "fixed": "Tiện ích chính, không thể bỏ",
+      "maxFav": "Tối đa 6 tiện ích yêu thích"
+    },
+    "utilities": {
+      "title": "Tất cả tiện ích",
+      "count": "{{count}} tiện ích",
+      "search": "Tìm tiện ích",
+      "empty": "Không tìm thấy tiện ích",
+      "newBadge": "MỚI"
+    },
+    "util": {
+      "schedule": "Lịch dạy",
+      "classes": "Lớp phụ trách",
+      "attendance": "Điểm danh",
+      "room": "Vào phòng học",
+      "students": "Học viên",
+      "materials": "Tài liệu",
+      "upload": "Tải file lên",
+      "substitute": "Buổi dạy thay",
+      "sync": "Đồng bộ sĩ số",
+      "sessionOnly": "Mở từ buổi đang dạy trong Lịch dạy"
+    }
+  }
+}

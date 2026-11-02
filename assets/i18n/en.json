@@ -1,0 +1,688 @@
+{
+  "boilerplate": {
+    "common_appName": {
+      "full": "React Native Boilerplate",
+      "initials": "RNB"
+    },
+    "common_error": "Oops! Something went wrong.",
+    "screen_example": {
+      "hello_user": "Hi, my name is {{name}}",
+      "title": "Welcome on The $t(boilerplate.common_appName.full)",
+      "description": "Do you want to discover some features? Just click on one of the three buttons at the bottom of the screen. The first allows you to call a REST API. The second lets you change the theme color. And the third allows you to change the language.",
+      "explore_features": "Explore Features",
+      "features": {
+        "api_integration": {
+          "title": "API Integration",
+          "description": "Check the connection to the Mindy server",
+          "button": "Try API Integration"
+        },
+        "theme_toggle": {
+          "title": "Theme Toggle",
+          "description": "Use the default light appearance",
+          "button": "Use light theme"
+        },
+        "language_switch": {
+          "title": "Language Switch",
+          "description": "Toggle between available languages",
+          "button": "Try Language Switch"
+        }
+      },
+      "api_messages": {
+        "success_title": "Success!",
+        "success_message": "API connected successfully. The Mindy server is running.",
+        "success_button": "OK",
+        "error_title": "Error",
+        "error_message": "Cannot connect to the API ({{code}}, HTTP {{status}}). Please try again.",
+        "error_button": "OK"
+      },
+      "stats": {
+        "title": "Boilerplate Stats",
+        "components": "Components",
+        "utilities": "Utilities",
+        "languages": "Languages",
+        "possibilities": "Possibilities"
+      }
+    },
+    "error_boundary": {
+      "title": "Oops! Something went wrong.",
+      "description": "We are sorry for the inconvenience. Please try again later.",
+      "cta": "Reload the screen"
+    }
+  },
+  "common": {
+    "retry": "Try again",
+    "loading": "Loading",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "back": "Back",
+    "requestId": "Support reference: {{id}}",
+    "close": "Close"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "INVALID_CREDENTIALS": "The email or password is incorrect.",
+    "MAIL_DELIVERY_UNAVAILABLE": "Email is temporarily unavailable. Please try again.",
+    "NETWORK_UNAVAILABLE": "You are offline. Check your connection and try again.",
+    "RATE_LIMIT_EXCEEDED": "Too many requests. Please try again later."
+  },
+  "auth": {
+    "brandName": "Mindy Coding",
+    "integrationUnavailable": "This feature will be available after authentication is connected.",
+    "welcome": {
+      "title": "Welcome!",
+      "description": "Mindy Coding is here to help you learn to code.\nSign in or create an account to get started.",
+      "register": "Create an account",
+      "login": "Sign in"
+    },
+    "fields": {
+      "displayName": "Display name",
+      "email": "Email",
+      "phone": "Phone (optional)",
+      "password": "Password",
+      "confirmPassword": "Confirm password"
+    },
+    "validation": {
+      "required": "Please fill in this field.",
+      "email": "Enter a valid email, up to 320 characters.",
+      "passwordMin": "Use at least 6 characters.",
+      "passwordMax": "Use no more than 128 characters.",
+      "nameMax": "Use no more than 150 characters.",
+      "phone": "Use between 7 and 32 characters.",
+      "confirmPassword": "The passwords do not match.",
+      "serverField": "Please check this information and try again."
+    },
+    "login": {
+      "title": "Sign in",
+      "submit": "Sign in",
+      "registerLink": "New here? Create an account",
+      "registerPrompt": "New here?",
+      "registerAction": "Sign up",
+      "slogan": "Start small. Grow big.",
+      "subtitle": "Sign in with your Mindy account",
+      "remember": "Remember me",
+      "submitting": "Signing in…"
+    },
+    "register": {
+      "title": "Create an account",
+      "description": "Learn to code. Open your world.",
+      "submit": "Create account",
+      "loginLink": "Already have an account? Sign in",
+      "checkEmailTitle": "Check your email",
+      "checkEmailDescription": "If the address can be registered, a verification email has been sent. Check your inbox and spam folder.",
+      "backToLogin": "Back to sign in",
+      "resend": "Resend email",
+      "resendSuccess": "If the address can receive a verification email, another email has been sent.",
+      "loginPrompt": "Already have an account?",
+      "loginAction": "Sign in",
+      "ready": "Are you ready?"
+    },
+    "placeholders": {
+      "email": "name@email.com",
+      "password": "••••••••",
+      "displayName": "Full name",
+      "loginEmail": "name@mindy.vn",
+      "loginPassword": "Enter your password"
+    },
+    "session": {
+      "error": "We could not verify your session. Please try again.",
+      "logout": "Sign out",
+      "staff": "Incorrect account or password."
+    }
+  },
+  "home": {
+    "title": "Give it a try. You can do it.",
+    "greeting": "Hello, {{name}}",
+    "sections": {
+      "nextSession": "Your next session",
+      "courses": "Featured courses",
+      "compiler": "Write code on your phone",
+      "about": "About us"
+    },
+    "actions": {
+      "join": "Open class",
+      "explore": "Explore courses",
+      "course": "View course {{title}}",
+      "cart": "Shopping cart",
+      "unavailable": "Available in a future version.",
+      "previewClass": "Preview class"
+    },
+    "empty": {
+      "title": "No courses yet",
+      "description": "Courses will appear here when data is available."
+    },
+    "errorTitle": "Unable to load content",
+    "tabs": {
+      "courses": "Courses",
+      "schedule": "Schedule",
+      "home": "Home",
+      "notifications": "Notifications",
+      "account": "Account"
+    },
+    "carousel": {
+      "goToSlide": "View item {{index}}: {{title}}"
+    },
+    "intro": {
+      "first": {
+        "title": "Your own beginning.",
+        "description": "Everyone starts somewhere. Begin with the basics and learn at your own pace.",
+        "action": "Getting started"
+      },
+      "second": {
+        "title": "Nobody learns alone.",
+        "description": "Classes of up to 20 learners, with mentors reviewing every exercise and replying within 24 hours.",
+        "action": "Meet the mentors"
+      },
+      "third": {
+        "title": "Your first project in 4 weeks.",
+        "description": "Finish each course with something you can show your friends.",
+        "action": "View projects"
+      },
+      "headingBefore": "There are ",
+      "headingAccent": "many ways",
+      "headingAfter": "\nto begin.",
+      "slides": {
+        "start": {
+          "imageAlt": "Starting to code"
+        },
+        "mentor": {
+          "imageAlt": "Learning with a mentor"
+        },
+        "project": {
+          "imageAlt": "Student project"
+        }
+      }
+    },
+    "about": {
+      "notes": {
+        "first": {
+          "title": "Learn today, use it tonight",
+          "description": "Every Mindy lesson has two parts:",
+          "oneBold": "Learn",
+          "oneText": "(Input): understand when and how to use each concept.",
+          "twoBold": "Apply",
+          "twoText": "(Output): practise in the compiler, receive mentor feedback, then use it in a real project."
+        },
+        "second": {
+          "title": "Small classes, close guidance",
+          "description": "Up to 20 learners per class so nobody is left behind:",
+          "oneBold": "Close mentoring",
+          "oneText": "with exercise reviews and feedback on your code.",
+          "twoBold": "Answers within 24 hours",
+          "twoText": "so your questions never hold you back for long."
+        },
+        "third": {
+          "title": "Learn your way",
+          "description": "Choose the format that fits your schedule:",
+          "oneBold": "Online",
+          "oneText": "learn from anywhere in a virtual class.",
+          "twoBold": "In person",
+          "twoText": "meet your mentor and classmates in the classroom."
+        }
+      },
+      "dash": "– "
+    },
+    "compiler": {
+      "action": "Try the compiler",
+      "illustration": "Illustration only; no code is executed.",
+      "terminal": "mindy — zsh",
+      "benefits": {
+        "one": "Run code without installing anything",
+        "two": "Automatic checks after each submission",
+        "three": "Easy-to-understand fixes"
+      },
+      "running": "Running…",
+      "hello": "Hello, {{name}}!",
+      "complete": "Complete · 3/3 passed",
+      "command": "$ mindy run main.py",
+      "test1": "✓ test 1   0.12s",
+      "test2": "✓ test 2   0.09s",
+      "test3": "✓ test 3   0.21s",
+      "prompt": "$ "
+    },
+    "footer": {
+      "tagline": "Learn to code. Open your world.",
+      "learn": "Learning",
+      "contact": "hotro@mindycoding.vn · 1900 0000",
+      "copyright": "© 2026 Mindy Coding",
+      "myClasses": "My classes"
+    },
+    "authRequired": "Sign in with a student account to open Home.",
+    "delivery": {
+      "ONLINE": "Online",
+      "OFFLINE": "Offline"
+    },
+    "starts": " · Starts {{date}}",
+    "brand": {
+      "name": "Mindy",
+      "initial": "M",
+      "subtitle": "CODING"
+    }
+  },
+  "preview": {
+    "open": "Preview UI (development)",
+    "title": "UI preview",
+    "description": "Illustrative data; no session is created and no API is called.",
+    "auth": "Try Auth forms",
+    "home": "Student Home 2a",
+    "foundation": "Check Foundation",
+    "success": "Success",
+    "loading": "Loading",
+    "empty": "Empty",
+    "error": "Error",
+    "failure": "Simulate an error",
+    "signedIn": "Sign-in callback checked ({{role}}). No session created.",
+    "fixtureName": "Minh Anh",
+    "status": "State: {{status}}",
+    "nextSession": "Session 3 · HTML & CSS",
+    "className": "Web basics · WEB101-A",
+    "course0": "Web basics: HTML, CSS",
+    "course1": "Python for beginners",
+    "course2": "Practical JavaScript",
+    "course3": "Data structures & algorithms",
+    "action": "Action received: {{name}}",
+    "reset": "Choose another screen",
+    "tools": "Preview tools",
+    "closeTools": "Close preview tools",
+    "toolsShort": "UI",
+    "courses": "Courses · Cart · QR"
+  },
+  "courses": {
+    "recommend": {
+      "title": "Recommended for you",
+      "label": "Recommended: {{title}}",
+      "badge": "RECOMMEND",
+      "view": "View course"
+    },
+    "meta": {
+      "startsAndPrice": "Starts {{date}} · {{price}}"
+    },
+    "categories": {
+      "title": "Categories",
+      "all": "All"
+    },
+    "filter": {
+      "title": "Filters",
+      "mode": "Delivery mode",
+      "all": "All",
+      "ONLINE": "Online",
+      "OFFLINE": "Offline",
+      "apply": "View {{count}} courses",
+      "reset": "Reset"
+    },
+    "grid": {
+      "empty": "No courses match your filters.",
+      "clearFilter": "Reset filters"
+    },
+    "pagination": {
+      "page": "Page {{page}}",
+      "previous": "Previous page",
+      "next": "Next page",
+      "ellipsis": "…"
+    }
+  },
+  "courseSheet": {
+    "openClasses": "Open classes",
+    "classCount": "{{count}} classes",
+    "seats": "{{count}} seats left",
+    "full": "Full",
+    "mentor": "Mentor {{name}}",
+    "pick": "Choose class",
+    "picked": "✓ Selected",
+    "empty": "No open classes for this course.",
+    "more": "Show more",
+    "buy": "Buy now",
+    "added": "Added {{name}} to cart",
+    "removed": "Removed {{name}} from cart",
+    "unpickHint": "Tap to deselect class",
+    "buyHint": "Add a class and open your cart",
+    "addToCart": "Add selected class to cart"
+  },
+  "cart": {
+    "title": "Cart ({{count}})",
+    "empty": "Your cart is empty.",
+    "total": "Total",
+    "checkout": "Checkout",
+    "checkoutPending": "Creating order…",
+    "checkoutUnknown": "The order may have been created.",
+    "checkoutVerify": "Check again",
+    "item": {
+      "meta": "{{name}} · {{mode}} · Starts {{date}}",
+      "priceChanged": "Price has changed",
+      "unavailable": "This class is unavailable — remove it from your cart.",
+      "remove": "Remove",
+      "removeLabel": "Remove {{course}} {{name}} from cart"
+    },
+    "errors": {
+      "CART_ITEM_ALREADY_EXISTS": "This class is already in your cart.",
+      "CART_LIMIT_EXCEEDED": "Your cart already contains 20 classes.",
+      "CLASS_FULL": "This class is full.",
+      "CLASS_NOT_OPEN": "This class is no longer open.",
+      "CLASS_NOT_FOUND": "This class is no longer open.",
+      "CLASS_ALREADY_ENROLLED": "You are already enrolled or have a seat held in this class.",
+      "CART_EMPTY": "Your cart is now empty.",
+      "unavailable": "Remove unavailable classes before checkout.",
+      "generic": "Unable to complete the action. Please try again."
+    }
+  },
+  "payment": {
+    "title": "Payment",
+    "amountLabel": "Amount to pay",
+    "expiresIn": "Expires in {{time}}",
+    "expired": "Expired",
+    "qr": {
+      "label": "Payment QR code for {{amount}}",
+      "caption": "Scan with your banking app",
+      "creating": "Creating payment QR code…",
+      "missing": "No QR code is available for this order.",
+      "expired": "QR code expired"
+    },
+    "info": {
+      "courses": "Courses",
+      "bank": "Bank",
+      "account": "Account number",
+      "owner": "Account name",
+      "amount": "Amount",
+      "note": "Reference",
+      "copy": "Copy"
+    },
+    "note": "Keep the transfer reference unchanged so your payment can be confirmed automatically.",
+    "copied": "Copied {{label}}",
+    "goCourses": "Back to Courses",
+    "leave": {
+      "title": "Leave payment?",
+      "message": "Your seats are held until {{time}}. You cannot reopen this QR code after leaving yet.",
+      "stay": "Stay",
+      "confirm": "Leave"
+    },
+    "errors": {
+      "PAYMENT_UNAVAILABLE": "Payment service is unavailable. Try again later.",
+      "PAYMENT_AMOUNT_INVALID": "Unable to create a payment QR code.",
+      "ORDER_NOT_FOUND": "Order not found.",
+      "ORDER_ACCESS_DENIED": "You cannot access this order.",
+      "generic": "Unable to load payment information.",
+      "PAYMENT_REQUIRES_REVIEW": "This transaction is under review. Please do not pay again.",
+      "PAYMENT_CONFIRMATION_TIMEOUT": "Payment has not been confirmed. If you have transferred funds, do not pay again; check the order status."
+    },
+    "minute": "Your QR code expires in one minute.",
+    "result": {
+      "PAID": {
+        "title": "Payment successful",
+        "description": "Your order has been confirmed. Thank you for learning with Mindy!"
+      },
+      "CANCELLED": {
+        "title": "Payment unsuccessful",
+        "description": "The order was cancelled. You can select a class and place a new order."
+      },
+      "EXPIRED": {
+        "title": "Payment order expired",
+        "description": "The seat reservation has expired. You can select a class and place a new order."
+      },
+      "actions": {
+        "home": "Go to Home",
+        "retry": "Try again"
+      },
+      "retryHint": "Your reservation has ended. Prices and availability will be updated when you select a class again.",
+      "orderLabel": "Order reference",
+      "totalLabel": "Total payment",
+      "preview": "Payment results (sample data)",
+      "previewDescription": "This preview uses sample data and does not confirm a real payment.",
+      "previewExit": "Back to preview menu"
+    }
+  },
+  "learning": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "stale": "Showing previous data",
+    "refreshing": "Refreshing…",
+    "delivery": {
+      "ONLINE": "Online",
+      "OFFLINE": "At the center"
+    },
+    "sessionStatus": {
+      "SCHEDULED": "Scheduled",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Ended",
+      "CANCELLED": "Cancelled"
+    },
+    "classStatus": {
+      "DRAFT": "Preparing",
+      "OPEN": "Open",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Ended",
+      "CANCELLED": "Cancelled"
+    }
+  },
+  "schedule": {
+    "month": "{{month}}, {{year}}",
+    "goToday": "Tap to return to this week and select today",
+    "classCode": "Class code",
+    "delivery": {
+      "ONLINE": "Online",
+      "OFFLINE": "Offline"
+    },
+    "room": "Room: {{room}}",
+    "mentor": "Mentor: {{name}}",
+    "timeSeparator": "–",
+    "weekdays": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ],
+    "title": "Schedule",
+    "previous": "‹",
+    "previousWeek": "Previous week",
+    "next": "›",
+    "nextWeek": "Next week",
+    "week": "{{from}} – {{to}}",
+    "today": "Today",
+    "dayLabel": "{{day}}, {{count}} sessions. {{today}}",
+    "count": "{{count}} sessions",
+    "days": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ],
+    "noSessionsOnDay": "No sessions on {{day}}.",
+    "state": {
+      "empty": "No sessions this week",
+      "description": "Sessions appear when your classes grant schedule access."
+    }
+  },
+  "account": {
+    "orders": "My orders",
+    "editProfile": "Edit profile",
+    "certificates": "Certificates",
+    "attendance": "Attendance history",
+    "push": "Push notifications",
+    "help": "Help",
+    "policy": "Terms & policies",
+    "changeAvatar": "Change avatar",
+    "unavailable": "This feature is not available yet",
+    "title": "Account",
+    "avatar": "Initials avatar for {{name}}",
+    "profile": "Personal information",
+    "notUpdated": "Not provided",
+    "language": "Language",
+    "languages": {
+      "vi-VN": "Tiếng Việt",
+      "en-EN": "English"
+    },
+    "fields": {
+      "displayName": "Full name",
+      "email": "Email",
+      "phone": "Phone",
+      "role": "Role"
+    },
+    "roles": {
+      "STUDENT": "Student",
+      "MENTOR": "Mentor",
+      "MANAGER": "Manager",
+      "ADMIN": "Administrator"
+    },
+    "logout": "Log out",
+    "confirmLogout": "Log out of your account?",
+    "state": {
+      "empty": "Account information unavailable",
+      "description": "Please reload your session information."
+    }
+  },
+  "myClasses": {
+    "count": "{{count}} classes",
+    "historyTitle": "Class history",
+    "switchView": "Switch between current classes and history",
+    "collapseSymbol": "⌄",
+    "title": "My classes",
+    "view": {
+      "current": "Current",
+      "history": "History"
+    },
+    "loaded": "{{count}} classes loaded",
+    "open": "View class",
+    "preview": "Preview",
+    "resume": "Continue payment",
+    "review": "Payment under review",
+    "expires": "Expires: {{date}}",
+    "explore": "Explore courses",
+    "loadMore": "Load more",
+    "moreError": "The list is incomplete. Please retry.",
+    "state": {
+      "empty": "No classes in this list",
+      "description": "Classes are grouped by the courses you enrolled in."
+    },
+    "empty": {
+      "current": "You have no classes in the current list.",
+      "history": "You have no enrollment history."
+    },
+    "access": {
+      "ACTIVE_ENROLLMENT": "Full access",
+      "PENDING_CASH": "Awaiting cash confirmation — preview only",
+      "PENDING_PAYOS": "Awaiting payment",
+      "HOLD_EXPIRED": "Reservation expired",
+      "ENROLLMENT_CANCELLED": "Enrollment cancelled",
+      "ENROLLMENT_COMPLETED": "Completed",
+      "CLASS_CANCELLED": "Class cancelled",
+      "STATE_MISMATCH": "Class information is inconsistent. Please contact the center."
+    }
+  },
+  "classDetail": {
+    "session": {
+      "date": "Date",
+      "time": "Time",
+      "room": "Room",
+      "heading": "{{code}} · Session {{number}}/{{total}}",
+      "unit": "Unit: {{title}}",
+      "content": "Session content",
+      "noContent": "Detailed session content has not been provided.",
+      "objectives": "Objectives",
+      "noObjectives": "Session objectives have not been provided.",
+      "materials": "Materials"
+    },
+    "sessionsLabel": "Sessions",
+    "startDate": "Starts",
+    "endDate": "Ends",
+    "deliveryLabel": "Format",
+    "mentorLabel": "Mentor",
+    "participants": {
+      "open": "View teacher and students",
+      "mentorClass": "Teacher of {{code}}",
+      "students": "Students",
+      "pending": "The student list is not available yet."
+    },
+    "more": "Show more",
+    "less": "Show less",
+    "title": "Class details",
+    "preview": "Awaiting cash payment confirmation — preview only",
+    "noMentor": "Mentor not assigned",
+    "noRoom": "Room not assigned",
+    "sessionCount": "{{count}} sessions",
+    "sessionNumber": "Session {{number}}",
+    "rowToday": "Today",
+    "rowUpcoming": "Upcoming",
+    "noUnits": "This class has no units or sessions yet.",
+    "missingSession": "This session is no longer in the class schedule.",
+    "join": "Join Google Meet",
+    "linkError": "Unable to open the link. Please try again.",
+    "denied": "You cannot access this class",
+    "notFound": "Class not found",
+    "returnToList": "Return to your classes to refresh access.",
+    "state": {
+      "empty": "Class details unavailable",
+      "description": "Please return to your class list."
+    }
+  },
+  "learningPreview": {
+    "nextCourse": "Advanced web development",
+    "title": "Phase 3 preview",
+    "schedule": "Schedule",
+    "account": "Account",
+    "classes": "My classes",
+    "success": "Data",
+    "loading": "Loading",
+    "empty": "Empty",
+    "error": "Error",
+    "course": "Web application development",
+    "class": "Evening Web class",
+    "unit": "Programming foundations",
+    "session": "Introduction to web applications",
+    "mentor": "Sample mentor",
+    "name": "Mindy student",
+    "exit": "Back to preview menu",
+    "openTools": "States",
+    "logoutError": "Simulate logout failure"
+  },
+  "staff": {
+    "close": "Close",
+    "comingSoon": "Coming soon",
+    "comingSoonDescription": "This screen arrives in phase {{phase}} of the Mentor plan."
+  },
+  "mentor": {
+    "roleChip": "Mentor",
+    "notifications": "Notifications",
+    "account": {
+      "title": "Account",
+      "logout": "Sign out",
+      "logoutError": "Could not sign out. Please try again."
+    },
+    "home": {
+      "nextTitle": "Today's teaching",
+      "nextDescription": "Your next session and the Google Meet button will appear here.",
+      "viewSchedule": "View schedule",
+      "favorites": "Favourite tools",
+      "edit": "Edit",
+      "done": "Done",
+      "favCount": "{{count}}/6 · tap to add/remove",
+      "recent": "Recent tools",
+      "new": "New tools",
+      "viewAll": "View all",
+      "fixed": "Core tool, cannot be removed",
+      "maxFav": "Up to 6 favourite tools"
+    },
+    "utilities": {
+      "title": "All tools",
+      "count": "{{count}} tools",
+      "search": "Search tools",
+      "empty": "No tools found",
+      "newBadge": "NEW"
+    },
+    "util": {
+      "schedule": "Schedule",
+      "classes": "My classes",
+      "attendance": "Attendance",
+      "room": "Join classroom",
+      "students": "Students",
+      "materials": "Materials",
+      "upload": "Upload files",
+      "substitute": "Substitute sessions",
+      "sync": "Sync roster",
+      "sessionOnly": "Open from a live session in Schedule"
+    }
+  }
+}
