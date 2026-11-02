@@ -7,8 +7,9 @@ import '../payment/payment_api.dart';
 import '../payment/payment_models.dart';
 import 'my_classes_models.dart';
 
-final myClassesApiProvider =
-    Provider((ref) => MyClassesApi(ref.watch(apiClientProvider), ref.watch(paymentApiProvider)));
+final myClassesApiProvider = Provider(
+  (ref) => MyClassesApi(ref.watch(apiClientProvider), ref.watch(paymentApiProvider)),
+);
 
 /// view: current | history | all
 typedef ClassesView = String;
@@ -33,25 +34,44 @@ class MyClassesApi {
 
   /// Đọc HẾT các trang. Lỗi trang sau không bị coi là danh sách rỗng.
   Future<({List<Enrollment> items, DateTime asOf})> allClasses([ClassesView view = 'all']) async {
+    final epoch = _api.sessionEpoch;
     final items = <String, Enrollment>{};
+    int? total, size;
     var page = 1, count = 0;
     while (true) {
+      _check(epoch);
       final r = await classesPage(view, page);
+      _check(epoch);
+      if ((total != null && total != r.page.total) || (size != null && size != r.page.pageSize)) {
+        throw ApiError.invalidResponse(learningError);
+      }
+      total = r.page.total;
+      size = r.page.pageSize;
       count += r.page.items.length;
       r.page.check(page, count, learningError);
       for (final e in r.page.items) {
+        if (items.containsKey(e.enrollmentId)) throw ApiError.invalidResponse(learningError);
         items[e.enrollmentId] = e;
       }
-      if (count >= r.page.total) return (items: items.values.toList(), asOf: r.asOf);
+      if (count >= r.page.total) {
+        return (items: items.values.toList(), asOf: r.asOf);
+      }
       page++;
     }
   }
 
+  void _check(int epoch) {
+    if (_api.sessionEpoch != epoch) throw ApiError(status: 401, code: 'SESSION_CHANGED');
+  }
+
   Enrollment? _currentAccess(List<Enrollment> rows, String classId) {
-    final candidates =
-        rows.where((r) => r.classId == classId && r.classStatus != ClassStatus.CANCELLED && !r.isHoldExpired);
+    final candidates = rows.where(
+      (r) => r.classId == classId && r.classStatus != ClassStatus.CANCELLED && !r.isHoldExpired,
+    );
     for (final r in candidates) {
-      if (r.enrollmentStatus == EnrollmentStatus.ACTIVE && r.action == EnrollmentAction.FULL) return r;
+      if (r.enrollmentStatus == EnrollmentStatus.ACTIVE && r.action == EnrollmentAction.FULL) {
+        return r;
+      }
     }
     for (final r in candidates) {
       if (r.enrollmentStatus == EnrollmentStatus.PENDING_PAYMENT && r.action == EnrollmentAction.CASH_PREVIEW) {
@@ -65,7 +85,9 @@ class MyClassesApi {
     final preview = row.accessMode == AccessMode.CASH_PREVIEW;
     final res = await _api.get('me/classes/${row.classId}${preview ? '/preview' : ''}');
     final d = ClassDetail.fromJson(Json(res, learningError), preview: preview);
-    if (d.id != row.classId || d.classStatus == ClassStatus.CANCELLED) throw _denied();
+    if (d.id != row.classId || d.classStatus == ClassStatus.CANCELLED) {
+      throw _denied();
+    }
     return d;
   }
 
@@ -75,13 +97,19 @@ class MyClassesApi {
     if (!_uuid.hasMatch(classId)) {
       throw ApiError(status: 404, code: 'CLASS_NOT_FOUND', message: 'Class not found');
     }
+    final epoch = _api.sessionEpoch;
     final first = _currentAccess((await allClasses()).items, classId);
+    _check(epoch);
     if (first == null) throw _denied();
     try {
       return (detail: await _readDetail(first), enrollment: first);
     } on ApiError catch (e) {
-      if (e.status != 403 || !['CLASS_ACCESS_DENIED', 'CLASS_PREVIEW_DENIED'].contains(e.code)) rethrow;
+      if (e.status != 403 || !['CLASS_ACCESS_DENIED', 'CLASS_PREVIEW_DENIED'].contains(e.code)) {
+        rethrow;
+      }
+      _check(epoch);
       final next = _currentAccess((await allClasses()).items, classId);
+      _check(epoch);
       if (next == null || next.accessMode == first.accessMode) rethrow;
       return (detail: await _readDetail(next), enrollment: next);
     }
@@ -90,9 +118,13 @@ class MyClassesApi {
   /// "Tiếp tục thanh toán" từ Lớp của tôi: chỉ khi MỌI dòng của đơn đều ở trạng thái PAYMENT.
   Future<Order> verifiedResumeOrder(String orderId) async {
     ApiError invalid() => ApiError(status: 409, code: 'PAYMENT_ORDER_INVALID', message: 'Order cannot be resumed');
+    final epoch = _api.sessionEpoch;
     final rows = await allClasses();
+    _check(epoch);
     final candidates = rows.items.where((r) => r.order?.orderId == orderId).toList();
-    if (candidates.isEmpty || candidates.any((r) => r.action != EnrollmentAction.PAYMENT)) throw invalid();
+    if (candidates.isEmpty || candidates.any((r) => r.action != EnrollmentAction.PAYMENT)) {
+      throw invalid();
+    }
     final order = await _payment.order(orderId);
     if (order.status != OrderStatus.PENDING ||
         order.paymentType != PaymentType.PAYOS ||

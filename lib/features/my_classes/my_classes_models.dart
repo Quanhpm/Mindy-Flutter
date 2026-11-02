@@ -11,11 +11,52 @@ enum ClassStatus { DRAFT, OPEN, IN_PROGRESS, COMPLETED, CANCELLED }
 
 enum SessionStatus { SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED }
 
+enum SessionDisplay { upcoming, live, ended, cancelled }
+
+SessionDisplay sessionDisplayStatus(SessionStatus status, DateTime startsAt, DateTime endsAt, DateTime now) {
+  if (status == SessionStatus.CANCELLED) return SessionDisplay.cancelled;
+  if (status == SessionStatus.COMPLETED || !now.isBefore(endsAt)) {
+    return SessionDisplay.ended;
+  }
+  if (status == SessionStatus.IN_PROGRESS || !now.isBefore(startsAt)) {
+    return SessionDisplay.live;
+  }
+  return SessionDisplay.upcoming;
+}
+
+/// Trạng thái buổi cho UI chi tiết lớp - `sessionDisplayStatus.ts` bên RN.
+SessionStatus sessionDisplayStatusRN(ClassSession session, [DateTime? now]) {
+  if (session.status == SessionStatus.CANCELLED || session.status == SessionStatus.COMPLETED) {
+    return session.status;
+  }
+  final n = now ?? DateTime.now();
+  return !session.endsAt.isAfter(n) ? SessionStatus.COMPLETED : session.status;
+}
+
+/// Buổi tiếp theo học viên cần tham gia - `nextLearningSession.ts` bên RN.
+ClassSession? nextLearningSession(List<ClassSession> sessions, [DateTime? now]) {
+  final active = sessions.where((session) {
+    final status = sessionDisplayStatusRN(session, now);
+    return status != SessionStatus.CANCELLED && status != SessionStatus.COMPLETED;
+  }).toList();
+  active.sort((a, b) {
+    final diff = a.startsAt.compareTo(b.startsAt);
+    return diff != 0 ? diff : a.id.compareTo(b.id);
+  });
+  return active.isEmpty ? null : active.first;
+}
+
 enum AccessMode { FULL, CASH_PREVIEW, NONE }
 
 enum AccessReason {
-  ACTIVE_ENROLLMENT, PENDING_CASH, PENDING_PAYOS, HOLD_EXPIRED, ENROLLMENT_CANCELLED,
-  ENROLLMENT_COMPLETED, CLASS_CANCELLED, STATE_MISMATCH,
+  ACTIVE_ENROLLMENT,
+  PENDING_CASH,
+  PENDING_PAYOS,
+  HOLD_EXPIRED,
+  ENROLLMENT_CANCELLED,
+  ENROLLMENT_COMPLETED,
+  CLASS_CANCELLED,
+  STATE_MISMATCH,
 }
 
 /// Thao tác được phép với 1 dòng enrollment (`access.ts`)
@@ -98,7 +139,9 @@ class Enrollment {
 
   /// `enrollmentAction` - enum lạ / trạng thái lệch KHÔNG bao giờ suy thành FULL.
   EnrollmentAction get action {
-    if (isHoldExpired || classStatus == ClassStatus.CANCELLED) return EnrollmentAction.NONE;
+    if (isHoldExpired || classStatus == ClassStatus.CANCELLED) {
+      return EnrollmentAction.NONE;
+    }
     if (canViewClass &&
         enrollmentStatus == EnrollmentStatus.ACTIVE &&
         accessMode == AccessMode.FULL &&
@@ -249,7 +292,9 @@ class ClassDetail {
   factory ClassDetail.fromJson(Json j, {required bool preview}) {
     final full = !preview;
     if (j.str('accessMode') != (full ? 'FULL' : 'CASH_PREVIEW')) j.fail();
-    if (j.str('enrollmentStatus') != (full ? 'ACTIVE' : 'PENDING_PAYMENT')) j.fail();
+    if (j.str('enrollmentStatus') != (full ? 'ACTIVE' : 'PENDING_PAYMENT')) {
+      j.fail();
+    }
     j.uuid('courseId');
     j.uuid('enrollmentId');
     if (preview) {
