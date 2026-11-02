@@ -185,6 +185,19 @@ void main() {
     expect((await jar.loadForRequest(Uri.parse(Env.apiUrl))).single.value, 'new-user');
   });
 
+  test('Request chưa tới interceptor cũng giữ phiên tại thời điểm tạo lệnh', () async {
+    final client = ApiClient(cookieJar: CookieJar());
+    var sends = 0;
+    client.dio.httpClientAdapter = Adapter((o) {
+      sends++;
+      return jsonBody({'ok': true});
+    });
+    final pending = client.post('me/cart/items', body: {'classId': 'old-choice'});
+    client.sessionEpoch++;
+    await expectLater(pending, throwsA(isA<ApiError>().having((e) => e.code, 'code', 'SESSION_CHANGED')));
+    expect(sends, 0);
+  });
+
   test('Nhiều request 401 dùng chung một refresh và mỗi request chỉ gửi lại một lần', () async {
     final client = ApiClient(cookieJar: CookieJar());
     final refreshSeen = Completer<void>();

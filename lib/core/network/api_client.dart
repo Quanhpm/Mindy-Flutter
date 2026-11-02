@@ -77,7 +77,7 @@ class ApiClient {
       path,
       queryParameters: _clean(query),
       cancelToken: cancel,
-      options: timeout == null ? null : Options(receiveTimeout: timeout),
+      options: _options(timeout: timeout),
     ),
   );
 
@@ -92,7 +92,7 @@ class ApiClient {
       path,
       data: body,
       cancelToken: cancel,
-      options: Options(receiveTimeout: timeout, headers: headers),
+      options: _options(timeout: timeout, headers: headers),
     ),
   );
 
@@ -101,7 +101,7 @@ class ApiClient {
       path,
       data: body,
       cancelToken: cancel,
-      options: Options(headers: headers),
+      options: _options(headers: headers),
     ),
   );
 
@@ -109,17 +109,24 @@ class ApiClient {
     () => dio.patch<dynamic>(
       path,
       data: body,
-      options: Options(headers: headers),
+      options: _options(headers: headers),
     ),
   );
 
   Future<dynamic> delete(String path, {Object? body, Map<String, Object?>? query}) =>
-      _send(() => dio.delete<dynamic>(path, data: body, queryParameters: _clean(query)));
+      _send(() => dio.delete<dynamic>(path, data: body, queryParameters: _clean(query), options: _options()));
 
   /// Xoá cookie phía app (logout / hết phiên).
   Future<void> clearCookies() => cookieJar.deleteAll();
 
   // ---------------------------------------------------------------- internals
+
+  /// Chụp phiên đồng bộ ngay lúc tạo lệnh, trước hàng đợi interceptor bất đồng bộ.
+  Options _options({Duration? timeout, Map<String, String>? headers}) => Options(
+    receiveTimeout: timeout,
+    headers: headers,
+    extra: {'sessionEpoch': sessionEpoch, 'refreshGeneration': refreshGeneration},
+  );
 
   Future<dynamic> _send(Future<Response<dynamic>> Function() call) async {
     try {
@@ -218,7 +225,7 @@ class ApiClient {
 
   Future<void> _refresh(int epoch) async {
     try {
-      await dio.post<dynamic>('auth/refresh');
+      await dio.post<dynamic>('auth/refresh', options: _options());
       if (sessionEpoch == epoch) refreshGeneration++;
     } on DioException catch (e) {
       if (sessionEpoch == epoch) _expire();
