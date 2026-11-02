@@ -59,9 +59,12 @@ final mentorScheduleProvider = FutureProvider.autoDispose.family<TeachingSchedul
   if (sessions.timeZone != zone) throw ApiError.invalidResponse(MentorScheduleApi.errorCode);
   final byClass = {for (final item in classes) item.id: item};
   final entries = <TeachingEntry>[];
+  final visible = query.window == MentorScheduleWindow.substitute
+      ? sessions.sessions.where((session) => session.isSubstitute).toList()
+      : sessions.sessions;
   // Context có phòng và kiểm tra lại assignment; không bắn N request không giới hạn.
-  for (var offset = 0; offset < sessions.sessions.length; offset += 3) {
-    final batch = sessions.sessions.skip(offset).take(3);
+  for (var offset = 0; offset < visible.length; offset += 3) {
+    final batch = visible.skip(offset).take(3);
     final enriched = await Future.wait(
       batch.map((session) async {
         final classroom = byClass[session.classId];

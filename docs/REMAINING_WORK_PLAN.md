@@ -30,8 +30,9 @@ Tài liệu liên quan (giữ để tra cứu, plan này là nguồn chính khi 
 | Học viên: auth, home, catalog, giỏ, thanh toán, lịch, tài khoản, lớp của tôi | Chức năng chạy được; nhiều UI còn dạng khung (`TODO(UI)`) |
 | Mentor MF1: login chung, phân luồng role, UI kit staff, Home khung, tiện ích yêu thích | P0 đã sửa 2 lỗi P2, test hồi quy pass |
 | Mentor MF2: lịch, Home, phòng, dạy thay, thông báo | Đã triển khai UI + API, tự review theo ủy quyền; UAT backend còn thiếu |
-| Mentor MF3–MF6: điểm danh, lớp, học viên, báo cáo, tài liệu, tải lên | Chưa triển khai |
-| Build | `flutter analyze` sạch, 17/17 test pass; iOS Simulator chạy tới màn Đăng nhập (đã thêm CocoaPods) |
+| Mentor MF3: điểm danh | Đã có UI + API/controller, test mô phỏng; UAT live còn thiếu |
+| Mentor MF4–MF6: lớp, học viên, báo cáo, tài liệu, tải lên | Chưa triển khai |
+| Build | `flutter analyze` sạch, 94 test pass; build iOS Simulator thành công (MF3) |
 
 Cập nhật triển khai 02/11: P0 đã sửa B1–B4, chuyển ca chẩn đoán vào
 `test/p0_regression_test.dart` và bổ sung ca response/cookie cũ, refresh đồng thời,
@@ -384,3 +385,18 @@ Tổng phần bắt buộc: **25–35,5 ngày công**, cộng dự phòng 20% th
 - Smoke dev chưa thực hiện: môi trường cục bộ không có `SEED_ACCOUNT_PASSWORD`.
   Không đoán mật khẩu, không lưu thông tin đăng nhập trong repo.
 - Việc kế tiếp: MF3 điểm danh, rồi MF4/MF5; giữ các mục UAT live chưa đánh dấu Done.
+
+### MF3 — bản triển khai 02/11
+
+- Đã nối Start/mark/bulk/sync/finalize; roster hết trang, 3 trạng thái và khách MAKEUP.
+- Bản nháp diff, batch 100, version từ response trước; snapshot sâu key/body, retry thủ công;
+  ack rồi GET lỗi thì chỉ đọc lại. Giữ call trong RAM qua đóng/mở sheet, reset khi đổi phiên.
+- 409 đọc lại + yêu cầu xem bản nháp; hạn sửa tính theo asOf server; 403/404 đóng sheet về lịch.
+- UI đủ loading/rỗng/lỗi/disabled, cảnh báo rời nháp, xác nhận bulk/sync/chốt; vi/en và chữ ×1,3.
+- Source/ảnh/bằng chứng: `MF3_REVIEW.md`, `test/goldens/mf3_attendance_320_vi.png`.
+- Bổ sung tối ưu MF2: đổi ngày trong cùng tuần dùng chung cache tuần; trang Dạy thay chỉ lấy
+  context cho các buổi SUBSTITUTE sau khi đọc lịch đầy đủ, không đọc phòng của hàng trăm buổi chính.
+- Check toàn dự án: **94 test pass, analyze sạch**; build iOS Simulator ở nhánh MF3.
+  Chưa coi các test này là UAT hai thiết bị/backend thật.
+- Việc kế tiếp: MF4 lớp/chi tiết/báo cáo/học viên, MF5 tài liệu-upload, MF6, S1–S5,
+  MF7 theo ủy quyền và phát hành. Tài khoản backend live/MinIO/signing vẫn cần bằng chứng riêng.

@@ -9,6 +9,7 @@ import '../../../core/ui/staff/staff_data_state.dart';
 import '../../../core/ui/staff/staff_widgets.dart';
 import '../../../core/utils/format.dart';
 import '../classes/classes_providers.dart';
+import '../attendance/attendance_sheet.dart';
 import '../session/live_room_sheet.dart';
 import 'schedule_providers.dart';
 import 'schedule_screen.dart';
@@ -60,7 +61,7 @@ class _LiveMentorScheduleScreenState extends ConsumerState<LiveMentorScheduleScr
       data: (zone) {
         final now = ref.watch(mentorClockProvider)();
         final day = _day ?? Dates.localDay(now, zone);
-        final query = (window: MentorScheduleWindow.week, day: day);
+        final query = (window: MentorScheduleWindow.week, day: Dates.weekDays(day).first);
         void refresh() {
           ref.invalidate(mentorClassesProvider);
           ref.invalidate(mentorScheduleProvider(query));
@@ -75,7 +76,7 @@ class _LiveMentorScheduleScreenState extends ConsumerState<LiveMentorScheduleScr
           onRefresh: () async => refresh(),
           onRetry: refresh,
           onRoom: (entry) => showMentorRoom(context, ref, entry),
-          onAttendance: (_) => showStaffToast(context, t('mentor.preview.attendance')),
+          onAttendance: (entry) => showMentorAttendance(context, ref, entry),
         );
       },
     );

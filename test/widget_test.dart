@@ -22,6 +22,24 @@ void main() {
       // timestamp thiếu offset bị từ chối
       expect(() => Json({'t': '2026-11-02T10:00:00'}).dateTime('t'), throwsA(isA<ApiError>()));
     });
+
+    test('Mảng UUID kiểm tra kiểu, nội dung và ID trùng', () {
+      const id = '3f2b6d0e-1c2a-4b5c-8d9e-0a1b2c3d4e5f';
+      expect(
+        Json({
+          'ids': [id],
+        }).uuidList('ids'),
+        [id],
+      );
+      for (final ids in <Object?>[
+        [id, id],
+        [123],
+        ['invalid'],
+        'invalid',
+      ]) {
+        expect(() => Json({'ids': ids}).uuidList('ids'), throwsA(isA<ApiError>()));
+      }
+    });
   });
 
   group('Dates', () {
@@ -43,25 +61,25 @@ void main() {
 
   test('Translator nội suy {{x}}', () {
     final t = Translator({
-      'common': {'requestId': 'Mã hỗ trợ: {{id}}'}
+      'common': {'requestId': 'Mã hỗ trợ: {{id}}'},
     }, const Locale('vi'));
     expect(t('common.requestId', {'id': 'abc'}), 'Mã hỗ trợ: abc');
     expect(t('missing.key'), 'missing.key');
   });
 
   test('Order.result chỉ PAID/CANCELLED/EXPIRED', () {
-    Order order(String status, [String? payment]) => Order.fromJson(Json({
-          'id': '3f2b6d0e-1c2a-4b5c-8d9e-0a1b2c3d4e5f',
-          'orderCode': 'MD001',
-          'paymentType': 'PAYOS',
-          'status': status,
-          'totalAmount': 1000,
-          'expiresAt': '2026-11-02T10:00:00+07:00',
-          'details': <Object>[],
-          'payment': payment == null
-              ? null
-              : {'status': payment, 'qrCode': null, 'expiresAt': null, 'amount': 1000},
-        }));
+    Order order(String status, [String? payment]) => Order.fromJson(
+      Json({
+        'id': '3f2b6d0e-1c2a-4b5c-8d9e-0a1b2c3d4e5f',
+        'orderCode': 'MD001',
+        'paymentType': 'PAYOS',
+        'status': status,
+        'totalAmount': 1000,
+        'expiresAt': '2026-11-02T10:00:00+07:00',
+        'details': <Object>[],
+        'payment': payment == null ? null : {'status': payment, 'qrCode': null, 'expiresAt': null, 'amount': 1000},
+      }),
+    );
     expect(order('PAID').result, OrderStatus.PAID);
     expect(order('PENDING').result, isNull);
     expect(order('PENDING', 'REQUIRES_REVIEW').result, isNull);

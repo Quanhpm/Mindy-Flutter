@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/i18n/i18n.dart';
-import '../../../core/ui/staff/staff_widgets.dart';
 import '../classes/classes_providers.dart';
+import '../attendance/attendance_sheet.dart';
 import '../schedule/schedule_providers.dart';
 import '../session/live_room_sheet.dart';
 import 'substitute_screen.dart';
@@ -12,7 +11,6 @@ class LiveMentorSubstituteScreen extends ConsumerWidget {
   const LiveMentorSubstituteScreen({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final t = ref.watch(trProvider);
     void refresh() {
       ref.invalidate(mentorClassesProvider);
       ref.invalidate(mentorScheduleProvider(mentorSubstituteQuery));
@@ -24,7 +22,7 @@ class LiveMentorSubstituteScreen extends ConsumerWidget {
       onRetry: refresh,
       onRefresh: () async => refresh(),
       onRoom: (entry) => showMentorRoom(context, ref, entry),
-      onAttendance: (_) => showStaffToast(context, t('mentor.preview.attendance')),
+      onAttendance: (entry) => showMentorAttendance(context, ref, entry),
     );
   }
 }

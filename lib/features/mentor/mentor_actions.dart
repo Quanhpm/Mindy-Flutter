@@ -6,6 +6,7 @@ import '../../core/session/session_controller.dart';
 import '../../core/ui/states.dart';
 import '../../core/ui/staff/staff_widgets.dart';
 import 'mentor_utilities.dart';
+import 'attendance/attendance_sheet.dart';
 import 'schedule/schedule_models.dart';
 import 'schedule/schedule_providers.dart';
 import 'session/live_room_sheet.dart';
@@ -26,7 +27,7 @@ Future<void> openMentorSessionUtility(BuildContext context, WidgetRef ref, Mento
     if (utility == MentorUtil.room) {
       showMentorRoom(context, ref, entry);
     } else {
-      showStaffToast(context, t('staff.comingSoon'));
+      await showMentorAttendance(context, ref, entry, openSync: true);
     }
   } catch (error) {
     if (!context.mounted) return;

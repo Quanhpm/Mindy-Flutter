@@ -8,9 +8,9 @@ import 'api_error.dart';
 ///   Course(id: j.uuid('id'), title: j.str('title'), price: j.amount('priceAmount'));
 class Json {
   Json(Object? value, [this.errorCode = 'INVALID_RESPONSE'])
-      : _map = value is Map<String, dynamic>
-            ? value
-            : (value is Map ? Map<String, dynamic>.from(value) : _fail(errorCode));
+    : _map = value is Map<String, dynamic>
+          ? value
+          : (value is Map ? Map<String, dynamic>.from(value) : _fail(errorCode));
 
   final Map<String, dynamic> _map;
   final String errorCode;
@@ -18,8 +18,7 @@ class Json {
   static Never _fail(String code) => throw ApiError.invalidResponse(code);
   Never fail() => _fail(errorCode);
 
-  static final _uuid =
-      RegExp(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', caseSensitive: false);
+  static final _uuid = RegExp(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', caseSensitive: false);
   static final _day = RegExp(r'^\d{4}-\d{2}-\d{2}$');
   // Timestamp bắt buộc có offset (Z hoặc +07:00)
   static final _offset = RegExp(r'(Z|[+-]\d{2}:?\d{2})$');
@@ -73,6 +72,18 @@ class Json {
     if (v is! List) fail();
     return v.map((e) => parse(Json(e, errorCode))).toList();
   }
+
+  List<String> uuidList(String key) {
+    final value = _map[key];
+    if (value is! List) fail();
+    final result = <String>[];
+    for (final item in value) {
+      if (item is! String || !_uuid.hasMatch(item)) fail();
+      result.add(item);
+    }
+    if (result.toSet().length != result.length) fail();
+    return List.unmodifiable(result);
+  }
 }
 
 /// Trang dữ liệu `{ items, page, pageSize, total }`.
@@ -85,19 +96,16 @@ class Paged<T> {
   final int total;
 
   factory Paged.fromJson(Json j, T Function(Json) parse) => Paged(
-        items: j.list('items', parse),
-        page: j.integer('page'),
-        pageSize: j.integer('pageSize'),
-        total: j.integer('total'),
-      );
+    items: j.list('items', parse),
+    page: j.integer('page'),
+    pageSize: j.integer('pageSize'),
+    total: j.integer('total'),
+  );
 
   /// Kiểm tra metadata giống `checkPage` bên RN.
   /// [count] = tổng số item đã đọc tính đến trang này.
   void check(int expectedPage, int count, String errorCode) {
-    if (page != expectedPage ||
-        items.length > pageSize ||
-        count > total ||
-        (items.isEmpty && count < total)) {
+    if (page != expectedPage || items.length > pageSize || count > total || (items.isEmpty && count < total)) {
       throw ApiError.invalidResponse(errorCode);
     }
   }

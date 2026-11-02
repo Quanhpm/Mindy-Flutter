@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mindy_flutter/core/i18n/i18n.dart';
 import 'package:mindy_flutter/core/network/api_error.dart';
@@ -76,6 +77,7 @@ Future<void> pumpScreen(
   double height = 640,
   double scale = 1.3,
   String language = 'vi',
+  List<Override> overrides = const [],
 }) async {
   tester.view.physicalSize = Size(width, height);
   tester.view.devicePixelRatio = 1;
@@ -89,6 +91,7 @@ Future<void> pumpScreen(
         sessionProvider.overrideWith(_Session.new),
         mentorFavoritesProvider.overrideWith(_Favorites.new),
         mentorSubstituteOnlyProvider.overrideWith((ref) async => false),
+        ...overrides,
       ],
       child: MaterialApp(
         theme: buildAppTheme(),

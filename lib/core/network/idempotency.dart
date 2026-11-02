@@ -10,10 +10,20 @@ import 'package:uuid/uuid.dart';
 ///   final call = IdempotentCall({'expectedVersion': v, 'records': changed});
 ///   await api.put('class-sessions/$id/attendance', body: call.body, headers: call.headers);
 class IdempotentCall {
-  IdempotentCall(this.body, {String? key}) : key = key ?? const Uuid().v4();
+  IdempotentCall(Map<String, Object?> body, {String? key}) : body = _freezeMap(body), key = key ?? const Uuid().v4();
 
   final String key;
   final Map<String, Object?> body;
 
   Map<String, String> get headers => {'Idempotency-Key': key};
+
+  /// Snapshot sâu: sửa form sau lỗi mạng không được làm đổi payload của key cũ.
+  static Map<String, Object?> _freezeMap(Map<String, Object?> value) =>
+      Map.unmodifiable(value.map((key, value) => MapEntry(key, _freeze(value))));
+  static Object? _freeze(Object? value) {
+    if (value is Map<String, Object?>) return _freezeMap(value);
+    if (value is List<Object?>) return List<Object?>.unmodifiable(value.map(_freeze));
+    if (value == null || value is String || value is bool || (value is num && value.isFinite)) return value;
+    throw ArgumentError('IdempotentCall chỉ nhận giá trị JSON hợp lệ');
+  }
 }

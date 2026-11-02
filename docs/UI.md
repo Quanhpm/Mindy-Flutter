@@ -106,9 +106,13 @@ Liên quan: `docs/REMAINING_WORK_PLAN.md` (việc còn lại theo phase), `docs/
 | `StaffInput` | Ô nhập staff: nhãn, icon, mật khẩu, viền lỗi |
 | `showStaffSheet` / `openStaffSheet` | Bottom sheet có tiêu đề + phụ đề |
 | `showStaffToast` | Toast nổi đáy, tự ẩn 2,2 s |
+| `DayStrip` | Dải bảy ngày, vùng bấm ≥44px, cuộn ngang khi chữ lớn |
+| `TeachingCard` | Thẻ giờ/buổi dùng chung lịch và dạy thay |
+| `StaffStats` | Hàng số liệu co giãn, không trộn hệ Học viên |
+| `StaffDataState` | Rỗng/lỗi + mã hỗ trợ + thử lại đúng hệ Staff |
 | `Sym` | Icon Material Symbols: `Icon(Sym.calendarMonth, fill: 1)` |
 
-Component dự kiến (theo `REMAINING_WORK_PLAN.md`): `DayStrip` (MF2), thẻ buổi học, hàng điểm danh, hàng tài liệu, thanh tiến độ upload.
+Đã có DayStrip/thẻ buổi (MF2), hàng điểm danh và số liệu (MF3). Còn hàng tài liệu và thanh tiến độ upload ở MF5.
 
 ### 3.4. Bảng tone chip trạng thái (Staff)
 
@@ -186,9 +190,9 @@ Trạng thái: **Khung** (chạy được, UI chưa port chi tiết) · **Đủ*
 | P1 | Lịch dạy | `/mentor/page/schedule` | `features/mentor/schedule/` | Đủ; API phân trang/timezone | MF2 |
 | S2 | Sheet Phòng học | sheet | `features/mentor/session/room_sheet.dart` | Đủ; context + sao chép + mở link | MF2 |
 | P9 | Buổi dạy thay | `/mentor/page/substitute` | `features/mentor/substitute/` | Đủ; lịch 30 ngày trước/60 ngày tới | MF2 |
-| S1 | Sheet Điểm danh | sheet | `features/mentor/attendance/` | Chưa làm | MF3 |
-| S3 | Sheet Đồng bộ sĩ số | sheet | `features/mentor/attendance/` | Chưa làm | MF3 |
-| S4 | Sheet Chốt buổi | sheet | `features/mentor/attendance/` | Chưa làm | MF3 |
+| S1 | Sheet Điểm danh | sheet | `features/mentor/attendance/` | Đủ; UI + API + controller, tự review; chờ UAT live | MF3 |
+| S3 | Sheet Đồng bộ sĩ số | sheet | `features/mentor/attendance/` | Đủ; UI + API + controller, tự review; chờ UAT live | MF3 |
+| S4 | Sheet Chốt buổi | sheet | `features/mentor/attendance/` | Đủ; UI + API + controller, tự review; chờ UAT live | MF3 |
 | P2 | Lớp phụ trách | `/mentor/page/classes` | `features/mentor/classes/` | Chưa làm | MF4 |
 | P3 | Chi tiết lớp | (route mới) | `features/mentor/classes/` | Chưa làm | MF4 |
 | P4 | Báo cáo điểm danh | `/mentor/page/attendance` | `features/mentor/reports/` | Chưa làm | MF4 |
@@ -252,3 +256,5 @@ Agent tự đối chiếu ảnh, kiểm tra responsive rồi tiếp tục API; t
 | 02/11/2026 | Lớp/tiến độ | Không dùng storedUnitCount làm số unit hoàn thành hay tự tính % học tập | Backend trả completionPolicy=UNDEFINED |
 
 Review MF2: xem `docs/MF2_UI_REVIEW.md` và `test/goldens/mf2_*.png`. Đã kiểm tra UI tự động; UAT backend thật chưa chạy do thiếu tài khoản dev.
+
+Review MF3: `docs/MF3_REVIEW.md`, golden `test/goldens/mf3_attendance_320_vi.png`. Sync không đoán danh sách học viên mới; số thêm lấy từ response.

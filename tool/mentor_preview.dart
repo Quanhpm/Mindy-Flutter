@@ -13,6 +13,9 @@ import 'package:mindy_flutter/core/ui/staff/staff_theme.dart';
 import 'package:mindy_flutter/core/ui/staff/staff_widgets.dart';
 import 'package:mindy_flutter/core/utils/format.dart';
 import 'package:mindy_flutter/features/mentor/home/next_session_card.dart';
+import 'package:mindy_flutter/features/mentor/attendance/attendance_api.dart';
+import 'package:mindy_flutter/features/mentor/attendance/attendance_sheet.dart';
+import 'package:mindy_flutter/features/mentor/schedule/schedule_providers.dart';
 import 'package:mindy_flutter/features/mentor/mentor_home_screen.dart';
 import 'package:mindy_flutter/features/mentor/mentor_pages.dart';
 import 'package:mindy_flutter/features/mentor/mentor_providers.dart';
@@ -25,6 +28,7 @@ import 'package:mindy_flutter/features/notifications/notifications_models.dart';
 import 'package:mindy_flutter/features/notifications/notifications_panel.dart';
 
 import 'preview/mentor_fixtures.dart';
+import 'preview/attendance_fixtures.dart';
 
 Future<void> main() async {
   if (!kDebugMode) throw StateError('UI preview is debug-only');
@@ -37,6 +41,8 @@ Future<void> main() async {
       overrides: [
         initialLocaleProvider.overrideWithValue(locale),
         sessionProvider.overrideWith(_PreviewSession.new),
+        mentorClockProvider.overrideWithValue(() => previewNow),
+        mentorAttendanceApiProvider.overrideWithValue(MemoryAttendanceRouter()),
         mentorSubstituteOnlyProvider.overrideWith((ref) async => false),
         mentorFavoritesProvider.overrideWith(_PreviewFavorites.new),
       ],
@@ -143,10 +149,8 @@ class _MentorPreviewAppState extends ConsumerState<MentorPreviewApp> {
   );
   Future<void> _refresh() async => _change(() => _scenario = PreviewScenario.data);
   void _retry() => _change(() => _scenario = PreviewScenario.data);
-  void _attendance(TeachingEntry entry) => showStaffToast(
-    _router.routerDelegate.navigatorKey.currentContext!,
-    ref.read(trProvider)('mentor.preview.attendance'),
-  );
+  void _attendance(TeachingEntry entry) =>
+      showMentorAttendance(_router.routerDelegate.navigatorKey.currentContext!, ref, entry);
   Future<void> _sampleLink(Uri _) async => showStaffToast(
     _router.routerDelegate.navigatorKey.currentContext!,
     ref.read(trProvider)('mentor.preview.sampleLink'),
