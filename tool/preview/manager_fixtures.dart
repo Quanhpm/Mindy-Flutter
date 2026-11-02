@@ -8,7 +8,8 @@ import 'package:mindy_flutter/core/network/json.dart';
 import 'package:mindy_flutter/core/session/session_controller.dart';
 import 'package:mindy_flutter/core/session/session_user.dart';
 
-String mgId(int n) => '00000000-0000-4000-8000-${n.toString().padLeft(12, '0')}';
+String mgId(int n) =>
+    '00000000-0000-4000-8000-${n.toString().padLeft(12, '0')}';
 final mgActor = mgId(1),
     mgMentor = mgId(2),
     mgStudent = mgId(3),
@@ -90,7 +91,13 @@ Map<String, Object?> mgCourseJson({bool detail = false}) => {
   'updatedAt': mgNow,
   if (detail)
     'units': [
-      {'id': mgUnit, 'unitNumber': 1, 'title': 'Biến và vòng lặp', 'description': null, 'requiredScorePercent': 80},
+      {
+        'id': mgUnit,
+        'unitNumber': 1,
+        'title': 'Biến và vòng lặp',
+        'description': null,
+        'requiredScorePercent': 80,
+      },
     ],
 };
 Map<String, Object?> mgMaterialJson({bool draft = false, int revision = 1}) => {
@@ -121,7 +128,10 @@ Map<String, Object?> mgMaterialJson({bool draft = false, int revision = 1}) => {
   'inlineImages': [],
   'attachments': [],
 };
-Map<String, Object?> mgLeaveJson({int version = 1, String status = 'PENDING'}) => {
+Map<String, Object?> mgLeaveJson({
+  int version = 1,
+  String status = 'PENDING',
+}) => {
   'id': mgLeave,
   'mentorId': mgMentor,
   'fromDate': '2026-11-12',
@@ -155,7 +165,11 @@ Map<String, Object?> mgLeaveJson({int version = 1, String status = 'PENDING'}) =
   'timeZone': mgZone,
   'studentConflictCount': 1,
   'studentConflicts': [
-    {'sourceSessionId': mgSession, 'studentId': mgStudent, 'conflictingSessionId': mgTarget},
+    {
+      'sourceSessionId': mgSession,
+      'studentId': mgStudent,
+      'conflictingSessionId': mgTarget,
+    },
   ],
   'sourcesCurrent': true,
 };
@@ -177,7 +191,11 @@ Map<String, Object?> mgOrderJson({bool paid = false}) => {
           'amount': 1000000,
           'status': 'SUCCEEDED',
           'paidAt': mgNow,
-          'confirmedBy': {'id': mgActor, 'displayName': 'Quản lý tổng hợp', 'source': 'MANAGER'},
+          'confirmedBy': {
+            'id': mgActor,
+            'displayName': 'Quản lý tổng hợp',
+            'source': 'MANAGER',
+          },
           'review': null,
         }
       : null,
@@ -193,13 +211,20 @@ Map<String, Object?> mgOrderJson({bool paid = false}) => {
     },
   ],
 };
-Map<String, Object?> mgConflictJson({String status = 'OPEN', int version = 1}) => {
+Map<String, Object?> mgConflictJson({
+  String status = 'OPEN',
+  int version = 1,
+}) => {
   'id': mgConflict,
   'enrollmentId': mgId(31),
   'student': {'id': mgStudent, 'displayName': 'Học viên tổng hợp'},
   'sourceSession': mgSessionJson(),
   'conflictingIntervals': [
-    {'sessionId': mgTarget, 'startsAt': '2026-11-15T07:00:00Z', 'endsAt': '2026-11-15T08:30:00Z'},
+    {
+      'sessionId': mgTarget,
+      'startsAt': '2026-11-15T07:00:00Z',
+      'endsAt': '2026-11-15T08:30:00Z',
+    },
   ],
   'status': status,
   'version': version,
@@ -222,13 +247,19 @@ Map<String, Object?> mgPlacementJson({bool cancelled = false}) => {
 
 class ManagerFixtureSession extends SessionController {
   @override
-  SessionState build() => SessionState(ready: true, epoch: 1, user: SessionUser.fromJson(Json(mgPerson('MANAGER'))));
+  SessionState build() => SessionState(
+    ready: true,
+    epoch: 1,
+    user: SessionUser.fromJson(Json(mgPerson('MANAGER'))),
+  );
   void change() {
     ref.read(apiClientProvider).sessionEpoch++;
     state = SessionState(
       ready: true,
       epoch: state.epoch + 1,
-      user: SessionUser.fromJson(Json({...mgPerson('MANAGER'), 'id': mgId(90)})),
+      user: SessionUser.fromJson(
+        Json({...mgPerson('MANAGER'), 'id': mgId(90)}),
+      ),
     );
   }
 }
@@ -236,10 +267,24 @@ class ManagerFixtureSession extends SessionController {
 // Fixture không có client mạng: mọi path không đăng ký đều trả lỗi 501.
 class ManagerFixtureAdapter implements HttpClientAdapter {
   final requests =
-      <({String method, String path, Object? body, Map<String, dynamic> query, Map<String, dynamic> headers})>[];
-  final materials = <String, Map<String, Object?>>{mgMaterial: mgMaterialJson(), mgDraft: mgMaterialJson(draft: true)};
+      <
+        ({
+          String method,
+          String path,
+          Object? body,
+          Map<String, dynamic> query,
+          Map<String, dynamic> headers,
+        })
+      >[];
+  final materials = <String, Map<String, Object?>>{
+    mgMaterial: mgMaterialJson(),
+    mgDraft: mgMaterialJson(draft: true),
+  };
   String leaveStatus = 'PENDING', conflictStatus = 'OPEN';
-  int leaveVersion = 1, conflictVersion = 1, classVersion = 3, sessionVersion = 2;
+  int leaveVersion = 1,
+      conflictVersion = 1,
+      classVersion = 3,
+      sessionVersion = 2;
   bool cashPaid = false, loggedIn = true, loseNextWrite = false;
   String? conflictNextPath;
   bool failPaidDetail = false;
@@ -247,15 +292,21 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
   Object? Function(RequestOptions)? readOverride;
   Completer<ResponseBody>? heldResponse;
   final receipts = <String, Object?>{};
-  ResponseBody response(Object? body, [int status = 200]) => ResponseBody.fromString(
-    jsonEncode(body),
-    status,
-    headers: {
-      Headers.contentTypeHeader: [Headers.jsonContentType],
-    },
-  );
-  Map<String, Object?> page(RequestOptions o, List<Map<String, Object?>> rows, {Map<String, Object?> meta = const {}}) {
-    final n = o.queryParameters['page'] as int? ?? 1, size = o.queryParameters['pageSize'] as int? ?? 100;
+  ResponseBody response(Object? body, [int status = 200]) =>
+      ResponseBody.fromString(
+        jsonEncode(body),
+        status,
+        headers: {
+          Headers.contentTypeHeader: [Headers.jsonContentType],
+        },
+      );
+  Map<String, Object?> page(
+    RequestOptions o,
+    List<Map<String, Object?>> rows, {
+    Map<String, Object?> meta = const {},
+  }) {
+    final n = o.queryParameters['page'] as int? ?? 1,
+        size = o.queryParameters['pageSize'] as int? ?? 100;
     return {
       'items': rows.skip((n - 1) * size).take(size).toList(),
       'page': n,
@@ -266,7 +317,11 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
   }
 
   @override
-  Future<ResponseBody> fetch(RequestOptions o, Stream<Uint8List>? requestStream, Future<void>? cancelFuture) async {
+  Future<ResponseBody> fetch(
+    RequestOptions o,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
     requests.add((
       method: o.method,
       path: o.path,
@@ -282,44 +337,74 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
     }
     if (conflictNextPath == o.path && o.method != 'GET') {
       conflictNextPath = null;
-      return response({'statusCode': 409, 'code': 'LEAVE_VERSION_CONFLICT', 'message': 'Synthetic conflict'}, 409);
+      return response({
+        'statusCode': 409,
+        'code': 'LEAVE_VERSION_CONFLICT',
+        'message': 'Synthetic conflict',
+      }, 409);
     }
     if (o.path == 'auth/me') {
       return loggedIn
           ? response(mgPerson('MANAGER'))
-          : response({'statusCode': 401, 'code': 'AUTHENTICATION_REQUIRED', 'message': 'Synthetic'}, 401);
+          : response({
+              'statusCode': 401,
+              'code': 'AUTHENTICATION_REQUIRED',
+              'message': 'Synthetic',
+            }, 401);
     }
     if (o.path == 'auth/login') {
       loggedIn = true;
-      return response({'user': mgPerson('MANAGER'), 'accessTokenExpiresAt': '2026-11-02T09:15:00Z'});
+      return response({
+        'user': mgPerson('MANAGER'),
+        'accessTokenExpiresAt': '2026-11-02T09:15:00Z',
+      });
     }
     if (o.path == 'auth/logout') {
       loggedIn = false;
       return response(null, 204);
     }
     if (o.path == 'auth/refresh') {
-      return response({'statusCode': 401, 'code': 'AUTHENTICATION_REQUIRED', 'message': 'Synthetic'}, 401);
+      return response({
+        'statusCode': 401,
+        'code': 'AUTHENTICATION_REQUIRED',
+        'message': 'Synthetic',
+      }, 401);
     }
-    if (o.method == 'GET' && failPaidDetail && cashPaid && o.path == 'manager/orders/$mgOrder') {
+    if (o.method == 'GET' &&
+        failPaidDetail &&
+        cashPaid &&
+        o.path == 'manager/orders/$mgOrder') {
       failPaidDetail = false;
-      throw DioException(requestOptions: o, type: DioExceptionType.connectionError);
+      throw DioException(
+        requestOptions: o,
+        type: DioExceptionType.connectionError,
+      );
     }
     final data = (o.method == 'GET' ? readOverride?.call(o) : null) ?? _read(o);
     if (data != null) return response(data);
     if (o.method != 'GET') {
       final key = o.headers['Idempotency-Key'] as String?;
-      if (key != null && receipts.containsKey(key)) return response(receipts[key]);
+      if (key != null && receipts.containsKey(key)) {
+        return response(receipts[key]);
+      }
       final result = _write(o);
       if (result != null) {
         if (key != null) receipts[key] = result;
         if (loseNextWrite) {
           loseNextWrite = false;
-          throw DioException(requestOptions: o, type: DioExceptionType.connectionError);
+          throw DioException(
+            requestOptions: o,
+            type: DioExceptionType.connectionError,
+          );
         }
         return response(result, o.method == 'DELETE' ? 204 : 200);
       }
     }
-    return response({'statusCode': 501, 'code': 'FIXTURE_ROUTE_DISABLED', 'message': 'Synthetic route disabled'}, 501);
+    return response({
+      'statusCode': 501,
+      'code': 'FIXTURE_ROUTE_DISABLED',
+      'message': 'Synthetic route disabled',
+    }, 501);
   }
 
   Object? _read(RequestOptions o) {
@@ -331,15 +416,26 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
       final role = path.endsWith('mentors') ? 'MENTOR' : 'STUDENT',
           q = (o.queryParameters['q'] as String? ?? '').toLowerCase();
       final person = mgPerson(role);
-      return page(o, q.isEmpty || (person['displayName']! as String).toLowerCase().contains(q) ? [person] : []);
+      return page(
+        o,
+        q.isEmpty ||
+                (person['displayName']! as String).toLowerCase().contains(q)
+            ? [person]
+            : [],
+      );
     }
-    if (path.startsWith('manager/mentors/') && !path.endsWith('/classes') && !path.endsWith('/schedule')) {
+    if (path.startsWith('manager/mentors/') &&
+        !path.endsWith('/classes') &&
+        !path.endsWith('/schedule')) {
       return {...mgPerson('MENTOR'), 'id': path.split('/').last};
     }
     if (path.startsWith('manager/students/') && !path.endsWith('/classes')) {
       return {...mgPerson('STUDENT'), 'id': path.split('/').last};
     }
-    if (path == 'manager/classes' || path == 'manager/mentors/$mgMentor/classes') return page(o, [mgClassJson()]);
+    if (path == 'manager/classes' ||
+        path == 'manager/mentors/$mgMentor/classes') {
+      return page(o, [mgClassJson()]);
+    }
     if (path.startsWith('manager/classes/') && path.endsWith('/units')) {
       return page(o, [
         {
@@ -355,11 +451,20 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
     if (path.startsWith('manager/classes/')) {
       return {
         ...mgClassJson(path.split('/').last),
-        'course': {'id': mgCourse, 'title': 'Lập trình nhập môn', 'code': 'SYNTHETIC'},
+        'course': {
+          'id': mgCourse,
+          'title': 'Lập trình nhập môn',
+          'code': 'SYNTHETIC',
+        },
         'roomName': 'Phòng tổng hợp',
         'unitCount': 1,
         'sessionCount': 1,
-        'enrollmentCounts': {'ACTIVE': 1, 'COMPLETED': 0, 'CANCELLED': 0, 'PENDING_PAYMENT': 0},
+        'enrollmentCounts': {
+          'ACTIVE': 1,
+          'COMPLETED': 0,
+          'CANCELLED': 0,
+          'PENDING_PAYMENT': 0,
+        },
       };
     }
     if (path == 'manager/students/$mgStudent/classes') {
@@ -381,25 +486,35 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
       return page(
         o,
         [mgSessionJson()],
-        meta: {'from': o.queryParameters['from'], 'to': o.queryParameters['to'], 'timeZone': mgZone},
+        meta: {
+          'from': o.queryParameters['from'],
+          'to': o.queryParameters['to'],
+          'timeZone': mgZone,
+        },
       );
     }
     if (path == 'manager/materials') {
       final rows = materials.values
           .where(
             (m) =>
-                (o.queryParameters['reviewStatus'] == null || m['reviewStatus'] == o.queryParameters['reviewStatus']) &&
-                (o.queryParameters['courseUnitId'] == null || m['courseUnitId'] == o.queryParameters['courseUnitId']) &&
-                (o.queryParameters['contentType'] == null || m['contentType'] == o.queryParameters['contentType']),
+                (o.queryParameters['reviewStatus'] == null ||
+                    m['reviewStatus'] == o.queryParameters['reviewStatus']) &&
+                (o.queryParameters['courseUnitId'] == null ||
+                    m['courseUnitId'] == o.queryParameters['courseUnitId']) &&
+                (o.queryParameters['contentType'] == null ||
+                    m['contentType'] == o.queryParameters['contentType']),
           )
           .toList();
       return page(o, rows);
     }
-    if (path.startsWith('manager/materials/')) return materials[path.split('/').last];
+    if (path.startsWith('manager/materials/')) {
+      return materials[path.split('/').last];
+    }
     if (path == 'management/mentor-leave-requests') {
       return page(
         o,
-        o.queryParameters['status'] == null || o.queryParameters['status'] == leaveStatus
+        o.queryParameters['status'] == null ||
+                o.queryParameters['status'] == leaveStatus
             ? [mgLeaveJson(version: leaveVersion, status: leaveStatus)]
             : [],
         meta: {'asOf': mgNow},
@@ -415,7 +530,8 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
     if (path == 'manager/orders') {
       return page(
         o,
-        (o.queryParameters['status'] == null || o.queryParameters['status'] == (cashPaid ? 'PAID' : 'PENDING'))
+        (o.queryParameters['status'] == null ||
+                o.queryParameters['status'] == (cashPaid ? 'PAID' : 'PENDING'))
             ? [mgOrderJson(paid: cashPaid)]
             : [],
       );
@@ -428,7 +544,10 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
           'name': 'Lớp lập trình tổng hợp',
           'code': 'SYNTHETIC',
           'status': 'IN_PROGRESS',
-          'primaryMentor': {'id': mgMentor, 'displayName': 'Giảng viên tổng hợp'},
+          'primaryMentor': {
+            'id': mgMentor,
+            'displayName': 'Giảng viên tổng hợp',
+          },
           'assignmentVersion': classVersion,
         },
         'sessions': page(o, [
@@ -440,8 +559,16 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
       return page(
         o,
         [
-          {'id': mgMentor, 'displayName': 'Giảng viên tổng hợp', 'isCurrent': true},
-          {'id': mgId(20), 'displayName': 'Giảng viên thay thế', 'isCurrent': false},
+          {
+            'id': mgMentor,
+            'displayName': 'Giảng viên tổng hợp',
+            'isCurrent': true,
+          },
+          {
+            'id': mgId(20),
+            'displayName': 'Giảng viên thay thế',
+            'isCurrent': false,
+          },
         ],
         meta: {
           'asOf': mgNow,
@@ -465,7 +592,11 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
         o,
         [
           {
-            'session': {...mgSessionJson(), 'startsAt': '2026-11-01T07:00:00Z', 'endsAt': '2026-11-01T08:30:00Z'},
+            'session': {
+              ...mgSessionJson(),
+              'startsAt': '2026-11-01T07:00:00Z',
+              'endsAt': '2026-11-01T08:30:00Z',
+            },
             'issue': 'OVERDUE_NOT_STARTED',
             'deadlineExpired': true,
           },
@@ -496,6 +627,10 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
       return page(o, [
         {
           'id': mgId(30),
+          'attendanceId': mgId(32),
+          'enrollmentId': mgId(31),
+          'makeupPlacementId': null,
+          'entryType': 'REGULAR',
           'actor': {'id': mgMentor, 'displayName': 'Giảng viên tổng hợp'},
           'oldStatus': 'UNMARKED',
           'newStatus': 'PRESENT',
@@ -509,7 +644,8 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
     if (path == 'management/student-schedule-conflicts') {
       return page(
         o,
-        o.queryParameters['status'] == null || o.queryParameters['status'] == conflictStatus
+        o.queryParameters['status'] == null ||
+                o.queryParameters['status'] == conflictStatus
             ? [mgConflictJson(status: conflictStatus, version: conflictVersion)]
             : [],
         meta: {'asOf': mgNow},
@@ -528,8 +664,10 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
   }
 
   Object? _write(RequestOptions o) {
-    final path = o.path, body = o.data is Map ? o.data as Map : const <Object?, Object?>{};
-    if (path.endsWith('/approve') && path.startsWith('management/mentor-leave')) {
+    final path = o.path,
+        body = o.data is Map ? o.data as Map : const <Object?, Object?>{};
+    if (path.endsWith('/approve') &&
+        path.startsWith('management/mentor-leave')) {
       leaveStatus = 'APPROVED';
       leaveVersion++;
       return {
@@ -539,7 +677,8 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
         'studentConflictCount': 1,
       };
     }
-    if (path.endsWith('/reject') && path.startsWith('management/mentor-leave')) {
+    if (path.endsWith('/reject') &&
+        path.startsWith('management/mentor-leave')) {
       leaveStatus = 'REJECTED';
       leaveVersion++;
       return mgLeaveJson(status: leaveStatus, version: leaveVersion);
@@ -549,7 +688,11 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
       return mgOrderJson(paid: true);
     }
     if (path == 'manager/course-units/$mgUnit/materials') {
-      final m = {...mgMaterialJson(draft: true), 'id': mgId(17), ...body.cast<String, Object?>()};
+      final m = {
+        ...mgMaterialJson(draft: true),
+        'id': mgId(17),
+        ...body.cast<String, Object?>(),
+      };
       materials[mgId(17)] = m;
       return m;
     }
@@ -573,9 +716,18 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
       if (parts.length == 4) {
         final action = parts[3];
         if (action == 'approve') {
-          m.addAll({'reviewStatus': 'APPROVED', 'approvedRevision': m['revision'], 'publishedAt': mgNow});
+          m.addAll({
+            'reviewStatus': 'APPROVED',
+            'approvedRevision': m['revision'],
+            'publishedAt': mgNow,
+          });
         }
-        if (action == 'reject') m.addAll({'reviewStatus': 'REJECTED', 'rejectionReason': body['reason']});
+        if (action == 'reject') {
+          m.addAll({
+            'reviewStatus': 'REJECTED',
+            'rejectionReason': body['reason'],
+          });
+        }
         if (action == 'publish') m['publishedAt'] = mgNow;
         if (action == 'unpublish') m['publishedAt'] = null;
         return m;
@@ -589,7 +741,10 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
       classVersion++;
       return {
         'classId': mgClass,
-        'primaryMentor': {'id': body['mentorId'], 'displayName': 'Giảng viên thay thế'},
+        'primaryMentor': {
+          'id': body['mentorId'],
+          'displayName': 'Giảng viên thay thế',
+        },
         'assignmentVersion': classVersion,
         'affectedSessionCount': 1,
         'asOf': mgNow,
@@ -598,7 +753,11 @@ class ManagerFixtureAdapter implements HttpClientAdapter {
     if (path.endsWith('/makeup-placement')) {
       conflictStatus = 'MAKEUP_ASSIGNED';
       conflictVersion++;
-      return {'placement': mgPlacementJson(), 'conflictVersion': conflictVersion, 'targetSessionVersion': 3};
+      return {
+        'placement': mgPlacementJson(),
+        'conflictVersion': conflictVersion,
+        'targetSessionVersion': 3,
+      };
     }
     if (path.endsWith('/cancel') && path.contains('makeup-placements')) {
       conflictStatus = 'OPEN';

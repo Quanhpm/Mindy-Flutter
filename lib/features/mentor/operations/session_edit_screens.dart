@@ -47,6 +47,16 @@ void showMentorSessionTools(BuildContext context, WidgetRef ref, TeachingEntry e
               context.push(Routes.mentorMeeting(entry.session.id));
             },
           ),
+          const SizedBox(height: 12),
+          StaffButton(
+            key: const Key('mentor-tools-code'),
+            label: t('mentor.code.title'),
+            outlined: true,
+            onPressed: () {
+              Navigator.pop(sheet);
+              context.push(Routes.mentorSessionCode(entry.session.id));
+            },
+          ),
         ],
       ),
     ),

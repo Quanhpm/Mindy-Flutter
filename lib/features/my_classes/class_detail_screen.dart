@@ -238,6 +238,42 @@ class _ClassDetailScreenState extends ConsumerState<ClassDetailScreen> {
                         ),
                       ),
                     ),
+                    if (data.accessMode == AccessMode.FULL)
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Semantics(
+                            button: true,
+                            label: t('code.list.open'),
+                            excludeSemantics: true,
+                            child: Material(
+                              color: AppColors.canvas,
+                              shape: const StadiumBorder(side: BorderSide(color: AppColors.line)),
+                              child: InkWell(
+                                key: const Key('class-detail-code'),
+                                customBorder: const StadiumBorder(),
+                                onTap: () => context.push(Routes.classCode(widget.classId)),
+                                child: Container(
+                                  constraints: const BoxConstraints(minHeight: 54),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    t('code.list.open'),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontFamily: 'Nunito',
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 14,
+                                      color: AppColors.forest,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     if (footerUrl != null)
                       MeetingButton(
                         testId: 'class-detail-join',

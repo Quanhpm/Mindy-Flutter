@@ -63,7 +63,7 @@ Future<void> main() async {
 
 class _PreviewSession extends SessionController {
   @override
-  Future<void> logout() async {} // Preview không gọi auth/logout thật.
+  Future<void> logout({bool all = false}) async {} // Preview không gọi auth/logout thật.
   @override
   SessionState build() => SessionState(
     ready: true,

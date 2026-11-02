@@ -214,17 +214,18 @@ Trạng thái: **Khung** (chạy được, UI chưa port chi tiết) · **Đủ*
 
 Review: `REMAINING_CODE_REVIEW.md`. Theo ủy quyền không hỏi duyệt lại UI.
 
-### 6.3b. Bài tập code (Phase 7, slice C6 — chờ API)
+### 6.3b. Bài tập code (Phase 7, slice C6)
 
-| Màn | Vai trò | Hệ | Trạng thái |
-| --- | --- | --- | --- |
-| Danh sách bài tập trong Chi tiết lớp/buổi | Học viên | Học viên | Chưa làm |
-| Đề bài code (markdown, ví dụ, giới hạn, lượt còn, hạn nộp) | Học viên | Học viên | Chưa làm |
-| Editor toàn màn hình (`re_editor`, thanh phím phụ, chọn ngôn ngữ) | Học viên | Học viên | Chưa làm |
-| Sheet kết quả Chạy thử / Nộp bài + lịch sử nộp | Học viên | Học viên | Chưa làm |
-| Tổng hợp nộp bài của buổi (chỉ đọc) | Mentor | Staff | Chưa làm |
+| Màn | Vai trò | Hệ | File | Trạng thái |
+| --- | --- | --- | --- | --- |
+| Danh sách bài tập của lớp (nút "Bài tập" ở chân Chi tiết lớp, chỉ khi quyền FULL) | Học viên | Học viên | `features/code_assignments/code_assignments_screen.dart` | Code xong, chờ check |
+| Đề bài: mô tả, hạn nộp + đếm ngược theo giờ server, lượt còn, điểm cao nhất, giới hạn, chữ ký hàm, ví dụ, số test ẩn, lịch sử nộp | Học viên | Học viên | `code_problem_screen.dart` | Code xong, chờ check |
+| Editor toàn màn hình: số dòng, cuộn ngang, tự thụt lề, thanh phím phụ (Tab, `{}` `()` `[]` `;` `"` `=` `<` `>` `.`, Undo/Redo), chọn ngôn ngữ, autosave nháp 1,5 s; chạy thử với ví dụ hoặc input tự nhập | Học viên | Học viên | `code_editor_screen.dart`, `code_editor.dart` | Code xong, chờ check |
+| Sheet Chạy thử (ví dụ) + sheet kết quả bài nộp (tự hỏi lại theo `retryAfterMs`, tối đa 60 s) | Học viên | Học viên | `code_result_sheet.dart` | Code xong, chờ check |
+| Tổng hợp nộp bài của buổi (chỉ đọc), mở từ "Công cụ buổi dạy" → "Bài tập code" | Mentor | Staff | `features/mentor/code/mentor_session_code_screen.dart` | Code xong, chờ check |
 
-Chưa có thiết kế; cần thiết kế bổ sung trước C6. Test ẩn chỉ hiện trạng thái + thời gian (quyết định owner D10).
+Chưa có thiết kế riêng: dùng lại khuôn Chi tiết buổi (Học viên) và StaffPage/GlassCard (Mentor). Test ẩn chỉ hiện trạng thái + thời gian (D10);
+model từ chối response có dữ liệu test ẩn. Sai khác ghi ở mục 9.
 
 ### 6.4. Manager — đã triển khai
 
@@ -291,6 +292,8 @@ Agent tự đối chiếu ảnh, kiểm tra responsive rồi tiếp tục API; t
 | 02/11/2026 | Home Mentor | Thêm sheet Tài khoản/Đăng xuất khi chạm avatar | Thiết kế không có chỗ đăng xuất |
 | 02/11/2026 | Home Mentor | Thẻ buổi dạy hiện mô tả tạm, chuông báo "đang phát triển" | MF1 chưa gắn lịch/thông báo |
 | 02/11/2026 | Học viên — Lọc | Bỏ lọc "Bảo lưu" ở màn Học viên (Mentor) | Backend không có trạng thái này |
+| 02/11/2026 | Bài tập code | Editor tự viết (TextField + số dòng), chưa tô màu cú pháp (kế hoạch: `re_editor` + `re_highlight`) | Không thêm package khi chưa chạy được `pub get`; thay sau mà không đổi màn |
+| 02/11/2026 | Bài tập code | Đề bài hiển thị markdown dạng chữ thường | App chưa có package render markdown |
 | dự kiến MF2 | Lịch dạy | Thêm nút tuần trước/sau (thiết kế chỉ có tuần hiện tại) | Cần xem lịch tuần khác |
 | dự kiến MF4 | Học viên | Chạm học viên mở sheet chi tiết (thiết kế chỉ hiện toast) | Có API lịch sử điểm danh/tiến độ |
 | 02/11/2026 | Điểm danh | Buổi COMPLETED vẫn có thể sửa PRESENT/ABSENT trong hạn theo canEditAttendance | Contract backend thực tế; chốt không khoá vĩnh viễn |
@@ -332,3 +335,8 @@ Student UI Parity S1→S7: Hoàn thành 100% UI parity giữa Flutter và React 
 - Phase 6 (S5): Lớp của tôi (`MyClassesScreen`, folder course, enrollment row, resume button).
 - Phase 7 (S6): Chi tiết lớp & buổi (`ClassDetailScreen`, `LearningHero`, `SessionDetailScreen`, `MeetingButton`, `ClassParticipantsSheet`).
 - Phase 8 (S7): Thanh toán (`PaymentScreen`, QR box, info box, toast, leave sheet, `PaymentResultTicket` với mép xé lượn sóng và icon SVG chuẩn RN).
+
+
+### Staff RN clone — 03/11/2026
+
+Các route staff của auth, teaching, attendance, operations, leave, materials, quiz, reports và chat hiện dùng `lib/features/staff/` + design system `lib/core/ui/mdy/`. Các bảng màn Flutter cũ ở trên là lịch sử triển khai; Flutter-only vẫn giữ nguyên. Contacts chỉ có model theo RN. Trạng thái kiểm tra và các việc chờ nghiệm thu: `docs/RN_CLONE_PROGRESS.md`.

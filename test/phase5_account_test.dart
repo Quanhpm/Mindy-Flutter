@@ -18,7 +18,7 @@ class _FakeSession extends SessionController {
   SessionState build() => SessionState(ready: true, user: mockUser, epoch: 1);
 
   @override
-  Future<void> logout() async {
+  Future<void> logout({bool all = false}) async {
     state = const SessionState(ready: true, user: null, epoch: 2);
   }
 }

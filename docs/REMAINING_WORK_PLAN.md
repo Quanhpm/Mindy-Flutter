@@ -306,18 +306,24 @@ Tải lên lỗi/hết hạn URL không để lại bản ghi rác; không gửi
 
 ---
 
-## 10b. Bài tập code — Học viên + Mentor (chờ API Phase 7)
+## 10b. Bài tập code — Học viên + Mentor (Phase 7, slice C6)
 
-Kế hoạch tổng: `../../Mindy-BE/docs/implement_phase/phase 7/PHASE_7_CODE_ASSIGNMENTS.md` (slice C6). Làm sau khi BE xong C3/C4.
+Kế hoạch tổng: `../../Mindy-BE/docs/implement_phase/phase 7/PHASE_7_CODE_ASSIGNMENTS.md` (slice C6).
 
 Owner chốt 02/11/2026: ngôn ngữ JavaScript + Java; đề kiểu viết hàm (LeetCode); **có editor trên app**; điểm của bài = lần cao nhất;
 lỗi biên dịch không tính lượt; không nhận nộp trễ; test ẩn chỉ hiện trạng thái + thời gian.
 
-- Học viên: danh sách bài trong Chi tiết lớp/buổi; màn đề (markdown + ví dụ); màn editor toàn màn hình (`re_editor` + `re_highlight`,
-  số dòng, tô màu, thanh phím phụ Tab/`{}`/`()`/`[]`/`;`/`"`/`=`/Undo/Redo, chọn ngôn ngữ, autosave nháp); Chạy thử / Nộp bài;
-  sheet kết quả; lịch sử nộp. Nhận kết quả qua socket hoặc polling 1,5 s tối đa 60 s.
-- Mentor: tổng hợp nộp bài của buổi (chỉ đọc) trong Chi tiết lớp/buổi. Soạn đề chỉ trên web.
-- Ước lượng 6–8 ngày công. Nghiệm thu: Chạy thử/Nộp → điểm đúng; nháp giữ giữa web và app; 320×640 chữ ×1,3; không hiện dữ liệu test ẩn.
+- [x] Model/API/provider (`lib/features/code_assignments/code_{models,api,providers}.dart`): kiểm id khớp request, điểm giữ chuỗi
+      server, từ chối response lộ dữ liệu test ẩn; danh sách đọc hết trang; mentor đọc trang đầu bảng tổng hợp.
+- [x] Học viên: danh sách bài trong Chi tiết lớp; màn đề; editor toàn màn hình (số dòng, thanh phím phụ, chọn ngôn ngữ, autosave nháp
+      theo version, 409 thì cho tải bản mới, không ghi đè); Chạy thử / Nộp bài (Idempotency-Key, lỗi mạng gửi lại đúng yêu cầu);
+      sheet kết quả; lịch sử nộp. Kết quả qua polling theo `retryAfterMs` (kẹp 1–5 s), dừng sau 60 s và cho làm mới tay.
+- [x] Mentor: tổng hợp nộp bài của buổi (chỉ đọc) trong "Công cụ buổi dạy". Soạn đề, chấm lại, huỷ bài chỉ trên web.
+- [x] Test `test/code_assignments_test.dart` (model, soạn code, API/idempotency, 3 widget test 320×640 chữ ×1,3).
+- [ ] (02/11) Code C6 từng mất khỏi thư mục khi repo chuyển sang nhánh `flutter/manager-core`; đã ghép lại lên nhánh này, chưa commit.
+- [ ] Owner chạy `bash tool/check.sh` (môi trường Claude không có Flutter SDK, code **chưa được analyze/test**); duyệt UI; UAT với BE thật.
+- [x] Chạy thử với input tự nhập (02/11, giống web): sheet nhập từng tham số, chuỗi gõ thẳng, kiểm tra kiểu trước khi gửi `customArgs`.
+- [ ] Tuỳ chọn sau: tô màu cú pháp (`re_editor` + `re_highlight`), render markdown đề bài, socket `code_submission.updated`.
 
 ## 11. Phát hành
 
@@ -387,6 +393,7 @@ Tổng phần bắt buộc: **25–35,5 ngày công**, cộng dự phòng 20% th
 | `uuid` | MF1 (đã thêm) | Sinh `Idempotency-Key` cho điểm danh |
 | Font Be Vietnam Pro, Material Symbols Rounded (asset) | MF1 (đã thêm) | Đúng thiết kế staff; xem `assets/fonts/FONTS-LICENSES.md` |
 | `file_picker` | MF5 | Chọn file tài liệu/video/ảnh để tải lên |
+| `re_editor`, `re_highlight` | C6 (hoãn) | Tô màu cú pháp JS/Java cho editor bài code. v1 dùng editor tự viết, chưa thêm package |
 
 ## Nhật ký triển khai tiếp — 02/11/2026
 

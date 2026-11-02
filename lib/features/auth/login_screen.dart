@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../core/i18n/i18n.dart';
 import '../../core/router/routes.dart';
 import '../../core/session/session_controller.dart';
+import '../../core/session/session_user.dart';
+import '../../core/ui/mdy/mdy_theme.dart';
 import '../../core/ui/pressable.dart';
 import '../../core/ui/states.dart';
 import '../../core/ui/staff/staff_input.dart';
@@ -51,7 +53,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     setState(() => _pending = true);
     try {
+      // Login xong router đổi màn ngay (widget này bị huỷ) nên đọc qua container, không qua ref.
+      final container = ProviderScope.containerOf(context, listen: false);
+      final t = ref.read(trProvider), toast = ref.read(mdyToastProvider.notifier);
       await ref.read(sessionProvider.notifier).login(_email.text.trim(), _password.text, remember: _remember);
+      // App staff RN báo "Đăng nhập thành công" cho Mentor/Quản lý.
+      final role = container.read(sessionProvider).user?.role;
+      if (role == Role.MENTOR || role == Role.MANAGER) toast.show(t('mdy.foundation.signedIn'));
     } catch (e) {
       if (mounted) setState(() => _failure = e);
     } finally {

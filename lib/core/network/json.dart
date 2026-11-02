@@ -25,6 +25,9 @@ class Json {
 
   bool has(String key) => _map[key] != null;
 
+  /// Giá trị JSON tuỳ ý (tham số/kết quả bài code). Chỉ để hiển thị, không dùng suy ra nghiệp vụ.
+  Object? raw(String key) => _map[key];
+
   String str(String key) => _map[key] is String ? _map[key] as String : fail();
   String? strOrNull(String key) => _map[key] == null ? null : str(key);
   String nonEmpty(String key) => str(key).isNotEmpty ? str(key) : fail();

@@ -38,6 +38,9 @@ dependencies:
   # MF5: chọn file native và render bài viết canonical
   file_picker: ^11.0.3
   flutter_widget_from_html_core: ^0.17.4
+  pdfx: ^2.11.0
+  video_player: ^2.11.1
+  socket_io_client: ^3.1.5
 
 dev_dependencies:
   flutter_test:

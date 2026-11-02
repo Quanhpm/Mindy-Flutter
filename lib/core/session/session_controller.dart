@@ -90,8 +90,8 @@ class SessionController extends Notifier<SessionState> {
   }
 
   /// Logout lỗi mạng thì ném lỗi để màn hình báo, KHÔNG giả vờ thành công.
-  Future<void> logout() async {
-    await _auth.logout();
+  Future<void> logout({bool all = false}) async {
+    await _auth.logout(all: all);
     await _api.clearCookies();
     _accept(null);
   }

@@ -41,5 +41,6 @@ class AuthApi {
   Future<SessionUser> me({CancelToken? cancel}) async =>
       SessionUser.fromJson(Json(await _api.get('auth/me', cancel: cancel), _err));
 
-  Future<void> logout() => _api.post('auth/logout');
+  /// [all] = đăng xuất mọi thiết bị (`auth/logout-all`, Settings của app staff RN).
+  Future<void> logout({bool all = false}) => _api.post(all ? 'auth/logout-all' : 'auth/logout');
 }

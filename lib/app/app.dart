@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/i18n/i18n.dart';
 import '../core/theme/app_theme.dart';
+import '../core/ui/mdy/mdy.dart';
 import 'router.dart';
 
 class MindyApp extends ConsumerWidget {
@@ -17,6 +18,8 @@ class MindyApp extends ConsumerWidget {
       theme: buildAppTheme(),
       themeMode: ThemeMode.light,
       routerConfig: ref.watch(routerProvider),
+      // Bảng màu sáng/tối + toast của bộ UI clone RN (staff). Học viên không đọc palette này.
+      builder: (context, child) => MdyTheme(child: MdyToastHost(child: child ?? const SizedBox.shrink())),
       locale: ref.watch(localeProvider),
       supportedLocales: I18n.supported,
       localizationsDelegates: const [
