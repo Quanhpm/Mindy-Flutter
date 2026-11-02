@@ -27,14 +27,14 @@ Tài liệu liên quan (giữ để tra cứu, plan này là nguồn chính khi 
 | Hạng mục | Trạng thái |
 | --- | --- |
 | Nền app: network/cookie/refresh, session, router, i18n, theme | P0 đã sửa 2 lỗi P1, test hồi quy pass |
-| Học viên: auth, home, catalog, giỏ, thanh toán, lịch, tài khoản, lớp của tôi | Home S1 đã có các khối/paging/lifecycle; S2–S4 còn phần UI theo RN |
+| Học viên: auth, home, catalog, giỏ, thanh toán, lịch, tài khoản, lớp của tôi | S1–S5 đã có code; S2–S4 tự review/test, chờ UAT dev/thiết bị |
 | Mentor MF1: login chung, phân luồng role, UI kit staff, Home khung, tiện ích yêu thích | P0 đã sửa 2 lỗi P2, test hồi quy pass |
 | Mentor MF2: lịch, Home, phòng, dạy thay, thông báo | UI/API; Flutter đọc lịch/context backend local pass; UAT thiết bị/thông báo/dev còn thiếu |
 | Mentor MF3: điểm danh | UI/API/controller; start/save/finalize backend local pass; UAT hai thiết bị còn thiếu |
 | Mentor MF4: lớp, học viên, báo cáo | UI/API; workspace HTTP và provider local pass; UAT dữ liệu lớn/thiết bị còn thiếu |
 | Mentor MF5: tài liệu, tải lên | UI/API, test và UAT local PDF/MinIO/iOS picker; còn thiết bị Android/nhiều loại file/server dev |
 | Mentor MF6: hoàn thiện | Đã sửa vòng đời/quyền/trợ năng, có checklist và smoke backend local; UAT thiết bị còn thiếu |
-| Build | Analyze sạch, 214 test pass; smoke Flutter/backend/MinIO local pass; iOS Simulator S1 main build 12,0 giây |
+| Build | Analyze sạch, 248 test pass + 1 live skip; APK debug/iOS Simulator build pass; UAT/signing chưa đủ |
 
 Cập nhật triển khai 02/11: P0 đã sửa B1–B4, chuyển ca chẩn đoán vào
 `test/p0_regression_test.dart` và bổ sung ca response/cookie cũ, refresh đồng thời,
@@ -294,7 +294,7 @@ Tải lên lỗi/hết hạn URL không để lại bản ghi rác; không gửi
 
 ---
 
-## 10. MF7 (tuỳ chọn, chỉ làm khi owner đồng ý)
+## 10. MF7 (đã làm theo ủy quyền owner)
 
 Ước lượng **4–6 ngày công**. Backend và web Mindy-FE2 đã có; thiết kế mobile chưa có, cần thiết kế bổ sung.
 
@@ -305,14 +305,27 @@ Tải lên lỗi/hết hạn URL không để lại bản ghi rác; không gửi
 
 ---
 
+## 10b. Bài tập code — Học viên + Mentor (chờ API Phase 7)
+
+Kế hoạch tổng: `../../Mindy-BE/docs/implement_phase/phase 7/PHASE_7_CODE_ASSIGNMENTS.md` (slice C6). Làm sau khi BE xong C3/C4.
+
+Owner chốt 02/11/2026: ngôn ngữ JavaScript + Java; đề kiểu viết hàm (LeetCode); **có editor trên app**; điểm của bài = lần cao nhất;
+lỗi biên dịch không tính lượt; không nhận nộp trễ; test ẩn chỉ hiện trạng thái + thời gian.
+
+- Học viên: danh sách bài trong Chi tiết lớp/buổi; màn đề (markdown + ví dụ); màn editor toàn màn hình (`re_editor` + `re_highlight`,
+  số dòng, tô màu, thanh phím phụ Tab/`{}`/`()`/`[]`/`;`/`"`/`=`/Undo/Redo, chọn ngôn ngữ, autosave nháp); Chạy thử / Nộp bài;
+  sheet kết quả; lịch sử nộp. Nhận kết quả qua socket hoặc polling 1,5 s tối đa 60 s.
+- Mentor: tổng hợp nộp bài của buổi (chỉ đọc) trong Chi tiết lớp/buổi. Soạn đề chỉ trên web.
+- Ước lượng 6–8 ngày công. Nghiệm thu: Chạy thử/Nộp → điểm đúng; nháp giữ giữa web và app; 320×640 chữ ×1,3; không hiện dữ liệu test ẩn.
+
 ## 11. Phát hành
 
 Ước lượng **2–3 ngày công**.
 
-- [ ] Icon app + màn khởi động theo nhận diện Mindy; tên hiển thị (đang là "Mindy Flutter").
-- [ ] Chốt `applicationId` / bundle id: giữ `vn.mindy.mindy_flutter` để cài song song bản RN, hay thay bản RN (`com.mindymobile`, cần cùng id + chữ ký).
+- [x] Icon app + màn khởi động theo nhận diện Mindy; tên hiển thị (đang là "Mindy Flutter").
+- [x] Chốt `applicationId` / bundle id: giữ `vn.mindy.mindy_flutter` để cài song song bản RN, hay thay bản RN (`com.mindymobile`, cần cùng id + chữ ký).
 - [ ] `env/prod.json` có `API_URL`, `APP_ORIGIN` production (owner cung cấp; backend phải có origin này trong `CORS_ORIGINS`).
-- [ ] CI GitHub Actions: `flutter analyze`, `flutter test`, build APK; giống điều kiện merge của bản RN.
+- [x] CI GitHub Actions (đã thêm workflow, chưa chạy remote): `flutter analyze`, `flutter test`, build APK; giống điều kiện merge của bản RN.
 - [ ] Ký Android (keystore) và iOS (team, provisioning); bản thử nội bộ (APK / TestFlight).
 
 ---
@@ -481,3 +494,40 @@ xem snapshot mới trước khi dùng revision mới; xem `MF5_REVIEW.md`.
 
 S1 chốt code: **214 test pass**, 1 live test mặc định skip; analyze sạch; main
 iOS Simulator build **12,0 giây**. Chưa đánh dấu nghiệm thu toàn bộ Học viên.
+
+
+### Chỉ đạo mới của owner — code trước, test sau
+
+Owner yêu cầu hoàn thiện toàn bộ phần thiếu, ưu tiên code S2–S5/MF7/phát hành,
+gom test/ảnh/UAT ở cuối để tối ưu token. Tạm hoãn test đỏ→xanh và check toàn bộ
+mỗi phase theo yêu cầu này; chỉ kiểm tra biên dịch cần thiết, không ghi code chưa
+test thành đã nghiệm thu. Các gate production/signing vẫn phải có giá trị thật.
+
+
+### S2–S5, MF7 và phát hành — chốt code 02/11
+
+- Hoàn thiện toàn bộ mục code S2–S5/MF7 trong scope. `REMAINING_CODE_REVIEW.md`
+  ghi thay đổi, nguồn backend, bảo vệ unknown/version/epoch và giới hạn dữ liệu.
+- Gom kiểm tra sau code đúng yêu cầu: **248 test pass**, 1 live test skip;
+  analyze sạch, 8 golden mới đã mở xem; sửa overflow thumbnail/sheet giỏ và nạp
+  locale tháng được phát hiện trong lượt kiểm tra. APK debug/iOS Simulator pass.
+- Phát hành: tên Mindy, mascot icon/splash, giữ ID cài song song RN, CI workflow,
+  validate production và cấu hình signing. Hướng dẫn tại `RELEASE.md`.
+- Chưa có URL/Origin production, keystore, Apple team/profile. Chưa chạy CI remote,
+  TestFlight hay UAT MF7 backend/hai actor; các gate UAT cũ vẫn ghi ở `MENTOR_UAT.md`.
+- Assignments và chat trực tiếp ngoài scope đã chốt; cần đợt chức năng riêng.
+  Checklist tổng bao gồm UAT/phát hành vì vậy không tick toàn phase thành Done.
+
+
+Lưu ý cuối lượt: workspace đang có thay đổi UI Học viên đồng thời theo
+`STUDENT_UI_PARITY_PLAN.md`. Kết quả 248 test/analyze sạch là mốc trước lượt UI mới;
+không commit/restore file của luồng đó. Build main cuối APK/iOS pass 17,0/19,9 giây;
+3 lint cuối nằm ở `learning_layout.dart` mới. Xem ghi chú cuối review.
+
+
+### Kiểm tra trước đưa lên main — 02/11
+
+Owner yêu cầu push lên main. Nhánh tích hợp Mentor MF2–MF7 và UI Học viên đã chạy
+`bash tool/check.sh`: analyze sạch, **275 test pass**, 1 live test skip. Không coi
+push source là phát hành store; các gate UAT thực tế/signing nêu trên giữ nguyên.
+Bỏ qua `test/failures/` và env/keystore local khi commit.

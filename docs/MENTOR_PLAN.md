@@ -139,7 +139,7 @@ Package cần thêm (mỗi package cần ADR theo quy trình dự án):
 | 5 | **Đăng nhập Google**: backend có luồng web (`/auth/google` → callback đặt cookie trên trình duyệt). Mobile cần deep link + chuyển cookie (ADR-0013 đã hoãn). | Ẩn nút ở giai đoạn đầu. |
 | 6 | **"Bảo lưu", "Cần chú ý"**: backend không có trạng thái bảo lưu; ngưỡng chuyên cần chưa có business rule. | Bỏ lọc "Bảo lưu". Chốt ngưỡng "Cần chú ý" (thiết kế: < 80%) vào BUSINESS_RULES. |
 | 7 | **Login staff vs Học viên**: Login mới không có Đăng ký, khác Login Học viên hiện tại. | Xem câu hỏi ở mục 7. |
-| 8 | **Backend có nhưng thiết kế chưa có**: đơn xin nghỉ của mentor (`/mentor/leave-requests`), ghi chú giảng dạy (`/class-sessions/:id/teaching-notes`), bài tập (`/mentor/.../assignments`), chat, đổi link họp. | Ngoài phạm vi đợt này; đưa vào backlog khi có thiết kế. |
+| 8 | **Backend có nhưng thiết kế chưa có**: đơn xin nghỉ của mentor (`/mentor/leave-requests`), ghi chú giảng dạy (`/class-sessions/:id/teaching-notes`), bài tập (`/mentor/.../assignments`), chat, đổi link họp. | MF7 đã code nghỉ/dạy bù, ghi chú và link họp theo ủy quyền 02/11; xem `REMAINING_CODE_REVIEW.md`. Assignments/chat trực tiếp vẫn ngoài scope, chờ đợt riêng. |
 
 ## 5. Lộ trình
 
