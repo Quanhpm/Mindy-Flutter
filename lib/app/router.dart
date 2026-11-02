@@ -11,6 +11,14 @@ import '../features/auth/splash_screen.dart';
 import '../features/auth/welcome_screen.dart';
 import '../features/courses/courses_screen.dart';
 import '../features/home/home_screen.dart';
+import '../features/manager/manager_home_screen.dart';
+import '../features/manager/leave/leave_screens.dart';
+import '../features/manager/materials/materials_api.dart' show MaterialReviewStatus;
+import '../features/manager/materials/materials_screens.dart';
+import '../features/manager/materials/material_editor.dart';
+import '../features/manager/collections/collections_screens.dart';
+import '../features/manager/operations/read_screens.dart';
+import '../features/manager/operations/makeup_screens.dart';
 import '../features/mentor/live_mentor_home_screen.dart';
 import '../features/mentor/classes/classes_screen.dart';
 import '../features/mentor/classes/class_detail_screen.dart';
@@ -83,6 +91,92 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.mentorMeetingPath,
         builder: (_, state) =>
             SessionBoundView(child: MentorMeetingScreen(sessionId: state.pathParameters['sessionId']!)),
+      ),
+      // Manager: mọi form riêng tư tạo State mới khi đổi actor.
+      GoRoute(
+        path: Routes.manager,
+        builder: (_, _) => const SessionBoundView(child: ManagerHomeScreen()),
+      ),
+      GoRoute(
+        path: Routes.managerUtilities,
+        builder: (_, _) => const SessionBoundView(child: ManagerUtilitiesScreen()),
+      ),
+      GoRoute(
+        path: Routes.managerLeaves,
+        builder: (_, _) => const SessionBoundView(child: ManagerLeavesScreen()),
+      ),
+      GoRoute(
+        path: Routes.managerLeavePath,
+        builder: (_, s) => SessionBoundView(child: ManagerLeaveDetailScreen(id: s.pathParameters['requestId']!)),
+      ),
+      GoRoute(
+        path: Routes.managerMaterialNew,
+        builder: (_, s) => SessionBoundView(child: ManagerMaterialEditor(unitId: s.uri.queryParameters['unitId'])),
+      ),
+      GoRoute(
+        path: Routes.managerMaterialEditPath,
+        builder: (_, s) => SessionBoundView(child: ManagerMaterialEditor(id: s.pathParameters['materialId']!)),
+      ),
+      GoRoute(
+        path: Routes.managerMaterialPath,
+        builder: (_, s) => SessionBoundView(child: ManagerMaterialScreen(id: s.pathParameters['materialId']!)),
+      ),
+      GoRoute(
+        path: Routes.managerMaterials,
+        builder: (_, s) => SessionBoundView(
+          child: ManagerMaterialsScreen(
+            unitId: s.uri.queryParameters['unitId'],
+            initialStatus: MaterialReviewStatus.values
+                .where((v) => v.name == s.uri.queryParameters['status'])
+                .firstOrNull,
+          ),
+        ),
+      ),
+      GoRoute(
+        path: Routes.managerCollections,
+        builder: (_, _) => const SessionBoundView(child: ManagerCollectionsScreen()),
+      ),
+      GoRoute(
+        path: Routes.managerOrderPath,
+        builder: (_, s) => SessionBoundView(child: ManagerOrderScreen(id: s.pathParameters['orderId']!)),
+      ),
+      GoRoute(
+        path: Routes.managerPeoplePath,
+        builder: (_, s) => SessionBoundView(child: ManagerPeopleScreen(role: s.pathParameters['role']!)),
+      ),
+      GoRoute(
+        path: Routes.managerPersonPath,
+        builder: (_, s) => SessionBoundView(
+          child: ManagerPersonScreen(role: s.pathParameters['role']!, id: s.pathParameters['personId']!),
+        ),
+      ),
+      GoRoute(
+        path: Routes.managerClasses,
+        builder: (_, _) => const SessionBoundView(child: ManagerClassesScreen()),
+      ),
+      GoRoute(
+        path: Routes.managerClassPath,
+        builder: (_, s) => SessionBoundView(child: ManagerClassScreen(id: s.pathParameters['classId']!)),
+      ),
+      GoRoute(
+        path: Routes.managerIncomplete,
+        builder: (_, _) => const SessionBoundView(child: ManagerIncompleteScreen()),
+      ),
+      GoRoute(
+        path: Routes.managerReports,
+        builder: (_, s) => SessionBoundView(child: ManagerReportScreen(classId: s.uri.queryParameters['classId'])),
+      ),
+      GoRoute(
+        path: Routes.managerAuditPath,
+        builder: (_, s) => SessionBoundView(child: ManagerAuditScreen(sessionId: s.pathParameters['sessionId']!)),
+      ),
+      GoRoute(
+        path: Routes.managerMakeup,
+        builder: (_, _) => const SessionBoundView(child: ManagerMakeupScreen()),
+      ),
+      GoRoute(
+        path: Routes.managerMakeupPath,
+        builder: (_, s) => SessionBoundView(child: ManagerMakeupDetailScreen(id: s.pathParameters['conflictId']!)),
       ),
       // ---- Mentor
       GoRoute(path: Routes.mentor, builder: (_, _) => const LiveMentorHomeScreen()),

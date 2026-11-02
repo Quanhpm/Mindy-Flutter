@@ -21,8 +21,8 @@ class SessionState {
   final int epoch;
 }
 
-/// Role được vào app ở bản hiện tại. MANAGER/ADMIN sẽ thêm khi có app Quản lý.
-const appRoles = {Role.STUDENT, Role.MENTOR};
+/// Role được vào app ở bản hiện tại. ADMIN vẫn chưa có khu vực mobile.
+const appRoles = {Role.STUDENT, Role.MENTOR, Role.MANAGER};
 
 final sessionProvider = NotifierProvider<SessionController, SessionState>(SessionController.new);
 

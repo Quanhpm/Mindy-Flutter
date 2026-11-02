@@ -16,6 +16,7 @@ không mở rộng sang toàn bộ assignments/chat ngoài plan.
 Tài liệu liên quan (giữ để tra cứu, plan này là nguồn chính khi làm):
 
 - `docs/MENTOR_PLAN.md`: phân tích thiết kế Mentor, 5 quyết định của owner, chỗ lệch backend.
+- `docs/MANAGER_PLAN.md`: scope Manager mới được owner yêu cầu lập plan sau khi push Mentor; MG0–MG7 và backlog MGX.
 - `docs/FLUTTER_RN_PARITY_REVIEW_2026-11-02.md`: review đối chiếu Flutter/RN, có 4 lỗi đã tái hiện.
 - `docs/design/mentor/*.png`: ảnh các màn thiết kế Mentor.
 - `../MindyMobile/docs/FLUTTER_MIGRATION_PLAN.md`: plan clone phần Học viên.
@@ -531,3 +532,22 @@ Owner yêu cầu push lên main. Nhánh tích hợp Mentor MF2–MF7 và UI Họ
 `bash tool/check.sh`: analyze sạch, **275 test pass**, 1 live test skip. Không coi
 push source là phát hành store; các gate UAT thực tế/signing nêu trên giữ nguyên.
 Bỏ qua `test/failures/` và env/keystore local khi commit.
+
+
+### Mở đợt Manager — lập kế hoạch 02/11
+
+Owner yêu cầu lập plan sau khi đối chiếu web. Đã viết `MANAGER_PLAN.md`: cùng app,
+Login/role/shell, Home → duyệt nghỉ/dạy bù → tài liệu/review/upload → CASH → kiểm tra
+và UAT. Điều phối Mentor/chuyên cần/xếp học bù học viên nằm backlog MGX riêng.
+Đã cập nhật `UI.md` mục 6.4; chưa code, chưa bật quyền MANAGER và chưa chạy UAT.
+Kế thừa chỉ đạo tự quyết và code trước/test gom sau; không push main tự động.
+
+
+### Thực hiện toàn bộ Manager — 02/11
+
+Owner mở scope MG0–MG7 **và MGX1–MGX4**. Đã triển khai trong cùng app: login/guard
+Manager, Home/tiện ích/tài khoản, duyệt nghỉ/dạy bù, tài liệu review/publish và
+soạn/upload, CASH, tra cứu người/lớp/lịch, phân công primary/substitute, chuyên cần
+chỉ đọc/audit và xếp/hủy học bù học viên. Contract và dữ liệu tại
+`API_CONTRACT_MANAGER.md`, `MANAGER_TEST_DATA.md`; bằng chứng cuối và gate tại
+`MANAGER_REVIEW.md`. Không đổi backend/web, không tự push main.

@@ -226,9 +226,25 @@ Review: `REMAINING_CODE_REVIEW.md`. Theo ủy quyền không hỏi duyệt lại
 
 Chưa có thiết kế; cần thiết kế bổ sung trước C6. Test ẩn chỉ hiện trạng thái + thời gian (quyết định owner D10).
 
-### 6.4. Quản lý (chưa trong phạm vi)
+### 6.4. Manager — đã triển khai
 
-Thiết kế `Thiết kế Home UI.html`: Home Quản lý (đơn nghỉ, duyệt tài liệu, xác nhận tiền mặt, phân công dạy thay, buổi chưa chốt, thông báo). Dùng lại hệ Staff khi làm.
+Nguồn triển khai: `MANAGER_PLAN.md` (02/11/2026). Thêm role MANAGER vào cùng app,
+dùng Login và hệ Staff. Đã code MG1–MG6 và MGX1–MGX4; ADMIN vẫn chưa có khu vực mobile.
+Ảnh Home: `docs/design/mentor/manager_home.png`; nghiệp vụ theo web FE2 và backend.
+
+| Màn/luồng | Phase | Trạng thái |
+| --- | --- | --- |
+| Login Manager, shell, tiện ích, tài khoản | MG1 | Đã code, kiểm tra ở MG7 |
+| Home/tổng quan | MG2 | Đã code, kiểm tra ở MG7 |
+| Đơn nghỉ: danh sách, chi tiết, duyệt/từ chối | MG3 | Đã code, kiểm tra ở MG7 |
+| Kho tài liệu/theo khóa-chương, viewer, duyệt/xuất bản/ẩn | MG4 | Đã code, kiểm tra ở MG7 |
+| Tạo/sửa/xóa và upload tài liệu | MG5 | Đã code, kiểm tra ở MG7 |
+| Đơn CASH và xác nhận thu tiền | MG6 | Đã code, kiểm tra ở MG7 |
+| Tra cứu/điều phối/chuyên cần/xếp học bù | MGX1–MGX4 | Đã code, kiểm tra ở MG7 |
+
+Review và gate UAT/deploy: `MANAGER_REVIEW.md`, `MANAGER_TEST_DATA.md`.
+Các badge/thẻ lấy API thật, preview synthetic chỉ trong tool/test. Chuông CHAT_MESSAGE không thay
+thông báo phê duyệt; không hiển thị tiện ích chưa làm thành nút hoạt động.
 
 ---
 

@@ -35,7 +35,36 @@ class Routes {
 
   static const guestPages = {welcome, login, register};
 
-  // ---- Mentor (MENTOR_PLAN.md). Không có tab bar: Home + trang con mở bằng push.
+  // ---- Staff: Manager và Mentor dùng Home + trang con mở bằng push.
+  static const manager = '/manager';
+  static const managerUtilities = '/manager/utilities';
+  static const managerLeaves = '/manager/leave-requests';
+  static const managerLeavePath = '/manager/leave-requests/:requestId';
+  static String managerLeave(String id) => '$managerLeaves/$id';
+  static const managerMaterials = '/manager/materials';
+  static const managerMaterialNew = '/manager/materials/new';
+  static const managerMaterialPath = '/manager/materials/:materialId';
+  static const managerMaterialEditPath = '/manager/materials/:materialId/edit';
+  static String managerMaterial(String id) => '$managerMaterials/$id';
+  static String managerMaterialEdit(String id) => '${managerMaterial(id)}/edit';
+  static const managerCollections = '/manager/collections';
+  static const managerOrderPath = '/manager/orders/:orderId';
+  static String managerOrder(String id) => '/manager/orders/$id';
+  static const managerPeoplePath = '/manager/people/:role';
+  static String managerPeople(String role) => '/manager/people/$role';
+  static const managerPersonPath = '/manager/people/:role/:personId';
+  static String managerPerson(String role, String id) => '${managerPeople(role)}/$id';
+  static const managerClasses = '/manager/classes';
+  static const managerClassPath = '/manager/classes/:classId';
+  static String managerClass(String id) => '$managerClasses/$id';
+  static const managerIncomplete = '/manager/incomplete';
+  static const managerAuditPath = '/manager/sessions/:sessionId/audits';
+  static String managerAudit(String id) => '/manager/sessions/$id/audits';
+  static const managerReports = '/manager/reports';
+  static const managerMakeup = '/manager/makeup';
+  static const managerMakeupPath = '/manager/makeup/:conflictId';
+  static String managerMakeupDetail(String id) => '$managerMakeup/$id';
+
   static const mentor = '/mentor';
   static const mentorUtilities = '/mentor/utilities';
   static const mentorLeaveCreate = '/mentor/leave/new';
@@ -66,18 +95,20 @@ String? redirectFor(SessionState s, String loc) {
     return Routes.guestPages.contains(loc) ? null : Routes.login;
   }
 
+  final isManagerArea = loc == Routes.manager || loc.startsWith('${Routes.manager}/');
   final isMentorArea = loc == Routes.mentor || loc.startsWith('${Routes.mentor}/');
   switch (user.role) {
     case Role.STUDENT:
-      if (loc == Routes.splash || Routes.guestPages.contains(loc) || isMentorArea) {
+      if (loc == Routes.splash || Routes.guestPages.contains(loc) || isMentorArea || isManagerArea) {
         return Routes.home;
       }
       return null;
     case Role.MENTOR:
       return isMentorArea ? null : Routes.mentor;
     case Role.MANAGER:
+      return isManagerArea ? null : Routes.manager;
     case Role.ADMIN:
-      // Chưa có app Quản lý: màn "tài khoản nhân sự" + Đăng xuất
+      // ADMIN chưa có không gian mobile: màn tài khoản nhân sự + Đăng xuất
       return loc == Routes.welcome ? null : Routes.welcome;
   }
 }

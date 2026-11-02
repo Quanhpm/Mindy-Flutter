@@ -7,16 +7,16 @@ import 'package:mindy_flutter/core/ui/staff/staff_widgets.dart';
 import 'package:mindy_flutter/features/mentor/mentor_utilities.dart';
 
 SessionState signedIn(Role role) => SessionState(
-      ready: true,
-      user: SessionUser(
-        id: '3f2b6d0e-1c2a-4b5c-8d9e-0a1b2c3d4e5f',
-        email: 'a@mindy.vn',
-        displayName: 'Trần Thị Linh',
-        phone: null,
-        role: role,
-        createdAt: DateTime.utc(2026),
-      ),
-    );
+  ready: true,
+  user: SessionUser(
+    id: '3f2b6d0e-1c2a-4b5c-8d9e-0a1b2c3d4e5f',
+    email: 'a@mindy.vn',
+    displayName: 'Trần Thị Linh',
+    phone: null,
+    role: role,
+    createdAt: DateTime.utc(2026),
+  ),
+);
 
 void main() {
   group('redirectFor - phân luồng theo role', () {
@@ -51,8 +51,8 @@ void main() {
       expect(redirectFor(s, Routes.mentorPage('schedule')), isNull);
     });
 
-    test('MANAGER/ADMIN (chưa có app) -> welcome', () {
-      expect(redirectFor(signedIn(Role.MANAGER), Routes.mentor), Routes.welcome);
+    test('MANAGER vào Manager; ADMIN vẫn chưa có app', () {
+      expect(redirectFor(signedIn(Role.MANAGER), Routes.mentor), Routes.manager);
       expect(redirectFor(signedIn(Role.ADMIN), Routes.welcome), isNull);
     });
   });

@@ -42,8 +42,8 @@ class MemoryFilesApi extends MentorFilesApi {
   );
   @override
   Future<FileUploadIntent> intent({
-    required String classId,
-    required String unitId,
+    String? classId,
+    String? unitId,
     required String courseUnitId,
     required String name,
     required String mimeType,
