@@ -35,6 +35,9 @@ dependencies:
   url_launcher: ^6.3.2
   # Idempotency-Key cho điểm danh (UUID v4)
   uuid: ^4.5.1
+  # MF5: chọn file native và render bài viết canonical
+  file_picker: ^11.0.3
+  flutter_widget_from_html_core: ^0.17.4
 
 dev_dependencies:
   flutter_test:

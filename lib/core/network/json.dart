@@ -72,6 +72,17 @@ class Json {
   Json obj(String key) => Json(_map[key], errorCode);
   Json? objOrNull(String key) => _map[key] == null ? null : obj(key);
 
+  Map<String, String> stringMap(String key) {
+    final value = _map[key];
+    if (value is! Map<String, dynamic>) fail();
+    final result = <String, String>{};
+    for (final entry in value.entries) {
+      if (entry.value is! String) fail();
+      result[entry.key] = entry.value as String;
+    }
+    return Map.unmodifiable(result);
+  }
+
   List<T> list<T>(String key, T Function(Json j) parse) {
     final v = _map[key];
     if (v is! List) fail();
