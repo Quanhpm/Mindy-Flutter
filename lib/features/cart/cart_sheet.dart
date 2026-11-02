@@ -2,19 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/ui/ui.dart';
+import '../../core/i18n/i18n.dart';
+import '../../core/router/routes.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/ui/button.dart';
+import '../../core/ui/cover_image.dart';
+import '../../core/ui/pressable.dart';
+import '../../core/ui/states.dart';
+import '../../core/utils/format.dart';
+import '../courses/courses_providers.dart';
 import 'cart_controller.dart';
 import 'cart_models.dart';
 
-/// Mở giỏ hàng. Checkout thành công -> đóng sheet, mở màn Thanh toán.
+/// Mở bottom sheet giỏ hàng.
 Future<void> showCartSheet(BuildContext context) async {
   final router = GoRouter.of(context);
   final orderId = await showAppSheet<String>(context, (_) => const CartSheet());
   if (orderId != null) router.push(Routes.payment(orderId));
 }
 
-/// `cart/components/CartSheet.tsx` + `hooks/useCartController.ts`.
-/// TODO(UI): port ảnh lớp, badge giá đổi, layout tổng tiền cố định đáy.
+/// Bottom sheet giỏ hàng - port từ `CartSheet.tsx`.
 class CartSheet extends ConsumerStatefulWidget {
   const CartSheet({super.key});
 
@@ -23,16 +30,16 @@ class CartSheet extends ConsumerStatefulWidget {
 }
 
 class _CartSheetState extends ConsumerState<CartSheet> {
-  bool _busy = false; // khoá mọi thao tác khi đang chạy (chống bấm lặp)
+  bool _busy = false;
   String? _removingId;
   bool _checkingOut = false;
   String? _error;
-  List<String>? _unknownClassIds; // checkout mất response
+
+  List<String>? get _unknownClassIds => ref.read(checkoutPendingProvider);
 
   @override
   void initState() {
     super.initState();
-    // Luôn hiện giỏ thật của server khi mở sheet
     Future.microtask(() => ref.read(cartProvider.notifier).refresh().catchError((_) => Cart.empty));
   }
 
@@ -42,7 +49,7 @@ class _CartSheetState extends ConsumerState<CartSheet> {
     try {
       await task();
     } finally {
-      _busy = false;
+      if (mounted) _busy = false;
     }
   }
 
@@ -57,8 +64,10 @@ class _CartSheetState extends ConsumerState<CartSheet> {
         } catch (e) {
           if (mounted) setState(() => _error = t(cartErrorKey(e)));
         } finally {
-          await ref.read(cartProvider.notifier).refresh().catchError((_) => Cart.empty);
-          if (mounted) setState(() => _removingId = null);
+          if (mounted) {
+            await ref.read(cartProvider.notifier).refresh().catchError((_) => Cart.empty);
+            setState(() => _removingId = null);
+          }
         }
       });
 
@@ -72,8 +81,8 @@ class _CartSheetState extends ConsumerState<CartSheet> {
         try {
           final orderId = await ref.read(cartProvider.notifier).checkout();
           if (mounted) Navigator.of(context).pop(orderId);
-        } on CheckoutUnknown catch (u) {
-          if (mounted) setState(() => _unknownClassIds = u.classIds);
+        } on CheckoutUnknown {
+          if (mounted) setState(() => _error = null);
         } catch (e) {
           if (mounted) setState(() => _error = t(cartErrorKey(e)));
         } finally {
@@ -96,7 +105,6 @@ class _CartSheetState extends ConsumerState<CartSheet> {
           }
           final latest = ref.read(cartProvider).value ?? Cart.empty;
           setState(() {
-            _unknownClassIds = null;
             if (latest.items.isEmpty) _error = t('cart.errors.generic');
           });
         } catch (_) {
@@ -109,83 +117,304 @@ class _CartSheetState extends ConsumerState<CartSheet> {
   @override
   Widget build(BuildContext context) {
     final t = ref.watch(trProvider);
-    final cart = ref.watch(cartProvider);
+    final cartAsync = ref.watch(cartProvider);
+    ref.watch(checkoutPendingProvider);
 
     return RegionColors.cart(
-      child: AsyncView(
-        value: cart,
-        onRetry: () => ref.invalidate(cartProvider),
-        data: (c) => ListView(
-          controller: PrimaryScrollController.of(context),
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
+      child: SingleChildScrollView(
+        controller: PrimaryScrollController.maybeOf(context),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+        child: Column(
+          key: const Key('cart-sheet'),
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(t('cart.title', {'count': c.items.length}), style: AppText.title(AppColors.black)),
-            const SizedBox(height: 16),
-            if (c.items.isEmpty) Text(t('cart.empty'), style: AppText.body(AppColors.black)),
-            for (final item in c.items) _row(t, item),
-            if (c.items.any((i) => !i.isPurchasable))
-              Text(t('cart.errors.unavailable'), style: const TextStyle(color: AppColors.headsup)),
-            if (_error != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(_error!, style: const TextStyle(color: AppColors.headsup, fontWeight: FontWeight.w700)),
+            Text(
+              t('cart.title', {'count': cartAsync.value?.items.length ?? 0}),
+              key: const Key('cart-title'),
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.44,
+                color: AppColors.black,
               ),
-            const Divider(height: 32),
-            Row(
-              children: [
-                Expanded(child: Text(t('cart.total'), style: AppText.label(AppColors.black))),
-                Text(formatVnd(c.totalAmount), style: AppText.title(AppColors.black)),
-              ],
             ),
-            const SizedBox(height: 16),
-            if (_unknownClassIds != null) ...[
-              Text(t('cart.checkoutUnknown'), style: const TextStyle(color: AppColors.headsup)),
-              const SizedBox(height: 8),
-              MindyButton(label: t('cart.checkoutVerify'), loading: _checkingOut, onPressed: _verify),
-            ] else
-              MindyButton(
-                label: _checkingOut ? t('cart.checkoutPending') : t('cart.checkout'),
-                loading: _checkingOut,
-                onPressed: c.items.isEmpty || c.items.any((i) => !i.isPurchasable) ? null : _checkout,
-              ),
+            const SizedBox(height: 10),
+            if (cartAsync.isLoading)
+              const Padding(
+                key: Key('cart-loading'),
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Column(
+                  children: [
+                    Skeleton(height: 78, radius: 12),
+                    SizedBox(height: 12),
+                    Skeleton(height: 78, radius: 12),
+                    SizedBox(height: 12),
+                    Skeleton(height: 40, radius: 12),
+                  ],
+                ),
+              )
+            else if (cartAsync.hasError)
+              Padding(
+                key: const Key('cart-error'),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: ScreenState(
+                  title: t('home.errorTitle'),
+                  description: t('errors.generic'),
+                  retryKey: const Key('cart-retry'),
+                  onRetry: () => ref.invalidate(cartProvider),
+                ),
+              )
+            else
+              _buildCartContent(t, cartAsync.value ?? Cart.empty),
           ],
         ),
       ),
     );
   }
 
-  Widget _row(Translator t, CartItem item) => Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), border: Border.all(color: AppColors.line)),
+  Widget _buildCartContent(Translator t, Cart cart) {
+    final unavailable = cart.items.any((item) => !item.isPurchasable);
+    final pending = _checkingOut || _removingId != null;
+    final checkoutUnknown = _unknownClassIds != null;
+    final checkoutDisabled =
+        pending || cart.items.isEmpty || unavailable || checkoutUnknown;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (cart.items.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 28),
+            child: Text(
+              t('cart.empty'),
+              key: const Key('cart-empty'),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.muted,
+              ),
+            ),
+          )
+        else
+          for (var i = 0; i < cart.items.length; i++)
+            _buildCartItem(t, cart.items[i], i, pending),
+
+        // Hàng tổng cộng
+        Padding(
+          padding: const EdgeInsets.only(top: 16, bottom: 14),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  t('cart.total'),
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.muted,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                formatVnd(cart.totalAmount),
+                key: const Key('cart-total'),
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Thông báo lỗi checkout hoặc không khả dụng
+        if (unavailable || _error != null) ...[
+          Text(
+            _error ?? t('cart.errors.unavailable'),
+            key: const Key('cart-checkout-error'),
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: AppColors.statusRed,
+            ),
+          ),
+          const SizedBox(height: 10),
+        ],
+
+        // Trạng thái đơn chưa rõ
+        if (checkoutUnknown) ...[
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  t('cart.checkoutUnknown'),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.statusRed,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                MindyButton(
+                  key: const Key('cart-checkout-verify'),
+                  variant: ButtonVariant.outline,
+                  label: t('cart.checkoutVerify'),
+                  loading: _checkingOut,
+                  onPressed: pending ? null : _verify,
+                ),
+              ],
+            ),
+          ),
+        ],
+
+        // Nút thanh toán
+        MindyButton(
+          key: const Key('cart-checkout'),
+          label: t(_checkingOut ? 'cart.checkoutPending' : 'cart.checkout'),
+          variant: ButtonVariant.action,
+          loading: _checkingOut,
+          minHeight: 52,
+          radius: 14,
+          onPressed: checkoutDisabled ? null : _checkout,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCartItem(Translator t, CartItem item, int index, bool pending) {
+    final imgUrl = ref.watch(courseDetailProvider(item.courseId)).value?.imgUrl;
+    final isRemoving = _removingId == item.classId;
+
+    return Container(
+      key: Key('cart-item-${item.classId}'),
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: AppColors.line)),
+      ),
+      child: Opacity(
+        opacity: item.isPurchasable ? 1.0 : 0.6,
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(
+              width: 54,
+              height: 54,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: CoverImage(
+                  url: imgUrl,
+                  label: item.courseTitle,
+                  hideLabel: true,
+                  fallback: CourseCover(index: index),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(item.courseTitle, style: AppText.label(AppColors.black)),
+                  Text(
+                    item.courseTitle,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.black,
+                    ),
+                  ),
                   Text(
                     t('cart.item.meta', {
                       'name': item.className,
-                      'mode': t('home.delivery.${item.deliveryMode.name}'),
+                      'mode': item.deliveryMode.name,
                       'date': Dates.dateOnly(item.startDate),
                     }),
-                    style: AppText.caption(AppColors.black),
+                    style: const TextStyle(
+                      fontSize: 12.5,
+                      color: AppColors.muted,
+                    ),
                   ),
-                  Text(formatVnd(item.currentPriceAmount), style: AppText.label(AppColors.black)),
-                  if (item.priceChanged)
-                    Text(t('cart.item.priceChanged'), style: const TextStyle(color: AppColors.statusYellow)),
+                  const SizedBox(height: 2),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 2,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Text(
+                        formatVnd(item.currentPriceAmount),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.forest,
+                        ),
+                      ),
+                      if (item.currentPriceAmount != item.priceSnapshot)
+                        Text(
+                          formatVnd(item.priceSnapshot),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.muted,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                    ],
+                  ),
+                  if (item.currentPriceAmount != item.priceSnapshot)
+                    Text(
+                      t('cart.item.priceChanged'),
+                      key: Key('cart-item-price-changed-${item.classId}'),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.statusYellow,
+                      ),
+                    ),
                   if (!item.isPurchasable)
-                    Text(t('cart.item.unavailable'), style: const TextStyle(color: AppColors.headsup)),
+                    Text(
+                      t('cart.item.unavailable'),
+                      key: Key('cart-item-unavailable-${item.classId}'),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.statusRed,
+                      ),
+                    ),
                 ],
               ),
             ),
-            TextLink(
-              t('cart.item.remove'),
-              onTap: _removingId != null || _checkingOut ? null : () => _remove(item.classId),
+            Pressable(
+              key: Key('cart-item-remove-${item.classId}'),
+              semanticLabel: t('cart.item.removeLabel', {
+                'course': item.courseTitle,
+                'name': item.className,
+              }),
+              onTap: pending ? null : () => _remove(item.classId),
+              child: Container(
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                alignment: Alignment.center,
+                child: isRemoving
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.headsup),
+                      )
+                    : Text(
+                        t('cart.item.remove'),
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.headsup,
+                        ),
+                      ),
+              ),
             ),
           ],
         ),
-      );
+      ),
+    );
+  }
 }
