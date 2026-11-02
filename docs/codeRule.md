@@ -184,6 +184,10 @@ Feature lớn (Mentor) chia thư mục con theo màn (`mentor/schedule/`, `mento
 
 ## 14. Git và quy trình
 
+Owner đã ủy quyền trong chat ngày 02/11/2026: tự quyết các phần sau, không hỏi thêm.
+Từ MF2 agent tự review UI và tiếp tục API; lưu ảnh/bằng chứng để owner xem lại.
+Yêu cầu kiểm thử và bằng chứng hoàn thành vẫn giữ nguyên.
+
 - Mỗi phase một nhánh: `flutter/p0-fixes`, `flutter/mf2-schedule`, `flutter/s1-home`…
 - Commit nhỏ, message tiếng Việt hoặc tiếng Anh rõ ý: `mf3: điểm danh chia batch 100 dòng`.
 - **Chỉ một người/công cụ sửa repo tại một thời điểm**; công cụ khác chỉ review hoặc làm nhánh khác.

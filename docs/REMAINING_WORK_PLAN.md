@@ -2,6 +2,17 @@
 
 Ngày lập: **02/11/2026**. Một file duy nhất để làm hết phần còn lại: sửa lỗi nền, toàn bộ chức năng **Mentor**, các phần **Học viên** chưa giống bản React Native, và chuẩn bị phát hành.
 
+**Ủy quyền mới của owner (02/11/2026, trong chat):** “các phần sau bạn cứ tự làm
+đừng hỏi j nữa ... tự quyết định đi, sai thì tôi sửa sau”. Áp dụng từ MF2:
+agent tự đối chiếu UI, quyết định chi tiết còn mở và tiếp tục API/kiểm tra, không
+chờ từng vòng hỏi duyệt. Giữ ảnh và nhật ký để owner xem sau; không coi UAT thật,
+server dev hay phát hành có chữ ký là đã xong nếu chưa có bằng chứng thực thi.
+
+Các lựa chọn theo ủy quyền: chip lớp IN_PROGRESS = Đang dạy, OPEN/DRAFT = Sắp mở,
+COMPLETED = Đã kết thúc, CANCELLED có nhãn riêng; Cần chú ý khi rate khác null và
+<80%; Đăng ký giữ hệ Học viên; dự kiến làm MF7 (nghỉ/dạy bù, ghi chú, link họp),
+không mở rộng sang toàn bộ assignments/chat ngoài plan.
+
 Tài liệu liên quan (giữ để tra cứu, plan này là nguồn chính khi làm):
 
 - `docs/MENTOR_PLAN.md`: phân tích thiết kế Mentor, 5 quyết định của owner, chỗ lệch backend.
@@ -15,10 +26,11 @@ Tài liệu liên quan (giữ để tra cứu, plan này là nguồn chính khi 
 
 | Hạng mục | Trạng thái |
 | --- | --- |
-| Nền app: network/cookie/refresh, session, router, i18n, theme | Xong, còn 2 lỗi P1 (mục 2) |
+| Nền app: network/cookie/refresh, session, router, i18n, theme | P0 đã sửa 2 lỗi P1, test hồi quy pass |
 | Học viên: auth, home, catalog, giỏ, thanh toán, lịch, tài khoản, lớp của tôi | Chức năng chạy được; nhiều UI còn dạng khung (`TODO(UI)`) |
-| Mentor MF1: login chung, phân luồng role, UI kit staff, Home khung, tiện ích yêu thích | Xong, còn 2 lỗi P2 (mục 2) |
-| Mentor MF2–MF6: lịch, điểm danh, lớp, học viên, báo cáo, tài liệu, tải lên | **Chưa làm** (đang là trang tạm) |
+| Mentor MF1: login chung, phân luồng role, UI kit staff, Home khung, tiện ích yêu thích | P0 đã sửa 2 lỗi P2, test hồi quy pass |
+| Mentor MF2: lịch, Home, phòng, dạy thay, thông báo | Đã triển khai UI + API, tự review theo ủy quyền; UAT backend còn thiếu |
+| Mentor MF3–MF6: điểm danh, lớp, học viên, báo cáo, tài liệu, tải lên | Chưa triển khai |
 | Build | `flutter analyze` sạch, 17/17 test pass; iOS Simulator chạy tới màn Đăng nhập (đã thêm CocoaPods) |
 
 Cập nhật triển khai 02/11: P0 đã sửa B1–B4, chuyển ca chẩn đoán vào
@@ -358,3 +370,17 @@ Tổng phần bắt buộc: **25–35,5 ngày công**, cộng dự phòng 20% th
 | `uuid` | MF1 (đã thêm) | Sinh `Idempotency-Key` cho điểm danh |
 | Font Be Vietnam Pro, Material Symbols Rounded (asset) | MF1 (đã thêm) | Đúng thiết kế staff; xem `assets/fonts/FONTS-LICENSES.md` |
 | `file_picker` | MF5 | Chọn file tài liệu/video/ảnh để tải lên |
+
+## Nhật ký triển khai tiếp — 02/11/2026
+
+- P0: thêm ca queued request trước interceptor; `sessionEpoch` chụp đồng bộ lúc tạo lệnh.
+- MF2: đã có UI, API/provider và router thật cho Home/Lịch/Dạy thay/Phòng/Thông báo;
+  helper đọc hết trang kiểm tra tổng/ID, timezone từ server, context tối đa 3 đồng thời;
+  cursor thông báo, lệnh đọc không optimistic/retry, timer dừng khi Home bị che hoặc app nền.
+- Đã tự review ảnh tại `test/goldens/mf2_*.png`, preview debug `tool/mentor_preview.dart`;
+  có ảnh iPhone Simulator, nguồn và sai khác trong `MF2_UI_REVIEW.md`.
+- `bash tool/check.sh`: **No issues found, 67 test pass** (gồm 27 MF2 UI/model,
+  7 API/provider và 1 vòng đời polling). Không coi đây là UAT server.
+- Smoke dev chưa thực hiện: môi trường cục bộ không có `SEED_ACCOUNT_PASSWORD`.
+  Không đoán mật khẩu, không lưu thông tin đăng nhập trong repo.
+- Việc kế tiếp: MF3 điểm danh, rồi MF4/MF5; giữ các mục UAT live chưa đánh dấu Done.

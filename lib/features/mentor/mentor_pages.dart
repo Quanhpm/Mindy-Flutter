@@ -8,11 +8,13 @@ import '../../core/ui/staff/staff_theme.dart';
 import '../../core/ui/staff/staff_widgets.dart';
 import '../../core/ui/staff/sym.dart';
 import 'mentor_providers.dart';
+import 'mentor_actions.dart';
 import 'mentor_utilities.dart';
 
 /// "Tất cả tiện ích" (P10): tìm kiếm, nhóm, gắn sao yêu thích.
 class MentorUtilitiesScreen extends ConsumerStatefulWidget {
-  const MentorUtilitiesScreen({super.key});
+  const MentorUtilitiesScreen({super.key, this.onSessionUtility});
+  final ValueChanged<MentorUtil>? onSessionUtility;
 
   @override
   ConsumerState<MentorUtilitiesScreen> createState() => _MentorUtilitiesScreenState();
@@ -75,9 +77,7 @@ class _MentorUtilitiesScreenState extends ConsumerState<MentorUtilitiesScreen> {
                   ),
                   GlassCard(
                     padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Column(children: [
-                      for (final u in items) _row(t, u, favs.contains(u)),
-                    ]),
+                    child: Column(children: [for (final u in items) _row(t, u, favs.contains(u))]),
                   ),
                   const SizedBox(height: 12),
                 ],
@@ -87,26 +87,37 @@ class _MentorUtilitiesScreenState extends ConsumerState<MentorUtilitiesScreen> {
   }
 
   Widget _row(Translator t, MentorUtil u, bool fav) => ListTile(
-        onTap: () => u.sessionOnly
-            ? showStaffToast(context, t('mentor.util.sessionOnly'))
-            : context.push(Routes.mentorPage(u.name)),
-        leading: CircleAvatar(
-          backgroundColor: StaffColors.tealSoft,
-          child: Icon(u.icon, color: StaffColors.teal600),
+    onTap: () {
+      if (u.sessionOnly) {
+        if (widget.onSessionUtility != null) {
+          widget.onSessionUtility!(u);
+        } else {
+          openMentorSessionUtility(context, ref, u);
+        }
+      } else {
+        context.push(Routes.mentorPage(u.name));
+      }
+    },
+    leading: CircleAvatar(
+      backgroundColor: StaffColors.tealSoft,
+      child: Icon(u.icon, color: StaffColors.teal600),
+    ),
+    title: Text(t(u.labelKey), style: StaffText.body),
+    trailing: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (u.isNew) StatusChip(t('mentor.utilities.newBadge'), tone: StatusTone.red),
+        IconButton(
+          tooltip: t('mentor.home.favorites'),
+          onPressed: () async {
+            final error = await ref.read(mentorFavoritesProvider.notifier).toggle(u);
+            if (error != null && mounted) showStaffToast(context, t(error));
+          },
+          icon: Icon(Sym.star, fill: fav ? 1 : 0, color: fav ? StaffColors.star : StaffColors.faint),
         ),
-        title: Text(t(u.labelKey), style: StaffText.body),
-        trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-          if (u.isNew) StatusChip(t('mentor.utilities.newBadge'), tone: StatusTone.red),
-          IconButton(
-            tooltip: t('mentor.home.favorites'),
-            onPressed: () async {
-              final error = await ref.read(mentorFavoritesProvider.notifier).toggle(u);
-              if (error != null && mounted) showStaffToast(context, t(error));
-            },
-            icon: Icon(Sym.star, fill: fav ? 1 : 0, color: fav ? StaffColors.star : StaffColors.faint),
-          ),
-        ]),
-      );
+      ],
+    ),
+  );
 }
 
 /// Trang tạm cho tiện ích chưa làm (MF2–MF5). Tiêu đề đúng tên tiện ích để duyệt luồng điều hướng.
@@ -125,17 +136,22 @@ class MentorPlaceholderPage extends ConsumerWidget {
         child: Align(
           alignment: Alignment.topCenter,
           child: GlassCard(
-            child: Row(children: [
-              Icon(u?.icon ?? Sym.info, size: 32, color: StaffColors.teal600),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(t('staff.comingSoon'), style: StaffText.bodyStrong),
-                  const SizedBox(height: 2),
-                  Text(t('staff.comingSoonDescription', {'phase': u?.phase ?? '—'}), style: StaffText.caption),
-                ]),
-              ),
-            ]),
+            child: Row(
+              children: [
+                Icon(u?.icon ?? Sym.info, size: 32, color: StaffColors.teal600),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(t('staff.comingSoon'), style: StaffText.bodyStrong),
+                      const SizedBox(height: 2),
+                      Text(t('staff.comingSoonDescription', {'phase': u?.phase ?? '—'}), style: StaffText.caption),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

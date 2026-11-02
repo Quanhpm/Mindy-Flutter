@@ -663,7 +663,12 @@
       "new": "New tools",
       "viewAll": "View all",
       "fixed": "Core tool, cannot be removed",
-      "maxFav": "Up to 6 favourite tools"
+      "maxFav": "Up to 6 favourite tools",
+      "noSessions": "You have no sessions today",
+      "until": "until {{time}}",
+      "enterMeet": "Join Google Meet",
+      "substituteNotice": "You are substituting for {{name}} today",
+      "dismiss": "Dismiss substitute notice"
     },
     "utilities": {
       "title": "All tools",
@@ -683,6 +688,86 @@
       "substitute": "Substitute sessions",
       "sync": "Sync roster",
       "sessionOnly": "Open from a live session in Schedule"
+    },
+    "schedule": {
+      "title": "Teaching schedule",
+      "week": "Week {{from}} – {{to}}",
+      "previousWeek": "Previous week",
+      "nextWeek": "Next week",
+      "today": "Today",
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "sessionCount": "{{count}} sessions",
+      "empty": "No sessions on this day",
+      "emptyDescription": "Select another day or browse to next week.",
+      "loadError": "Could not load the schedule"
+    },
+    "session": {
+      "noRoom": "Room not assigned",
+      "unnamedMentor": "Name unavailable",
+      "primaryMentor": "Primary mentor: {{name}}",
+      "substitute": "Substitute",
+      "attendance": "Attendance",
+      "enterRoom": "Join classroom",
+      "status": {
+        "live": "In progress",
+        "upcoming": "Upcoming",
+        "ended": "Time elapsed",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "noLive": "There is no session in progress.",
+      "accessLost": "You are no longer assigned to this session. The schedule has been refreshed."
+    },
+    "substitute": {
+      "title": "Substitute sessions",
+      "subtitle": "Your assigned substitute sessions",
+      "empty": "No substitute sessions",
+      "emptyDescription": "Assigned sessions in this date range will appear here.",
+      "note": "As a substitute, you can join the classroom and take attendance for your assigned session. The primary mentor manages materials."
+    },
+    "room": {
+      "title": "Classroom",
+      "online": "Online classroom",
+      "noLink": "There is no online meeting link for this session.",
+      "copy": "Copy meeting link",
+      "copied": "Link copied",
+      "loadError": "Could not load classroom details",
+      "openError": "Could not open the link. Try again or copy the link."
+    },
+    "notificationsPanel": {
+      "readAll": "Mark all as read",
+      "empty": "No notifications yet",
+      "disabled": "Notifications are not enabled at your centre.",
+      "emptyDescription": "New notifications will appear here.",
+      "unread": "Unread",
+      "loadMore": "Load more",
+      "loadError": "Could not load notifications",
+      "actionError": "Could not mark as read"
+    },
+    "preview": {
+      "title": "MF2 preview · sample data",
+      "home": "Home",
+      "schedule": "Schedule",
+      "substitute": "Substitute",
+      "room": "Classroom",
+      "notifications": "Notifications",
+      "state": "State",
+      "data": "Data",
+      "empty": "Empty",
+      "loading": "Loading",
+      "error": "Error",
+      "noLink": "No link",
+      "disabled": "Chat off",
+      "attendance": "The attendance sheet is planned for MF3",
+      "sampleLink": "The preview does not open a real classroom."
     }
   }
 }

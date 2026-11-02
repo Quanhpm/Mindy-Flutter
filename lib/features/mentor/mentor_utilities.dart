@@ -59,7 +59,7 @@ const utilityGroups = <(String, List<MentorUtil>)>[
       MentorUtil.attendance,
       MentorUtil.students,
       MentorUtil.upload,
-    ]
+    ],
   ),
   ('mentor.home.new', [MentorUtil.substitute, MentorUtil.sync]),
 ];
@@ -69,9 +69,9 @@ bool isUtilVisible(MentorUtil u, {required bool substituteOnly}) => !(substitute
 
 /// Danh sách yêu thích hiển thị: 3 cố định trước, rồi phần người dùng chọn; lọc theo quyền.
 List<MentorUtil> displayFavorites(List<MentorUtil> chosen, {required bool substituteOnly}) => [
-      ...fixedFavorites,
-      ...chosen.where((u) => !fixedFavorites.contains(u)),
-    ].where((u) => isUtilVisible(u, substituteOnly: substituteOnly)).toList();
+  ...fixedFavorites,
+  ...chosen.where((u) => !fixedFavorites.contains(u)),
+].where((u) => isUtilVisible(u, substituteOnly: substituteOnly)).toList();
 
 /// Bật/tắt yêu thích. Trả về (danh sách mới, key thông báo lỗi nếu không đổi được).
 (List<MentorUtil>, String?) toggleFavorite(List<MentorUtil> chosen, MentorUtil u) {

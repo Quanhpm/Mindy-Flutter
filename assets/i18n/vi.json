@@ -663,7 +663,12 @@
       "new": "Tính năng mới",
       "viewAll": "Xem tất cả",
       "fixed": "Tiện ích chính, không thể bỏ",
-      "maxFav": "Tối đa 6 tiện ích yêu thích"
+      "maxFav": "Tối đa 6 tiện ích yêu thích",
+      "noSessions": "Hôm nay bạn không có buổi dạy",
+      "until": "đến {{time}}",
+      "enterMeet": "Vào Google Meet",
+      "substituteNotice": "Bạn có buổi dạy thay {{name}} hôm nay",
+      "dismiss": "Ẩn thông báo dạy thay"
     },
     "utilities": {
       "title": "Tất cả tiện ích",
@@ -683,6 +688,86 @@
       "substitute": "Buổi dạy thay",
       "sync": "Đồng bộ sĩ số",
       "sessionOnly": "Mở từ buổi đang dạy trong Lịch dạy"
+    },
+    "schedule": {
+      "title": "Lịch dạy",
+      "week": "Tuần {{from}} – {{to}}",
+      "previousWeek": "Tuần trước",
+      "nextWeek": "Tuần sau",
+      "today": "Hôm nay",
+      "days": [
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "CN"
+      ],
+      "sessionCount": "{{count}} buổi",
+      "empty": "Không có buổi dạy trong ngày",
+      "emptyDescription": "Chọn ngày khác hoặc xem tuần kế tiếp.",
+      "loadError": "Chưa tải được lịch dạy"
+    },
+    "session": {
+      "noRoom": "Chưa có phòng",
+      "unnamedMentor": "Chưa có tên",
+      "primaryMentor": "Mentor chính: {{name}}",
+      "substitute": "Dạy thay",
+      "attendance": "Điểm danh",
+      "enterRoom": "Vào phòng học",
+      "status": {
+        "live": "Đang diễn ra",
+        "upcoming": "Sắp tới",
+        "ended": "Đã hết giờ",
+        "completed": "Đã kết thúc",
+        "cancelled": "Đã huỷ"
+      },
+      "noLive": "Hiện không có buổi dạy đang diễn ra.",
+      "accessLost": "Bạn không còn được phân công buổi này. Lịch đã được cập nhật."
+    },
+    "substitute": {
+      "title": "Buổi dạy thay",
+      "subtitle": "Các buổi bạn được phân công",
+      "empty": "Chưa có buổi dạy thay",
+      "emptyDescription": "Các buổi được giao trong khoảng lịch sẽ xuất hiện ở đây.",
+      "note": "Khi dạy thay, bạn chỉ vào phòng học và điểm danh buổi được giao. Tài liệu do mentor chính phụ trách."
+    },
+    "room": {
+      "title": "Phòng học",
+      "online": "Học trực tuyến",
+      "noLink": "Buổi học chưa có liên kết trực tuyến.",
+      "copy": "Sao chép liên kết",
+      "copied": "Đã sao chép liên kết",
+      "loadError": "Chưa tải được thông tin phòng học",
+      "openError": "Chưa mở được liên kết. Hãy thử lại hoặc sao chép liên kết."
+    },
+    "notificationsPanel": {
+      "readAll": "Đánh dấu đã đọc",
+      "empty": "Chưa có thông báo",
+      "disabled": "Thông báo hiện chưa được bật tại trung tâm.",
+      "emptyDescription": "Thông báo mới sẽ xuất hiện ở đây.",
+      "unread": "Chưa đọc",
+      "loadMore": "Xem thêm",
+      "loadError": "Chưa tải được thông báo",
+      "actionError": "Chưa đánh dấu đã đọc được"
+    },
+    "preview": {
+      "title": "Xem trước MF2 · dữ liệu mẫu",
+      "home": "Trang chủ",
+      "schedule": "Lịch dạy",
+      "substitute": "Dạy thay",
+      "room": "Phòng học",
+      "notifications": "Thông báo",
+      "state": "Trạng thái",
+      "data": "Có dữ liệu",
+      "empty": "Rỗng",
+      "loading": "Đang tải",
+      "error": "Lỗi",
+      "noLink": "Không link",
+      "disabled": "Tắt chat",
+      "attendance": "Sheet điểm danh sẽ làm ở MF3",
+      "sampleLink": "Bản xem trước không mở phòng học thật."
     }
   }
 }

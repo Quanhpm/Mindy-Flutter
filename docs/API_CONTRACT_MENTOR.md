@@ -345,5 +345,6 @@ Nguồn: `chat/controllers/notifications.controller.ts`, `chat/dtos/chat.dto.ts`
 
 Contract source đã đọc, **chưa kiểm chứng server dev**. Dataset và phép kiểm tra thực tế
 theo `MENTOR_TEST_DATA.md`; không đưa mật khẩu/link ký vào tài liệu.
-Chờ quyết định map chip lớp, ngưỡng Cần chú ý, có làm MF7; Đăng ký giữ hệ Học viên
-theo UI.md cho đến khi owner chọn khác. Không coi các quyết định này là đã được duyệt.
+Owner đã ủy quyền tự quyết các phần sau trong chat 02/11. Lựa chọn đã ghi trong
+REMAINING_WORK_PLAN.md: map chip đúng lifecycle, Cần chú ý khi rate khác null và <80%,
+Đăng ký giữ hệ Học viên, làm MF7. Đây là lựa chọn theo ủy quyền, chưa phải UAT live.

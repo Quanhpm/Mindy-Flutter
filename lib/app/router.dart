@@ -11,8 +11,10 @@ import '../features/auth/splash_screen.dart';
 import '../features/auth/welcome_screen.dart';
 import '../features/courses/courses_screen.dart';
 import '../features/home/home_screen.dart';
-import '../features/mentor/mentor_home_screen.dart';
+import '../features/mentor/live_mentor_home_screen.dart';
 import '../features/mentor/mentor_pages.dart';
+import '../features/mentor/schedule/live_schedule_screen.dart';
+import '../features/mentor/substitute/live_substitute_screen.dart';
 import '../features/my_classes/class_detail_screen.dart';
 import '../features/my_classes/my_classes_screen.dart';
 import '../features/payment/payment_screen.dart';
@@ -51,17 +53,19 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.classDetailPath,
-        builder: (_, st) => ClassDetailScreen(
-          classId: st.pathParameters['classId']!,
-          sessionId: st.uri.queryParameters['sessionId'],
-        ),
+        builder: (_, st) =>
+            ClassDetailScreen(classId: st.pathParameters['classId']!, sessionId: st.uri.queryParameters['sessionId']),
       ),
       // ---- Mentor
-      GoRoute(path: Routes.mentor, builder: (_, _) => const MentorHomeScreen()),
+      GoRoute(path: Routes.mentor, builder: (_, _) => const LiveMentorHomeScreen()),
       GoRoute(path: Routes.mentorUtilities, builder: (_, _) => const MentorUtilitiesScreen()),
       GoRoute(
         path: Routes.mentorPagePath,
-        builder: (_, st) => MentorPlaceholderPage(utilKey: st.pathParameters['key']!),
+        builder: (_, st) => switch (st.pathParameters['key']) {
+          'schedule' => const LiveMentorScheduleScreen(),
+          'substitute' => const LiveMentorSubstituteScreen(),
+          _ => MentorPlaceholderPage(utilKey: st.pathParameters['key']!),
+        },
       ),
       GoRoute(
         path: Routes.paymentPath,

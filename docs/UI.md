@@ -178,14 +178,14 @@ Trạng thái: **Khung** (chạy được, UI chưa port chi tiết) · **Đủ*
 
 | # | Màn | Route | File | Trạng thái | Phase |
 | --- | --- | --- | --- | --- | --- |
-| H | Home Mentor | `/mentor` | `features/mentor/mentor_home_screen.dart` | Khung (thẻ buổi dạy, chuông chưa có dữ liệu) | MF1 → MF2 |
+| H | Home Mentor | `/mentor` | `features/mentor/mentor_home_screen.dart` | Đủ; API MF2 đã nối, tự review theo ủy quyền | MF1 → MF2 |
 | — | Sheet Tài khoản / Đăng xuất | sheet | trong `mentor_home_screen.dart` | Đủ (bổ sung, thiết kế không có) | MF1 |
 | P10 | Tất cả tiện ích | `/mentor/utilities` | `features/mentor/mentor_pages.dart` | Đủ; đã sửa Material, test 320×640 chữ ×1,3 pass; chờ duyệt | MF1/P0 |
 | — | Trang tạm cho tiện ích chưa làm | `/mentor/page/:key` | `mentor_pages.dart` | Tạm, gỡ dần | MF2–MF5 |
-| N | Thông báo | panel | `features/notifications/` | Chưa làm | MF2 |
-| P1 | Lịch dạy | `/mentor/page/schedule` | `features/mentor/schedule/` | Chưa làm | MF2 |
-| S2 | Sheet Phòng học | sheet | `features/mentor/session/room_sheet.dart` | Chưa làm | MF2 |
-| P9 | Buổi dạy thay | `/mentor/page/substitute` | `features/mentor/substitute/` | Chưa làm | MF2 |
+| N | Thông báo | panel | `features/notifications/` | Đủ; cursor + đọc + timer foreground | MF2 |
+| P1 | Lịch dạy | `/mentor/page/schedule` | `features/mentor/schedule/` | Đủ; API phân trang/timezone | MF2 |
+| S2 | Sheet Phòng học | sheet | `features/mentor/session/room_sheet.dart` | Đủ; context + sao chép + mở link | MF2 |
+| P9 | Buổi dạy thay | `/mentor/page/substitute` | `features/mentor/substitute/` | Đủ; lịch 30 ngày trước/60 ngày tới | MF2 |
 | S1 | Sheet Điểm danh | sheet | `features/mentor/attendance/` | Chưa làm | MF3 |
 | S3 | Sheet Đồng bộ sĩ số | sheet | `features/mentor/attendance/` | Chưa làm | MF3 |
 | S4 | Sheet Chốt buổi | sheet | `features/mentor/attendance/` | Chưa làm | MF3 |
@@ -221,6 +221,10 @@ Thiết kế `Thiết kế Home UI.html`: Home Quản lý (đơn nghỉ, duyệt
 
 ## 8. Quy trình làm một màn
 
+Cập nhật owner 02/11/2026: đã ủy quyền tự quyết các phase tiếp theo, không hỏi lại.
+Agent tự đối chiếu ảnh, kiểm tra responsive rồi tiếp tục API; trạng thái tự review
+được ghi riêng, không giả mạo owner đã xem từng màn.
+
 1. Mở ảnh/HTML thiết kế; ghi vào bảng mục 6 nguồn thiết kế và phase.
 2. Dựng UI bằng component có sẵn; thiếu component thì thêm vào `core/ui/` hoặc `core/ui/staff/` (không tự vẽ lại trong màn).
 3. Dữ liệu mẫu (fixture) chỉ bật ở bản debug.
@@ -246,3 +250,5 @@ Thiết kế `Thiết kế Home UI.html`: Home Quản lý (đơn nghỉ, duyệt
 | dự kiến MF4 | Học viên | Chạm học viên mở sheet chi tiết (thiết kế chỉ hiện toast) | Có API lịch sử điểm danh/tiến độ |
 | 02/11/2026 | Điểm danh | Buổi COMPLETED vẫn có thể sửa PRESENT/ABSENT trong hạn theo canEditAttendance | Contract backend thực tế; chốt không khoá vĩnh viễn |
 | 02/11/2026 | Lớp/tiến độ | Không dùng storedUnitCount làm số unit hoàn thành hay tự tính % học tập | Backend trả completionPolicy=UNDEFINED |
+
+Review MF2: xem `docs/MF2_UI_REVIEW.md` và `test/goldens/mf2_*.png`. Đã kiểm tra UI tự động; UAT backend thật chưa chạy do thiếu tài khoản dev.

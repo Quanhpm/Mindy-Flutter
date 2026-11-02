@@ -1,6 +1,9 @@
 # Kế hoạch Flutter cho role Mentor
 
-Ngày lập: **02/11/2026**. Trạng thái: **owner đã chốt 5 quyết định (mục 0), đang làm MF1**.
+Ngày lập: **02/11/2026**. Đây là phân tích thiết kế ban đầu. Tiến độ hiện tại xem
+`REMAINING_WORK_PLAN.md`; contract xác minh từ source xem `API_CONTRACT_MENTOR.md`.
+MF2 đã có UI + API; owner đã ủy quyền tự quyết các phần tiếp theo.
+Lưu ý xác minh mới: chốt buổi vẫn có thể sửa PRESENT/ABSENT trong hạn theo permissions server.
 
 Nguồn đã đọc:
 

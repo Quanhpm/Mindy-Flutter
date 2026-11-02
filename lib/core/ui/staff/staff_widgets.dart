@@ -162,7 +162,7 @@ class FilterChipsBar<T> extends StatelessWidget {
               selected: value == selected,
               semanticLabel: label,
               child: Container(
-                constraints: const BoxConstraints(minHeight: 40),
+                constraints: const BoxConstraints(minHeight: 44),
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
                 decoration: BoxDecoration(
                   color: value == selected ? StaffColors.teal700 : const Color(0xCCFFFFFF),
@@ -193,15 +193,17 @@ class UtilityTile extends StatelessWidget {
     required this.onTap,
     this.highlighted = false,
     this.isNew = false,
+    this.newLabel,
     this.count = 0,
     this.mark,
-  });
+  }) : assert(!isNew || newLabel != null);
 
   final IconData icon;
   final String label;
   final VoidCallback onTap;
   final bool highlighted; // ô đầu tiên của Yêu thích: nền teal
   final bool isNew;
+  final String? newLabel;
   final int count;
 
   /// Chế độ Sửa: icon nhỏ ở góc (lock / check / add)
@@ -234,7 +236,7 @@ class UtilityTile extends StatelessWidget {
               clipBehavior: Clip.none,
               children: [
                 circle,
-                if (isNew) Positioned(top: -6, left: -8, child: _badge('MỚI')),
+                if (isNew) Positioned(top: -6, left: -8, child: _badge(newLabel!)),
                 if (count > 0) Positioned(top: -4, right: -4, child: _badge(count > 9 ? '9+' : '$count', round: true)),
                 if (mark != null)
                   Positioned(
@@ -396,12 +398,20 @@ class StaffPage extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: Transform.translate(
-            offset: const Offset(0, -28),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-              child: StaffBackground(child: body),
-            ),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                top: -28,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+                  child: StaffBackground(child: SafeArea(top: false, child: body)),
+                ),
+              ),
+            ],
           ),
         ),
       ],
