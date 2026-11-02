@@ -25,12 +25,20 @@ String? requestIdOf(Object error) => error is ApiError ? error.requestId : null;
 
 /// Khối trạng thái lỗi/trống - `components/common/ScreenState.tsx`
 class ScreenState extends ConsumerWidget {
-  const ScreenState({super.key, required this.title, required this.description, this.onRetry, this.requestId});
+  const ScreenState({
+    super.key,
+    required this.title,
+    required this.description,
+    this.onRetry,
+    this.requestId,
+    this.retryKey,
+  });
 
   final String title;
   final String description;
   final VoidCallback? onRetry;
   final String? requestId;
+  final Key? retryKey;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,7 +73,7 @@ class ScreenState extends ConsumerWidget {
           ],
           if (onRetry != null) ...[
             const SizedBox(height: 12),
-            MindyButton(label: t('common.retry'), variant: ButtonVariant.outline, onPressed: onRetry),
+            MindyButton(key: retryKey, label: t('common.retry'), variant: ButtonVariant.outline, onPressed: onRetry),
           ],
         ],
       ),

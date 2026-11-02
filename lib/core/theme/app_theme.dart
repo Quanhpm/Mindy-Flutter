@@ -23,7 +23,7 @@ class AppText {
   AppText._();
 
   static TextStyle sectionTitle(Color c) =>
-      TextStyle(fontSize: 30, fontWeight: FontWeight.w800, letterSpacing: -0.5, color: c);
+      TextStyle(fontSize: 30, fontWeight: FontWeight.w800, letterSpacing: -0.75, color: c);
   static TextStyle eyebrow([Color c = AppColors.mint]) =>
       TextStyle(fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 1.7, color: c);
   static TextStyle link([Color c = AppColors.mint]) =>
@@ -58,7 +58,7 @@ ThemeData buildAppTheme() {
     bottomSheetTheme: const BottomSheetThemeData(
       backgroundColor: AppColors.canvas,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
-      showDragHandle: true,
+      showDragHandle: false,
     ),
   );
 }

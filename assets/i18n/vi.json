@@ -57,7 +57,9 @@
     "back": "Quay lại",
     "requestId": "Mã hỗ trợ: {{id}}",
     "close": "Đóng",
-    "home": "Về trang chủ"
+    "home": "Về trang chủ",
+    "showMore": "Xem thêm",
+    "showLess": "Thu gọn"
   },
   "errors": {
     "generic": "Đã xảy ra lỗi. Vui lòng thử lại.",
@@ -431,6 +433,15 @@
       "preview": "Kết quả thanh toán (dữ liệu mẫu)",
       "previewDescription": "Bản xem trước dùng dữ liệu mẫu, không xác nhận thanh toán thật.",
       "previewExit": "Về menu xem trước"
+    },
+    "bank": {
+      "devOnly": "Chuyển khoản thử nghiệm (môi trường phát triển)",
+      "bank": "Ngân hàng",
+      "account": "Số tài khoản",
+      "owner": "Chủ tài khoản",
+      "note": "Nội dung",
+      "copy": "Sao chép",
+      "copied": "Đã sao chép"
     }
   },
   "learning": {
@@ -454,6 +465,12 @@
       "IN_PROGRESS": "Đang học",
       "COMPLETED": "Đã kết thúc",
       "CANCELLED": "Đã huỷ"
+    },
+    "display": {
+      "upcoming": "Sắp diễn ra",
+      "live": "Đang diễn ra",
+      "ended": "Đã kết thúc",
+      "cancelled": "Đã hủy"
     }
   },
   "schedule": {
@@ -596,9 +613,10 @@
     "mentorLabel": "Giảng viên",
     "participants": {
       "open": "Xem giáo viên và học viên",
+      "title": "Người tham gia",
       "mentorClass": "Giảng viên lớp {{code}}",
       "students": "Học viên",
-      "pending": "Danh sách học viên hiện chưa được cung cấp."
+      "pending": "Danh sách học viên sẽ được hiển thị khi API người tham gia khả dụng."
     },
     "more": "Xem thêm",
     "less": "Thu gọn",
@@ -692,7 +710,8 @@
       "upload": "Tải file lên",
       "substitute": "Buổi dạy thay",
       "sync": "Đồng bộ sĩ số",
-      "sessionOnly": "Mở từ buổi đang dạy trong Lịch dạy"
+      "sessionOnly": "Mở từ buổi đang dạy trong Lịch dạy",
+      "leave": "Nghỉ dạy / Dạy bù"
     },
     "schedule": {
       "title": "Lịch dạy",
@@ -1046,6 +1065,87 @@
       "loadLatest": "Xem phiên bản mới",
       "latestRevision": "Phiên bản hiện tại · {{revision}}",
       "reviewed": "Tôi đã xem, tiếp tục sửa"
+    },
+    "operations": {
+      "tools": "Công cụ buổi dạy",
+      "notes": "Ghi chú giảng dạy",
+      "meeting": "Link phòng học",
+      "failed": "Chưa thể hoàn tất",
+      "chooseDate": "Chọn ngày",
+      "leaveTitle": "Rời màn hình?",
+      "leaveDescription": "Thay đổi chưa lưu sẽ bị bỏ. Nếu lệnh đang chờ kết quả, lần mở lại vẫn cần kiểm tra kết quả trước khi gửi lệnh mới.",
+      "stay": "Ở lại",
+      "leave": "Rời màn hình",
+      "saved": "Máy chủ đã xác nhận lưu.",
+      "notesReadonly": "Ghi chú chỉ được sửa trong cửa sổ cho phép của buổi đang dạy hoặc đã hoàn thành.",
+      "content": "Nội dung giảng dạy",
+      "nextSteps": "Kế hoạch tiếp theo",
+      "receiptRetry": "Chưa rõ kết quả thao tác trước. Thử lại dùng đúng yêu cầu cũ để kiểm tra biên nhận; không tạo thao tác mới.",
+      "retrySame": "Kiểm tra yêu cầu trước",
+      "readLatest": "Đọc dữ liệu mới nhất",
+      "latest": "Dữ liệu mới nhất từ máy chủ",
+      "adoptVersion": "Đã xem, dùng phiên bản mới",
+      "save": "Lưu thay đổi",
+      "inheritLink": "Dùng link mặc định của lớp",
+      "url": "Link phòng học (http/https)",
+      "meetingUnknown": "Chưa rõ link đã đổi hay chưa. Đọc dữ liệu mới nhất và xác nhận trước khi lưu lại.",
+      "errors": {
+        "LEAVE_NOTICE_TOO_SHORT": "Đã quá hạn báo nghỉ. Chọn khoảng nghỉ khác.",
+        "LEAVE_SOURCE_STALE": "Lịch gốc đã thay đổi. Đọc lại bản xem trước và chọn giờ dạy bù mới.",
+        "LEAVE_MAPPING_INVALID": "Cần chọn giờ dạy bù hợp lệ cho từng buổi bị ảnh hưởng.",
+        "LEAVE_RANGE_INVALID": "Khoảng ngày nghỉ chưa hợp lệ (tối đa 93 ngày).",
+        "LEAVE_REASON_INVALID": "Nhập lý do từ 1 đến 1.000 ký tự.",
+        "LEAVE_STATUS_CONFLICT": "Trạng thái đơn đã thay đổi. Đọc dữ liệu mới nhất trước khi thao tác.",
+        "LEAVE_TARGET_CONFLICT": "Giờ dạy bù bị trùng lịch. Chọn lại giờ trống.",
+        "LEAVE_SLOTS_STALE": "Giờ trống hoặc phiên bản buổi học đã thay đổi. Tải lại bản xem trước.",
+        "TEACHING_VERSION_CONFLICT": "Ghi chú đã được cập nhật ở nơi khác. Xem bản mới trước khi lưu lại.",
+        "TEACHING_NOTE_WINDOW_CLOSED": "Đã hết thời gian sửa ghi chú.",
+        "TEACHING_NOTE_STATE_CONFLICT": "Trạng thái buổi học không cho phép sửa ghi chú.",
+        "SESSION_VERSION_CONFLICT": "Buổi học đã thay đổi. Xem phiên bản mới trước khi lưu.",
+        "MEETING_URL_INVALID": "Nhập link http/https hợp lệ, không chứa thông tin đăng nhập, tối đa 2.048 ký tự.",
+        "IDEMPOTENCY_KEY_REUSED": "Yêu cầu trước có nội dung khác. Đọc lại dữ liệu trước khi thực hiện thao tác mới."
+      }
+    },
+    "leave": {
+      "title": "Nghỉ dạy và dạy bù",
+      "create": "Tạo đơn nghỉ dạy",
+      "all": "Tất cả",
+      "status": {
+        "PENDING": "Chờ duyệt",
+        "APPROVED": "Đã duyệt",
+        "REJECTED": "Từ chối",
+        "WITHDRAWN": "Đã rút",
+        "EXPIRED": "Hết hạn"
+      },
+      "empty": "Chưa có đơn nghỉ dạy",
+      "emptyDescription": "Các đơn phù hợp bộ lọc sẽ xuất hiện ở đây.",
+      "count": "{{count}} buổi bị ảnh hưởng",
+      "period": {
+        "MORNING": "Buổi sáng",
+        "AFTERNOON": "Buổi chiều",
+        "EVENING": "Buổi tối",
+        "FULL_DAY": "Cả ngày"
+      },
+      "from": "Từ ngày",
+      "to": "Đến ngày",
+      "periodLabel": "Khoảng nghỉ",
+      "reason": "Lý do nghỉ dạy",
+      "preview": "Xem các buổi bị ảnh hưởng",
+      "zone": "Múi giờ: {{zone}}",
+      "notEligible": "Khoảng nghỉ chưa đáp ứng thời hạn báo trước hoặc không có buổi cần dạy bù. Hãy chọn lại ngày và đọc bản xem trước mới.",
+      "submit": "Gửi đơn nghỉ dạy",
+      "targetDate": "Ngày dạy bù",
+      "findSlots": "Tìm giờ trống",
+      "noSlots": "Không có giờ trống phù hợp. Chọn ngày hoặc buổi khác.",
+      "chooseSlot": "Chọn giờ do máy chủ cung cấp",
+      "detail": "Chi tiết đơn nghỉ dạy",
+      "withdraw": "Rút đơn",
+      "withdrawReason": "Lý do rút đơn",
+      "conflicts": "{{count}} học viên trùng lịch",
+      "session": "Buổi học",
+      "source": "Buổi gốc",
+      "replacement": "Dạy bù",
+      "extension": "{{name}}: ngày kết thúc mới {{date}}"
     }
   }
 }

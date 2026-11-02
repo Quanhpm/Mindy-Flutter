@@ -57,7 +57,9 @@
     "back": "Back",
     "requestId": "Support reference: {{id}}",
     "close": "Close",
-    "home": "Return home"
+    "home": "Return home",
+    "showMore": "Show more",
+    "showLess": "Show less"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -431,6 +433,15 @@
       "preview": "Payment results (sample data)",
       "previewDescription": "This preview uses sample data and does not confirm a real payment.",
       "previewExit": "Back to preview menu"
+    },
+    "bank": {
+      "devOnly": "Test bank transfer (development)",
+      "bank": "Bank",
+      "account": "Account number",
+      "owner": "Account holder",
+      "note": "Transfer reference",
+      "copy": "Copy",
+      "copied": "Copied"
     }
   },
   "learning": {
@@ -454,6 +465,12 @@
       "IN_PROGRESS": "In progress",
       "COMPLETED": "Ended",
       "CANCELLED": "Cancelled"
+    },
+    "display": {
+      "upcoming": "Upcoming",
+      "live": "In progress",
+      "ended": "Ended",
+      "cancelled": "Cancelled"
     }
   },
   "schedule": {
@@ -596,9 +613,10 @@
     "mentorLabel": "Mentor",
     "participants": {
       "open": "View teacher and students",
+      "title": "Participants",
       "mentorClass": "Teacher of {{code}}",
       "students": "Students",
-      "pending": "The student list is not available yet."
+      "pending": "The student list will be available when the participants API is supported."
     },
     "more": "Show more",
     "less": "Show less",
@@ -692,7 +710,8 @@
       "upload": "Upload files",
       "substitute": "Substitute sessions",
       "sync": "Sync roster",
-      "sessionOnly": "Open from a live session in Schedule"
+      "sessionOnly": "Open from a live session in Schedule",
+      "leave": "Leave / Make-up lessons"
     },
     "schedule": {
       "title": "Teaching schedule",
@@ -1046,6 +1065,87 @@
       "loadLatest": "View current version",
       "latestRevision": "Current revision · {{revision}}",
       "reviewed": "Reviewed, continue editing"
+    },
+    "operations": {
+      "tools": "Session tools",
+      "notes": "Teaching notes",
+      "meeting": "Meeting link",
+      "failed": "Could not complete",
+      "chooseDate": "Choose date",
+      "leaveTitle": "Leave this page?",
+      "leaveDescription": "Unsaved changes will be lost. If a command is awaiting a response, check its result before sending a new command when you return.",
+      "stay": "Stay",
+      "leave": "Leave page",
+      "saved": "Saved and confirmed by the server.",
+      "notesReadonly": "Notes can only be edited within the allowed window for a session in progress or completed.",
+      "content": "Teaching content",
+      "nextSteps": "Next steps",
+      "receiptRetry": "The previous command has an unknown result. Retry the same request to check its receipt before starting another command.",
+      "retrySame": "Check previous request",
+      "readLatest": "Read latest data",
+      "latest": "Latest server data",
+      "adoptVersion": "Reviewed, use latest version",
+      "save": "Save changes",
+      "inheritLink": "Use class meeting link",
+      "url": "Meeting URL (http/https)",
+      "meetingUnknown": "The meeting link update has an unknown result. Read and review the latest data before saving again.",
+      "errors": {
+        "LEAVE_NOTICE_TOO_SHORT": "The notice deadline has passed. Choose a different leave range.",
+        "LEAVE_SOURCE_STALE": "The original timetable changed. Refresh the preview and choose new make-up times.",
+        "LEAVE_MAPPING_INVALID": "Choose a valid make-up time for every affected session.",
+        "LEAVE_RANGE_INVALID": "Invalid leave date range (maximum 93 days).",
+        "LEAVE_REASON_INVALID": "Enter a reason between 1 and 1,000 characters.",
+        "LEAVE_STATUS_CONFLICT": "The request status changed. Read the latest data before continuing.",
+        "LEAVE_TARGET_CONFLICT": "The make-up time conflicts with another session. Choose another available time.",
+        "LEAVE_SLOTS_STALE": "Available times or the session version changed. Refresh the preview.",
+        "TEACHING_VERSION_CONFLICT": "The notes were updated elsewhere. Review the latest version before saving again.",
+        "TEACHING_NOTE_WINDOW_CLOSED": "The note editing window has closed.",
+        "TEACHING_NOTE_STATE_CONFLICT": "The session status does not allow note editing.",
+        "SESSION_VERSION_CONFLICT": "The session changed. Review the latest version before saving.",
+        "MEETING_URL_INVALID": "Enter a valid http/https URL without credentials, up to 2,048 characters.",
+        "IDEMPOTENCY_KEY_REUSED": "The previous request has different content. Read the latest data before starting a new command."
+      }
+    },
+    "leave": {
+      "title": "Leave and make-up lessons",
+      "create": "Request leave",
+      "all": "All",
+      "status": {
+        "PENDING": "Pending",
+        "APPROVED": "Approved",
+        "REJECTED": "Rejected",
+        "WITHDRAWN": "Withdrawn",
+        "EXPIRED": "Expired"
+      },
+      "empty": "No leave requests",
+      "emptyDescription": "Requests matching this filter will appear here.",
+      "count": "{{count}} affected sessions",
+      "period": {
+        "MORNING": "Morning",
+        "AFTERNOON": "Afternoon",
+        "EVENING": "Evening",
+        "FULL_DAY": "Full day"
+      },
+      "from": "From date",
+      "to": "To date",
+      "periodLabel": "Leave period",
+      "reason": "Reason for leave",
+      "preview": "Preview affected sessions",
+      "zone": "Time zone: {{zone}}",
+      "notEligible": "This leave range does not meet the notice deadline or has no sessions to reschedule. Choose new dates and refresh the preview.",
+      "submit": "Submit leave request",
+      "targetDate": "Make-up date",
+      "findSlots": "Find available times",
+      "noSlots": "No suitable times available. Choose another date or period.",
+      "chooseSlot": "Choose an available time",
+      "detail": "Leave request details",
+      "withdraw": "Withdraw request",
+      "withdrawReason": "Withdrawal reason",
+      "conflicts": "{{count}} students with timetable conflicts",
+      "session": "Session",
+      "source": "Original session",
+      "replacement": "Make-up session",
+      "extension": "{{name}}: new end date {{date}}"
     }
   }
 }

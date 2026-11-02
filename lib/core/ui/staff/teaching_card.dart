@@ -21,11 +21,14 @@ class TeachingCard extends StatelessWidget {
     this.roomLabel,
     this.onAttendance,
     this.onRoom,
+    this.onTools,
+    this.toolsLabel,
   });
   final String startTime, endTime, title, subtitle, status;
   final StatusTone tone;
   final String? substituteLabel, mentorLabel, dayLabel, attendanceLabel, roomLabel;
-  final VoidCallback? onAttendance, onRoom;
+  final VoidCallback? onAttendance, onRoom, onTools;
+  final String? toolsLabel;
 
   @override
   Widget build(BuildContext context) => GlassCard(
@@ -98,6 +101,14 @@ class TeachingCard extends StatelessWidget {
                 ],
               );
             },
+          ),
+        ],
+        if (onTools != null) ...[
+          const SizedBox(height: 8),
+          TextButton.icon(
+            onPressed: onTools,
+            icon: const Icon(Sym.editNote, color: StaffColors.teal600),
+            label: Text(toolsLabel!, style: StaffText.link),
           ),
         ],
       ],

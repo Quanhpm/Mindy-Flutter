@@ -15,6 +15,9 @@ class MindyButton extends StatelessWidget {
     this.loading = false,
     this.expand = true,
     this.icon,
+    this.minHeight,
+    this.padding,
+    this.radius,
   });
 
   final String label;
@@ -23,6 +26,9 @@ class MindyButton extends StatelessWidget {
   final bool loading;
   final bool expand;
   final Widget? icon;
+  final double? minHeight;
+  final EdgeInsetsGeometry? padding;
+  final double? radius;
 
   bool get _darkText =>
       variant == ButtonVariant.outline || variant == ButtonVariant.ghost || variant == ButtonVariant.action;
@@ -32,21 +38,22 @@ class MindyButton extends StatelessWidget {
     final blocked = loading || onPressed == null;
     final textColor = _darkText ? AppColors.black : AppColors.canvas;
 
+    final r = BorderRadius.all(Radius.circular(radius ?? 999));
     final decoration = switch (variant) {
-      ButtonVariant.primary => const BoxDecoration(
-          gradient: LinearGradient(colors: [AppColors.mint, AppColors.forest]),
-          borderRadius: BorderRadius.all(Radius.circular(999)),
-          boxShadow: [BoxShadow(color: Color(0x401D5B57), blurRadius: 16, offset: Offset(0, 8))],
+      ButtonVariant.primary => BoxDecoration(
+          gradient: const LinearGradient(colors: [AppColors.mint, AppColors.forest]),
+          borderRadius: r,
+          boxShadow: const [BoxShadow(color: Color(0x401D5B57), blurRadius: 16, offset: Offset(0, 8))],
         ),
       ButtonVariant.outline => BoxDecoration(
           color: AppColors.canvas,
           border: Border.all(color: AppColors.banner, width: 1.5),
-          borderRadius: const BorderRadius.all(Radius.circular(999)),
+          borderRadius: r,
         ),
-      ButtonVariant.solid => const BoxDecoration(
-          color: AppColors.forest, borderRadius: BorderRadius.all(Radius.circular(999))),
-      ButtonVariant.action => const BoxDecoration(
-          color: AppColors.action, borderRadius: BorderRadius.all(Radius.circular(999))),
+      ButtonVariant.solid => BoxDecoration(
+          color: AppColors.forest, borderRadius: r),
+      ButtonVariant.action => BoxDecoration(
+          color: AppColors.action, borderRadius: r),
       ButtonVariant.ghost => const BoxDecoration(),
     };
 
@@ -87,8 +94,8 @@ class MindyButton extends StatelessWidget {
           onTap: blocked ? null : onPressed,
           isButton: false,
           child: Container(
-            constraints: const BoxConstraints(minHeight: 54, minWidth: 44),
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            constraints: BoxConstraints(minHeight: minHeight ?? 54, minWidth: 44),
+            padding: padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             decoration: decoration,
             child: content,
           ),

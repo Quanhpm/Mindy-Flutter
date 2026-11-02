@@ -53,15 +53,17 @@ const _extras = <MindyIconName, String>{
 };
 
 class MindyIcon extends StatelessWidget {
-  const MindyIcon(this.name, {super.key, this.size = 22, this.color = AppColors.muted});
+  const MindyIcon(this.name, {super.key, this.size = 22, this.color, this.light = false});
 
   final MindyIconName name;
   final double size;
-  final Color color;
+  final Color? color;
+  final bool light;
 
   @override
   Widget build(BuildContext context) {
-    final hex = (color.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0');
+    final effectiveColor = color ?? (light ? AppColors.canvas : AppColors.muted);
+    final hex = (effectiveColor.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0');
     final width = name == MindyIconName.arrow ? 2.4 : 2;
     final svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" '
         'stroke="#$hex" stroke-width="$width" stroke-linecap="round" stroke-linejoin="round">'
