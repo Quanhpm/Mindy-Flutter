@@ -5,6 +5,7 @@ import '../../core/i18n/i18n.dart';
 import '../../core/session/session_controller.dart';
 import '../../core/ui/states.dart';
 import '../../core/ui/staff/staff_widgets.dart';
+import '../../core/utils/await_provider.dart';
 import 'mentor_utilities.dart';
 import 'attendance/attendance_sheet.dart';
 import 'schedule/schedule_models.dart';
@@ -16,7 +17,7 @@ Future<void> openMentorSessionUtility(BuildContext context, WidgetRef ref, Mento
   final epoch = ref.read(sessionEpochProvider);
   final clock = ref.read(mentorClockProvider);
   try {
-    final schedule = await ref.read(mentorScheduleProvider(mentorHomeQuery).future);
+    final schedule = await awaitWidgetProvider(ref, mentorScheduleProvider(mentorHomeQuery).future);
     if (!context.mounted || ref.read(sessionEpochProvider) != epoch) return;
     // nextToday có thể trả buổi sắp tới: chỉ nhận buổi đang diễn ra cho tiện ích buổi.
     final entry = schedule.nextToday(clock());
@@ -30,7 +31,7 @@ Future<void> openMentorSessionUtility(BuildContext context, WidgetRef ref, Mento
       await showMentorAttendance(context, ref, entry, openSync: true);
     }
   } catch (error) {
-    if (!context.mounted) return;
+    if (!context.mounted || ref.read(sessionEpochProvider) != epoch) return;
     showStaffToast(context, t(errorKey(error)));
   }
 }

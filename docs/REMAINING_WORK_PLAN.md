@@ -29,12 +29,12 @@ Tài liệu liên quan (giữ để tra cứu, plan này là nguồn chính khi 
 | Nền app: network/cookie/refresh, session, router, i18n, theme | P0 đã sửa 2 lỗi P1, test hồi quy pass |
 | Học viên: auth, home, catalog, giỏ, thanh toán, lịch, tài khoản, lớp của tôi | Chức năng chạy được; nhiều UI còn dạng khung (`TODO(UI)`) |
 | Mentor MF1: login chung, phân luồng role, UI kit staff, Home khung, tiện ích yêu thích | P0 đã sửa 2 lỗi P2, test hồi quy pass |
-| Mentor MF2: lịch, Home, phòng, dạy thay, thông báo | Đã triển khai UI + API, tự review theo ủy quyền; UAT backend còn thiếu |
-| Mentor MF3: điểm danh | Đã có UI + API/controller, test mô phỏng; UAT live còn thiếu |
-| Mentor MF4: lớp, học viên, báo cáo | UI + API, tự review và test mô phỏng; UAT live còn thiếu |
-| Mentor MF5: tài liệu, tải lên | UI + API/controller, tự review, test/Simulator; còn UAT live/native picker |
-| Mentor MF6: hoàn thiện | Chưa triển khai |
-| Build | `flutter analyze` sạch, 175 test pass; iOS Simulator build thành công với UI MF5 |
+| Mentor MF2: lịch, Home, phòng, dạy thay, thông báo | UI/API; Flutter đọc lịch/context backend local pass; UAT thiết bị/thông báo/dev còn thiếu |
+| Mentor MF3: điểm danh | UI/API/controller; start/save/finalize backend local pass; UAT hai thiết bị còn thiếu |
+| Mentor MF4: lớp, học viên, báo cáo | UI/API; workspace HTTP và provider local pass; UAT dữ liệu lớn/thiết bị còn thiếu |
+| Mentor MF5: tài liệu, tải lên | UI/API, test và UAT local PDF/MinIO/iOS picker; còn thiết bị Android/nhiều loại file/server dev |
+| Mentor MF6: hoàn thiện | Đã sửa vòng đời/quyền/trợ năng, có checklist và smoke backend local; UAT thiết bị còn thiếu |
+| Build | Analyze sạch, 189 test pass; thêm smoke Flutter/backend local pass; iOS Simulator MF6 build 8,3 giây |
 
 Cập nhật triển khai 02/11: P0 đã sửa B1–B4, chuyển ca chẩn đoán vào
 `test/p0_regression_test.dart` và bổ sung ca response/cookie cũ, refresh đồng thời,
@@ -440,3 +440,25 @@ Tổng phần bắt buộc: **25–35,5 ngày công**, cộng dự phòng 20% th
 
 MF5 chốt code: **175 test pass**, analyze sạch. Editor conflict giữ input và yêu cầu
 xem snapshot mới trước khi dùng revision mới; xem `MF5_REVIEW.md`.
+
+### MF6 — hoàn thiện và kiểm thử local 02/11
+
+- Gỡ MentorPlaceholderPage/chuông giả; route sai có lối về Home. Quyền đang tải,
+  refresh hoặc lỗi không làm hiện tiện ích lớp chính, có thử lại.
+- Sửa autoDispose khi mở tiện ích trực tiếp; nút Staff/Student có tap semantics;
+  Skeleton có nhãn dịch, dừng ticker giảm chuyển động; yêu thích chụp user trước await.
+- 14 test mới (12 regression/polish + 2 i18n), 2 golden mới và cập nhật Home dùng
+  chuông thật; đã mở xem. Check thường **189 test pass**, analyze sạch.
+- Main iOS Simulator build **8,3 giây**. Backend sibling build 32 migration artifact,
+  7 test HTTP attendance/workspace pass trên PostgreSQL riêng.
+- Luồng Flutter **state/API thật** → Nest/PostgreSQL riêng: login → lịch hôm nay →
+  start → PRESENT → save → finalize → logout **pass**; chưa coi là native UI E2E.
+- Bằng chứng/runner: `MF6_REVIEW.md`, `tool/live/run_mentor_smoke.mjs`.
+  `MENTOR_UAT.md` ghi riêng gate thiết bị, nhiều loại file/picker Android, hai thiết bị,
+  VoiceOver/TalkBack và server dev chưa hoàn tất. Không hỏi owner duyệt lại theo ủy quyền.
+
+- Bổ sung UAT local MF5/MF6: **39 test HTTP file/material với MinIO thật pass**;
+  Flutter UploadController → MinIO/worker → READY → DRAFT → signed download →
+  submit PENDING_REVIEW cũng pass. iOS picker mở/hủy/chọn PDF tổng hợp đọc đúng
+  880 B; ảnh `docs/design/mentor/review/mf6_ios_picker_selected.png`.
+  Gate còn lại gồm Android/nhiều loại file, app nền, nhiều thiết bị và server dev.

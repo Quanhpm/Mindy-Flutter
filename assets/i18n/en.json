@@ -56,7 +56,8 @@
     "hidePassword": "Hide password",
     "back": "Back",
     "requestId": "Support reference: {{id}}",
-    "close": "Close"
+    "close": "Close",
+    "home": "Return home"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -641,8 +642,8 @@
   },
   "staff": {
     "close": "Close",
-    "comingSoon": "Coming soon",
-    "comingSoonDescription": "This screen arrives in phase {{phase}} of the Mentor plan."
+    "pageNotFound": "Page not found",
+    "pageNotFoundDescription": "This link is no longer available. Return home to choose a utility."
   },
   "mentor": {
     "roleChip": "Mentor",
@@ -676,7 +677,8 @@
       "count": "{{count}} tools",
       "search": "Search tools",
       "empty": "No tools found",
-      "newBadge": "NEW"
+      "newBadge": "NEW",
+      "scopeError": "Could not load your class assignments"
     },
     "util": {
       "schedule": "Schedule",

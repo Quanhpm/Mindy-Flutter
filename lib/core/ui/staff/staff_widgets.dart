@@ -319,6 +319,8 @@ class StaffButton extends StatelessWidget {
       enabled: enabled,
       label: label,
       excludeSemantics: true,
+      // Con bị exclude nên action trợ năng phải gắn ở node nút này.
+      onTap: enabled ? onPressed : null,
       child: Opacity(
         opacity: onPressed == null ? .5 : 1,
         child: Pressable(

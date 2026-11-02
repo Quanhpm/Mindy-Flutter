@@ -13,7 +13,7 @@ import 'schedule_models.dart';
 import 'schedule_widgets.dart';
 
 /// P1: UI thuần nhận AsyncValue; nguồn fixture chỉ nằm ở entrypoint debug.
-/// Adapter provider/API được nối sau khi owner duyệt UI của phase.
+/// Widget trình bày nhận dữ liệu từ adapter API; fixture chỉ ở entrypoint debug.
 class MentorScheduleScreen extends ConsumerWidget {
   const MentorScheduleScreen({
     super.key,

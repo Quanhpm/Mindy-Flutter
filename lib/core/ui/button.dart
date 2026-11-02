@@ -79,6 +79,8 @@ class MindyButton extends StatelessWidget {
       label: label,
       excludeSemantics: true,
       button: true,
+      // Con bị exclude nên action trợ năng phải gắn ở node nút này.
+      onTap: blocked ? null : onPressed,
       child: Opacity(
         opacity: blocked ? 0.5 : 1,
         child: Pressable(

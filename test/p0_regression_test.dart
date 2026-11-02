@@ -269,7 +269,9 @@ void main() {
       ],
     );
     addTearDown(container.dispose);
-    expect(await container.read(mentorSubstituteOnlyProvider.future), isTrue);
+    final subscription = container.listen(mentorSubstituteOnlyProvider.future, (_, _) {});
+    addTearDown(subscription.close);
+    expect(await subscription.read(), isTrue);
   });
 
   final screens = <String, Widget>{

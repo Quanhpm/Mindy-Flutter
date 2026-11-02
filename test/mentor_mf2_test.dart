@@ -353,6 +353,7 @@ void main() {
 
   testWidgets('Home dữ liệu mẫu ở 320 chữ lớn và 390 bình thường', (tester) async {
     Widget home() => MentorHomeScreen(
+      notificationButton: NotificationBell(count: 0, label: 'Thông báo', onPressed: () {}),
       teachingCard: MentorNextSessionCard(
         value: AsyncData(sampleSchedule()),
         now: previewNow,

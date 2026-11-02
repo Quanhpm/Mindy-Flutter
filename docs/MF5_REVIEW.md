@@ -69,3 +69,10 @@ phân biệt duyệt/xuất bản; REJECTED sửa trước khi gửi; không có
 - Native picker thao tác trực tiếp/VoiceOver/máy thật. Công cụ UI báo Mac đang khóa,
   chưa chọn file thủ công trên Simulator trong lượt này; build/bridge mock không
   thay thế phép thử đó. Tài khoản seed backend vẫn chưa được cấp trong môi trường.
+
+
+Bổ sung kiểm thử ở MF6: đã chạy native picker iOS chọn/hủy PDF tổng hợp 880 B;
+Flutter UploadController/API → MinIO/worker thật → READY → DRAFT → signed download
+→ submit pass. 39 test HTTP file/material backend pass trên test DB/storage riêng.
+Bằng chứng và giới hạn cập nhật ở `MF6_REVIEW.md` và `MENTOR_UAT.md`; ghi chú
+Mac khóa/thiếu môi trường ở trên là trạng thái tại thời điểm MF5, không phải kết quả mới.

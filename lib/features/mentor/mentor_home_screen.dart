@@ -12,6 +12,7 @@ import '../../core/ui/staff/staff_widgets.dart';
 import '../../core/ui/staff/sym.dart';
 import 'mentor_providers.dart';
 import 'mentor_utilities.dart';
+import 'mentor_scope_notice.dart';
 
 /// Home Mentor - `Mentor Mobile UI.html` (MF1: khung + tiện ích; dữ liệu lịch gắn ở MF2).
 ///
@@ -40,7 +41,7 @@ class MentorHomeScreen extends ConsumerStatefulWidget {
 class _MentorHomeScreenState extends ConsumerState<MentorHomeScreen> {
   bool _editing = false;
 
-  bool get _substituteOnly => ref.watch(mentorSubstituteOnlyProvider).value ?? false;
+  bool get _substituteOnly => !canShowPrimaryUtilities(ref.watch(mentorSubstituteOnlyProvider));
 
   /// Mở tiện ích: trang con, hoặc báo cần mở từ buổi đang dạy (sheet ở MF2/MF3).
   void _open(MentorUtil u) {
@@ -91,6 +92,7 @@ class _MentorHomeScreenState extends ConsumerState<MentorHomeScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          const MentorScopeNotice(),
                           _sectionTitle(
                             t('mentor.home.favorites'),
                             action: TextButton.icon(
@@ -187,18 +189,7 @@ class _MentorHomeScreenState extends ConsumerState<MentorHomeScreen> {
             ],
           ),
         ),
-        // Chuông: danh sách thông báo gắn API ở MF2
-        widget.notificationButton ??
-            IconButton(
-              tooltip: t('mentor.notifications'),
-              onPressed: () => showStaffToast(context, t('staff.comingSoon')),
-              style: IconButton.styleFrom(
-                backgroundColor: const Color(0x33FFFFFF),
-                side: const BorderSide(color: Color(0x59FFFFFF)),
-                fixedSize: const Size(44, 44),
-              ),
-              icon: const Icon(Sym.notifications, color: Colors.white),
-            ),
+        ?widget.notificationButton,
       ],
     ),
   );

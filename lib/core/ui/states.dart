@@ -74,18 +74,31 @@ class ScreenState extends ConsumerWidget {
 }
 
 /// Khung xám nhấp nháy khi đang tải - `components/ui/Skeleton`
-class Skeleton extends StatefulWidget {
+class Skeleton extends ConsumerStatefulWidget {
   const Skeleton({super.key, this.height = 24, this.width, this.radius = 24});
   final double height;
   final double? width;
   final double radius;
 
   @override
-  State<Skeleton> createState() => _SkeletonState();
+  ConsumerState<Skeleton> createState() => _SkeletonState();
 }
 
-class _SkeletonState extends State<Skeleton> with SingleTickerProviderStateMixin {
-  late final _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000))..repeat(reverse: true);
+class _SkeletonState extends ConsumerState<Skeleton> with SingleTickerProviderStateMixin {
+  late final _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000));
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Dừng ticker thật sự, kể cả khi đổi setting khi màn vẫn đang mở.
+    // TickerMode.valuesOf chỉ có ở Flutter mới; app còn hỗ trợ 3.32.
+    // ignore: deprecated_member_use
+    if (MediaQuery.of(context).disableAnimations || !TickerMode.of(context)) {
+      _c.stop();
+    } else if (!_c.isAnimating) {
+      _c.repeat(reverse: true);
+    }
+  }
 
   @override
   void dispose() {
@@ -102,7 +115,7 @@ class _SkeletonState extends State<Skeleton> with SingleTickerProviderStateMixin
       decoration: BoxDecoration(color: AppColors.line, borderRadius: BorderRadius.circular(widget.radius)),
     );
     return Semantics(
-      label: 'loading',
+      label: ref.watch(trProvider)('common.loading'),
       child: reduced ? box : FadeTransition(opacity: Tween(begin: 0.5, end: 1.0).animate(_c), child: box),
     );
   }

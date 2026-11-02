@@ -5,11 +5,13 @@ import 'package:go_router/go_router.dart';
 import '../../core/i18n/i18n.dart';
 import '../../core/router/routes.dart';
 import '../../core/ui/staff/staff_theme.dart';
+import '../../core/ui/staff/staff_data_state.dart';
 import '../../core/ui/staff/staff_widgets.dart';
 import '../../core/ui/staff/sym.dart';
 import 'mentor_providers.dart';
 import 'mentor_actions.dart';
 import 'mentor_utilities.dart';
+import 'mentor_scope_notice.dart';
 
 /// "Tất cả tiện ích" (P10): tìm kiếm, nhóm, gắn sao yêu thích.
 class MentorUtilitiesScreen extends ConsumerStatefulWidget {
@@ -26,7 +28,7 @@ class _MentorUtilitiesScreenState extends ConsumerState<MentorUtilitiesScreen> {
   @override
   Widget build(BuildContext context) {
     final t = ref.watch(trProvider);
-    final substituteOnly = ref.watch(mentorSubstituteOnlyProvider).value ?? false;
+    final substituteOnly = !canShowPrimaryUtilities(ref.watch(mentorSubstituteOnlyProvider));
     final chosen = ref.watch(mentorFavoritesProvider).value ?? const <MentorUtil>[];
     final favs = displayFavorites(chosen, substituteOnly: substituteOnly);
     final q = _q.trim().toLowerCase();
@@ -65,24 +67,24 @@ class _MentorUtilitiesScreenState extends ConsumerState<MentorUtilitiesScreen> {
           ),
         ),
       ),
-      body: groups.isEmpty
-          ? Center(child: Text(t('mentor.utilities.empty'), style: StaffText.caption))
-          : ListView(
-              padding: const EdgeInsets.fromLTRB(16, 48, 16, 32),
-              children: [
-                for (final (titleKey, items) in groups) ...[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
-                    child: Text(t(titleKey).toUpperCase(), style: StaffText.eyebrow),
-                  ),
-                  GlassCard(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Column(children: [for (final u in items) _row(t, u, favs.contains(u))]),
-                  ),
-                  const SizedBox(height: 12),
-                ],
-              ],
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 48, 16, 32),
+        children: [
+          const MentorScopeNotice(),
+          if (groups.isEmpty) Text(t('mentor.utilities.empty'), style: StaffText.caption),
+          for (final (titleKey, items) in groups) ...[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
+              child: Text(t(titleKey).toUpperCase(), style: StaffText.eyebrow),
             ),
+            GlassCard(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Column(children: [for (final u in items) _row(t, u, favs.contains(u))]),
+            ),
+            const SizedBox(height: 12),
+          ],
+        ],
+      ),
     );
   }
 
@@ -120,40 +122,27 @@ class _MentorUtilitiesScreenState extends ConsumerState<MentorUtilitiesScreen> {
   );
 }
 
-/// Trang tạm cho tiện ích chưa làm (MF2–MF5). Tiêu đề đúng tên tiện ích để duyệt luồng điều hướng.
-class MentorPlaceholderPage extends ConsumerWidget {
-  const MentorPlaceholderPage({super.key, required this.utilKey});
-  final String utilKey;
+/// Đường dẫn cũ hoặc key không tồn tại có lối về Home, không hiện phase nội bộ.
+class MentorUnavailablePage extends ConsumerWidget {
+  const MentorUnavailablePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = ref.watch(trProvider);
-    final u = MentorUtil.byName(utilKey);
+    void home() => context.go(Routes.mentor);
     return StaffPage(
-      title: u == null ? t('staff.comingSoon') : t(u.labelKey),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: GlassCard(
-            child: Row(
-              children: [
-                Icon(u?.icon ?? Sym.info, size: 32, color: StaffColors.teal600),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(t('staff.comingSoon'), style: StaffText.bodyStrong),
-                      const SizedBox(height: 2),
-                      Text(t('staff.comingSoonDescription', {'phase': u?.phase ?? '—'}), style: StaffText.caption),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+      title: t('staff.pageNotFound'),
+      onBack: home,
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 48, 16, 32),
+        children: [
+          StaffDataState(
+            title: t('staff.pageNotFound'),
+            description: t('staff.pageNotFoundDescription'),
+            retryLabel: t('common.home'),
+            onRetry: home,
           ),
-        ),
+        ],
       ),
     );
   }

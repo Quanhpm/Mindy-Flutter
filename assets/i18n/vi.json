@@ -56,7 +56,8 @@
     "hidePassword": "Ẩn mật khẩu",
     "back": "Quay lại",
     "requestId": "Mã hỗ trợ: {{id}}",
-    "close": "Đóng"
+    "close": "Đóng",
+    "home": "Về trang chủ"
   },
   "errors": {
     "generic": "Đã xảy ra lỗi. Vui lòng thử lại.",
@@ -641,8 +642,8 @@
   },
   "staff": {
     "close": "Đóng",
-    "comingSoon": "Tính năng đang được phát triển",
-    "comingSoonDescription": "Màn hình này sẽ có trong giai đoạn {{phase}} của kế hoạch Mentor."
+    "pageNotFound": "Không tìm thấy trang",
+    "pageNotFoundDescription": "Liên kết này không còn khả dụng. Về trang chủ để chọn tiện ích."
   },
   "mentor": {
     "roleChip": "Mentor",
@@ -676,7 +677,8 @@
       "count": "{{count}} tiện ích",
       "search": "Tìm tiện ích",
       "empty": "Không tìm thấy tiện ích",
-      "newBadge": "MỚI"
+      "newBadge": "MỚI",
+      "scopeError": "Chưa tải được quyền phụ trách lớp"
     },
     "util": {
       "schedule": "Lịch dạy",

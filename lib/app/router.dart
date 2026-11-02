@@ -87,7 +87,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           'students' => MentorStudentsScreen(classId: st.uri.queryParameters['classId']),
           'materials' => const MentorMaterialsScreen(),
           'upload' => const MentorUploadScreen(),
-          _ => MentorPlaceholderPage(utilKey: st.pathParameters['key']!),
+          _ => const MentorUnavailablePage(),
         },
       ),
       GoRoute(

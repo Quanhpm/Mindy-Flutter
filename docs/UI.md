@@ -184,8 +184,8 @@ Trạng thái: **Khung** (chạy được, UI chưa port chi tiết) · **Đủ*
 | --- | --- | --- | --- | --- | --- |
 | H | Home Mentor | `/mentor` | `features/mentor/mentor_home_screen.dart` | Đủ; API MF2 đã nối, tự review theo ủy quyền | MF1 → MF2 |
 | — | Sheet Tài khoản / Đăng xuất | sheet | trong `mentor_home_screen.dart` | Đủ (bổ sung, thiết kế không có) | MF1 |
-| P10 | Tất cả tiện ích | `/mentor/utilities` | `features/mentor/mentor_pages.dart` | Đủ; đã sửa Material, test 320×640 chữ ×1,3 pass; chờ duyệt | MF1/P0 |
-| — | Trang tạm cho tiện ích chưa làm | `/mentor/page/:key` | `mentor_pages.dart` | Tạm, gỡ dần | MF2–MF5 |
+| P10 | Tất cả tiện ích | `/mentor/utilities` | `features/mentor/mentor_pages.dart` | Tự review; scope loading/lỗi có retry, 320 vi/en chữ lớn | MF1/P0/MF6 |
+| — | Trang không tìm thấy | `/mentor/page/:key` không hợp lệ | `mentor_pages.dart` | Có lối về Home; đã gỡ placeholder | MF6 |
 | N | Thông báo | panel | `features/notifications/` | Đủ; cursor + đọc + timer foreground | MF2 |
 | P1 | Lịch dạy | `/mentor/page/schedule` | `features/mentor/schedule/` | Đủ; API phân trang/timezone | MF2 |
 | S2 | Sheet Phòng học | sheet | `features/mentor/session/room_sheet.dart` | Đủ; context + sao chép + mở link | MF2 |
@@ -264,3 +264,14 @@ Review MF4: `docs/MF4_REVIEW.md`, 9 golden vi/en chữ lớn; lớp/chi tiết/b
 Review MF5: `docs/MF5_REVIEW.md`, 10 golden vi/en chữ lớn và ảnh iPhone Simulator.
 Chọn Unit rõ ràng, ARTICLE lấy detail, published khác approved, sửa REJECTED trước
 khi gửi lại. UI có tiến độ, hủy, kiểm tra kết quả, sửa/xóa và gửi lô DRAFT.
+
+
+Review MF6: `docs/MF6_REVIEW.md`, checklist `docs/MENTOR_UAT.md`. Đã bỏ chuông
+placeholder; golden Home dùng NotificationBell thật. Hai golden lỗi assignment
+vi/en 320 chữ lớn đã tự review. Nút Staff/Student có action cho trình đọc màn hình;
+loading dùng nhãn dịch và dừng ticker khi giảm chuyển động. VoiceOver/TalkBack
+trên thiết bị vẫn cần kiểm chứng riêng.
+
+MF6 bổ sung: picker iOS mở/hủy và chọn PDF tổng hợp 880 B thành công; ảnh ở
+`docs/design/mentor/review/mf6_ios_picker_selected.png`. Flutter controller/API cũng
+đã chạy upload/submit qua MinIO/worker/backend thật trong môi trường test riêng.

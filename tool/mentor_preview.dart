@@ -146,7 +146,7 @@ class _MentorPreviewAppState extends ConsumerState<MentorPreviewApp> {
             'students' => MentorStudentsScreen(classId: state.uri.queryParameters['classId']),
             'materials' => const MentorMaterialsScreen(),
             'upload' => const MentorUploadScreen(),
-            _ => MentorPlaceholderPage(utilKey: state.pathParameters['key']!),
+            _ => const MentorUnavailablePage(),
           },
         ),
       ),
