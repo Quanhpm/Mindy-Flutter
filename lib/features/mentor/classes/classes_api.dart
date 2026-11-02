@@ -29,4 +29,50 @@ class MentorClassesApi {
         idOf: (item) => item.id,
         errorCode: errorCode,
       );
+
+  Future<MentorWorkspace> workspace(String id, {CancelToken? cancel}) async =>
+      MentorWorkspace.fromJson(Json(await _api.get('mentor/classes/$id', cancel: cancel), errorCode), id);
+  Future<List<MentorWorkspaceSession>> sessions(String id, {CancelToken? cancel}) => readAllPages(
+    (page) async {
+      final j = Json(
+        await _api.get('mentor/classes/$id/sessions', query: {'page': page, 'pageSize': 100}, cancel: cancel),
+        errorCode,
+      );
+      final response = Paged.fromJson(j, MentorWorkspaceSession.fromJson);
+      if (response.items.any((row) => row.session.classId != id)) j.fail();
+      return response;
+    },
+    idOf: (row) => row.session.id,
+    errorCode: errorCode,
+  );
+  Future<List<MentorUnit>> units(String id, {CancelToken? cancel}) => readAllPages(
+    (page) async {
+      final j = Json(
+        await _api.get('mentor/classes/$id/units', query: {'page': page, 'pageSize': 100}, cancel: cancel),
+        errorCode,
+      );
+      final response = Paged.fromJson(j, MentorUnit.fromJson);
+      if (response.items.any((unit) => unit.classId != id)) j.fail();
+      return response;
+    },
+    idOf: (unit) => unit.id,
+    errorCode: errorCode,
+  );
+  Future<List<MentorSessionSlot>> slots(String id, String unitId, {CancelToken? cancel}) => readAllPages(
+    (page) async {
+      final j = Json(
+        await _api.get(
+          'mentor/classes/$id/units/$unitId/sessions',
+          query: {'page': page, 'pageSize': 100},
+          cancel: cancel,
+        ),
+        errorCode,
+      );
+      final response = Paged.fromJson(j, MentorSessionSlot.fromJson);
+      if (response.items.any((slot) => slot.unitId != unitId)) j.fail();
+      return response;
+    },
+    idOf: (slot) => slot.id,
+    errorCode: errorCode,
+  );
 }

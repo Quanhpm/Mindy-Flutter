@@ -63,7 +63,8 @@
     "INVALID_CREDENTIALS": "Email hoặc mật khẩu không đúng.",
     "MAIL_DELIVERY_UNAVAILABLE": "Dịch vụ email tạm ngừng. Vui lòng thử lại.",
     "NETWORK_UNAVAILABLE": "Không có kết nối mạng. Kiểm tra kết nối rồi thử lại.",
-    "RATE_LIMIT_EXCEEDED": "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau."
+    "RATE_LIMIT_EXCEEDED": "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau.",
+    "ACCESS_DENIED": "Bạn không có quyền xem hoặc thực hiện thao tác này."
   },
   "auth": {
     "brandName": "Mindy Coding",
@@ -753,7 +754,7 @@
       "actionError": "Chưa đánh dấu đã đọc được"
     },
     "preview": {
-      "title": "Xem trước MF2 · dữ liệu mẫu",
+      "title": "Xem trước Mentor · dữ liệu mẫu",
       "home": "Trang chủ",
       "schedule": "Lịch dạy",
       "substitute": "Dạy thay",
@@ -826,6 +827,105 @@
         "ABSENT": "Vắng"
       },
       "startUnavailable": "Buổi chưa bắt đầu và hiện chưa được mở điểm danh. Vui lòng kiểm tra ngày dạy hoặc liên hệ quản lý."
+    },
+    "classes": {
+      "title": "Lớp phụ trách",
+      "subtitle": "Các lớp bạn là mentor chính",
+      "groups": {
+        "active": "Đang dạy",
+        "upcoming": "Sắp mở",
+        "ended": "Đã kết thúc",
+        "cancelled": "Đã hủy"
+      },
+      "status": {
+        "DRAFT": "Nháp",
+        "OPEN": "Mở ghi danh",
+        "IN_PROGRESS": "Đang học",
+        "COMPLETED": "Đã kết thúc",
+        "CANCELLED": "Đã hủy"
+      },
+      "empty": "Chưa có lớp",
+      "emptyDescription": "Lớp được phân công sẽ xuất hiện tại đây.",
+      "loadError": "Chưa tải được lớp",
+      "detailsUnavailable": "Chưa tải được thông tin tổng quan.",
+      "counts": "{{units}} Unit · {{sessions}} buổi · {{students}} ghi danh",
+      "structure": "{{units}} Unit · {{sessions}} buổi học",
+      "thisWeek": "Lịch tuần này",
+      "noWeekSessions": "Tuần này chưa có lịch.",
+      "noNext": "Chưa có buổi tiếp theo",
+      "next": "Buổi tới · {{date}}",
+      "contextRestricted": "Mentor khác phụ trách buổi này; bạn không có quyền xem phòng và danh sách điểm danh.",
+      "roomUnavailable": "Chưa tải được phòng học",
+      "viewDetail": "Xem chi tiết lớp ›",
+      "detail": "Chi tiết lớp",
+      "readonly": "Lớp chỉ đọc; các thao tác ghi đã được khóa.",
+      "viewStudents": "Xem {{count}} ghi danh ›",
+      "upcoming": "Sắp tới",
+      "past": "Đã học / Đã qua",
+      "noSessions": "Chưa có buổi học",
+      "noSessionsDescription": "Các buổi phù hợp sẽ xuất hiện ở đây.",
+      "unitUnavailable": "Chưa có thông tin Unit",
+      "sessionTitle": "Buổi {{number}} · {{unit}}"
+    },
+    "reports": {
+      "title": "Báo cáo điểm danh",
+      "subtitle": "Theo dõi chuyên cần theo lớp",
+      "loadError": "Chưa tải được báo cáo",
+      "average": "Chuyên cần",
+      "completed": "Buổi đã chốt",
+      "absent": "Lượt vắng",
+      "aggregateNote": "Tổng lượt có mặt / lượt đủ điều kiện đã chốt; gồm học bù và ghi danh cũ. —: chưa có tỷ lệ.",
+      "physical": "Có mặt tại từng buổi",
+      "physicalNote": "Theo danh sách điểm danh của buổi, gồm khách học bù. Chưa đánh dấu đủ hoặc không có ai đủ điều kiện: —.",
+      "empty": "Chưa có buổi đã chốt",
+      "emptyDescription": "Báo cáo từng buổi sẽ xuất hiện sau khi chốt.",
+      "rowError": "Chưa tải được buổi này",
+      "sessionCounts": "{{present}}/{{eligible}} có mặt · {{unmarked}} chưa đánh dấu"
+    },
+    "students": {
+      "title": "Học viên",
+      "subtitle": "Danh sách ghi danh và chuyên cần",
+      "filterTitle": "Lọc học viên",
+      "filters": {
+        "all": "Tất cả",
+        "attention": "Cần chú ý",
+        "regular": "Đi học đều"
+      },
+      "threshold": "Cần chú ý: dưới 80%. Đi học đều: từ 80%. Chưa có tỷ lệ chỉ hiện ở Tất cả.",
+      "apply": "Áp dụng",
+      "reset": "Đặt lại bộ lọc",
+      "detail": "Lịch sử và dữ liệu đã lưu",
+      "loadError": "Chưa tải được học viên",
+      "registered": "Ghi danh",
+      "historyScope": "Số liệu của học viên trong toàn bộ lịch sử ghi danh của lớp, gồm học bù; có thể khác hàng ghi danh hiện tại.",
+      "history": "Lịch sử điểm danh",
+      "noHistory": "Chưa có lịch sử điểm danh.",
+      "applicability": {
+        "ELIGIBLE": "Đủ điều kiện tính chuyên cần",
+        "NOT_STARTED": "Buổi chưa bắt đầu",
+        "NOT_ELIGIBLE": "Không thuộc diện tính chuyên cần",
+        "PAYMENT_PENDING": "Chờ thanh toán",
+        "LEGACY_NO_DATA": "Chưa có dữ liệu lịch sử",
+        "MAKEUP_PENDING": "Đang chờ học bù",
+        "MAKEUP_CREDITED": "Đã ghi nhận kết quả học bù"
+      },
+      "physicalStatus": "Tại buổi: {{status}}",
+      "creditStatus": "Kết quả học bù: {{status}}",
+      "excluded": "Không tính vào mẫu số chuyên cần.",
+      "storedProgress": "Dữ liệu Unit đã lưu",
+      "progressNote": "Chưa có quy tắc xác định hoàn thành khóa học. Đây là dữ liệu đã lưu, không phải tỷ lệ học tập được đo lường.",
+      "noProgress": "Chưa có dữ liệu Unit.",
+      "untracked": "Chưa theo dõi",
+      "invalidProgress": "Giá trị đã lưu không hợp lệ; chưa có tỷ lệ.",
+      "storedValue": "Giá trị đã lưu: {{value}}",
+      "storedDate": "Mốc hoàn thành đã lưu: {{date}}",
+      "currentScope": "Gồm ghi danh chờ thanh toán, đang học và đã hoàn tất. Chuyên cần tính trên các lượt đủ điều kiện đã chốt.",
+      "search": "Tìm tên học viên",
+      "empty": "Không có học viên phù hợp",
+      "emptyDescription": "Thử đổi lớp, tên tìm kiếm hoặc bộ lọc.",
+      "presentCounts": "{{present}}/{{eligible}} lượt đủ điều kiện có mặt",
+      "pendingPayment": "Chờ thanh toán",
+      "attentionCount": "Cần chú ý"
     }
   }
 }

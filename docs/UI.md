@@ -193,10 +193,10 @@ Trạng thái: **Khung** (chạy được, UI chưa port chi tiết) · **Đủ*
 | S1 | Sheet Điểm danh | sheet | `features/mentor/attendance/` | Đủ; UI + API + controller, tự review; chờ UAT live | MF3 |
 | S3 | Sheet Đồng bộ sĩ số | sheet | `features/mentor/attendance/` | Đủ; UI + API + controller, tự review; chờ UAT live | MF3 |
 | S4 | Sheet Chốt buổi | sheet | `features/mentor/attendance/` | Đủ; UI + API + controller, tự review; chờ UAT live | MF3 |
-| P2 | Lớp phụ trách | `/mentor/page/classes` | `features/mentor/classes/` | Chưa làm | MF4 |
-| P3 | Chi tiết lớp | (route mới) | `features/mentor/classes/` | Chưa làm | MF4 |
-| P4 | Báo cáo điểm danh | `/mentor/page/attendance` | `features/mentor/reports/` | Chưa làm | MF4 |
-| P5 | Học viên + sheet lọc | `/mentor/page/students` | `features/mentor/students/` | Chưa làm | MF4 |
+| P2 | Lớp phụ trách | `/mentor/page/classes` | `features/mentor/classes/` | Tự review + API; UAT live còn thiếu | MF4 |
+| P3 | Chi tiết lớp | `/mentor/classes/:classId` | `features/mentor/classes/` | Tự review + API; UAT live còn thiếu | MF4 |
+| P4 | Báo cáo điểm danh | `/mentor/page/attendance` | `features/mentor/reports/` | Tự review + API; UAT live còn thiếu | MF4 |
+| P5 | Học viên + sheet lọc | `/mentor/page/students` | `features/mentor/students/` | Tự review + API; UAT live còn thiếu | MF4 |
 | P6 | Tài liệu | `/mentor/page/materials` | `features/mentor/materials/` | Chưa làm | MF5 |
 | P7 | Tải file lên (2 bước) | `/mentor/page/upload` | `features/mentor/materials/` | Chưa làm | MF5 |
 | ~~P8~~ | ~~Mở chương~~ | — | — | **Bỏ** (owner 02/11, backend đã gỡ) | — |
@@ -234,7 +234,7 @@ Agent tự đối chiếu ảnh, kiểm tra responsive rồi tiếp tục API; t
 3. Dữ liệu mẫu (fixture) chỉ bật ở bản debug.
 4. Đối chiếu ở 320×640 chữ ×1,3 và máy thường; chụp ảnh so với thiết kế.
 5. Cập nhật trạng thái mục 6; ghi sai khác vào mục 9.
-6. Owner duyệt UI → đổi trạng thái thành **Duyệt** → mới gắn API.
+6. Theo ủy quyền 02/11: agent tự review rồi gắn API, ghi rõ **Tự review** và bằng chứng; không đánh dấu owner đã duyệt từng màn.
 
 ---
 
@@ -258,3 +258,5 @@ Agent tự đối chiếu ảnh, kiểm tra responsive rồi tiếp tục API; t
 Review MF2: xem `docs/MF2_UI_REVIEW.md` và `test/goldens/mf2_*.png`. Đã kiểm tra UI tự động; UAT backend thật chưa chạy do thiếu tài khoản dev.
 
 Review MF3: `docs/MF3_REVIEW.md`, golden `test/goldens/mf3_attendance_320_vi.png`. Sync không đoán danh sách học viên mới; số thêm lấy từ response.
+
+Review MF4: `docs/MF4_REVIEW.md`, 9 golden vi/en chữ lớn; lớp/chi tiết/báo cáo/học viên đã nối API. Không dùng số Unit làm tiến độ hoàn thành.

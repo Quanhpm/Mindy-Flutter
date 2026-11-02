@@ -39,6 +39,9 @@ class Routes {
   static const mentor = '/mentor';
   static const mentorUtilities = '/mentor/utilities';
   static const mentorPagePath = '/mentor/page/:key';
+  static const mentorClassDetailPath = '/mentor/classes/:classId';
+  static String mentorClassDetail(String id) => '/mentor/classes/$id';
+  static String mentorStudents(String id) => '${mentorPage('students')}?classId=${Uri.encodeQueryComponent(id)}';
   static String mentorPage(String key) => '/mentor/page/$key';
 }
 
@@ -48,12 +51,16 @@ String? redirectFor(SessionState s, String loc) {
   if (!s.ready) return loc == Routes.splash ? null : Routes.splash;
 
   final user = s.user;
-  if (user == null) return Routes.guestPages.contains(loc) ? null : Routes.login;
+  if (user == null) {
+    return Routes.guestPages.contains(loc) ? null : Routes.login;
+  }
 
   final isMentorArea = loc == Routes.mentor || loc.startsWith('${Routes.mentor}/');
   switch (user.role) {
     case Role.STUDENT:
-      if (loc == Routes.splash || Routes.guestPages.contains(loc) || isMentorArea) return Routes.home;
+      if (loc == Routes.splash || Routes.guestPages.contains(loc) || isMentorArea) {
+        return Routes.home;
+      }
       return null;
     case Role.MENTOR:
       return isMentorArea ? null : Routes.mentor;

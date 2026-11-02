@@ -11,6 +11,7 @@ import 'icon.dart';
 String errorKey(Object error) {
   if (error is! ApiError) return 'errors.generic';
   if (error.status == 429) return 'errors.RATE_LIMIT_EXCEEDED';
+  if (error.status == 403) return 'errors.ACCESS_DENIED';
   return switch (error.code) {
     'INVALID_CREDENTIALS' => 'errors.INVALID_CREDENTIALS',
     'MAIL_DELIVERY_UNAVAILABLE' => 'errors.MAIL_DELIVERY_UNAVAILABLE',
@@ -45,7 +46,10 @@ class ScreenState extends ConsumerWidget {
           const SizedBox(height: 12),
           Semantics(
             header: true,
-            child: Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: AppColors.forest)),
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: AppColors.forest),
+            ),
           ),
           const SizedBox(height: 12),
           Semantics(
@@ -54,8 +58,10 @@ class ScreenState extends ConsumerWidget {
           ),
           if (requestId != null) ...[
             const SizedBox(height: 12),
-            SelectableText(t('common.requestId', {'id': requestId}),
-                style: const TextStyle(fontSize: 12, color: AppColors.muted)),
+            SelectableText(
+              t('common.requestId', {'id': requestId}),
+              style: const TextStyle(fontSize: 12, color: AppColors.muted),
+            ),
           ],
           if (onRetry != null) ...[
             const SizedBox(height: 12),
@@ -79,8 +85,7 @@ class Skeleton extends StatefulWidget {
 }
 
 class _SkeletonState extends State<Skeleton> with SingleTickerProviderStateMixin {
-  late final _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000))
-    ..repeat(reverse: true);
+  late final _c = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000))..repeat(reverse: true);
 
   @override
   void dispose() {

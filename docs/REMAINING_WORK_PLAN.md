@@ -31,15 +31,16 @@ Tài liệu liên quan (giữ để tra cứu, plan này là nguồn chính khi 
 | Mentor MF1: login chung, phân luồng role, UI kit staff, Home khung, tiện ích yêu thích | P0 đã sửa 2 lỗi P2, test hồi quy pass |
 | Mentor MF2: lịch, Home, phòng, dạy thay, thông báo | Đã triển khai UI + API, tự review theo ủy quyền; UAT backend còn thiếu |
 | Mentor MF3: điểm danh | Đã có UI + API/controller, test mô phỏng; UAT live còn thiếu |
-| Mentor MF4–MF6: lớp, học viên, báo cáo, tài liệu, tải lên | Chưa triển khai |
-| Build | `flutter analyze` sạch, 94 test pass; build iOS Simulator thành công (MF3) |
+| Mentor MF4: lớp, học viên, báo cáo | UI + API, tự review và test mô phỏng; UAT live còn thiếu |
+| Mentor MF5–MF6: tài liệu, tải lên, hoàn thiện | Chưa triển khai |
+| Build | `flutter analyze` sạch, 119 test pass; build iOS Simulator thành công (MF4) |
 
 Cập nhật triển khai 02/11: P0 đã sửa B1–B4, chuyển ca chẩn đoán vào
 `test/p0_regression_test.dart` và bổ sung ca response/cookie cũ, refresh đồng thời,
 refresh thất bại sau đổi phiên. `bash tool/check.sh`: analyze sạch, **31 test pass**.
 Chưa chạy lại UAT đăng nhập trên thiết bị thật. `check.sh` nay dừng ngay khi một bước lỗi.
 MF0 đã có `docs/API_CONTRACT_MENTOR.md` và `docs/MENTOR_TEST_DATA.md`;
-dataset live, kiểm tra MinIO/chat và các quyết định owner chưa hoàn tất.
+dataset live và kiểm tra MinIO/chat chưa hoàn tất; các lựa chọn còn mở đã quyết định theo ủy quyền ở đầu plan.
 
 Quyết định của owner (02/11): **gộp một app** theo role; **Login dùng chung**, Học viên vẫn có Đăng ký; **bỏ Mở chương**; **ẩn Google + Quên mật khẩu**; **điểm danh theo backend** (3 trạng thái + Bắt đầu buổi).
 
@@ -53,7 +54,7 @@ Giữ quy trình như bản RN để owner nghiệm thu được:
 
 1. **Đặc tả ngắn** trong mục phase ở file này: màn, API, quy tắc, tiêu chí nghiệm thu (đã viết sẵn bên dưới; bổ sung nếu phát hiện thiếu).
 2. **UI với fixture**: dựng màn bằng dữ liệu mẫu (chỉ bật ở bản debug), đối chiếu ảnh thiết kế ở 320×640 và chữ ×1,3.
-3. **Owner duyệt UI**, chưa duyệt thì chưa gắn API.
+3. Theo ủy quyền mới: agent **tự review UI**, lưu ảnh/sai khác rồi tiếp tục API; không hỏi duyệt lại.
 4. **Gắn API thật**, theo đúng contract ở mục 3 (MF0 xác minh lại từ source backend).
 5. **Test**: unit cho logic, widget cho màn; chạy `bash tool/check.sh` (analyze + test) phải sạch.
 6. **Ghi tiến độ**: đánh dấu checklist ở mục 14 của file này, ghi ngày + ghi chú giới hạn.
@@ -400,3 +401,16 @@ Tổng phần bắt buộc: **25–35,5 ngày công**, cộng dự phòng 20% th
   Chưa coi các test này là UAT hai thiết bị/backend thật.
 - Việc kế tiếp: MF4 lớp/chi tiết/báo cáo/học viên, MF5 tài liệu-upload, MF6, S1–S5,
   MF7 theo ủy quyền và phát hành. Tài khoản backend live/MinIO/signing vẫn cần bằng chứng riêng.
+
+### MF4 — bản triển khai 02/11
+
+- Đã có Lớp phụ trách, Chi tiết lớp, Báo cáo và Học viên, kèm tìm/lọc/chi tiết học viên.
+- Số ghi danh từ server; Unit/buổi không suy diễn completion. Guard CLASS/PRIMARY
+  trước dữ liệu riêng tư, skip context của buổi do mentor khác phụ trách.
+- Tổng chuyên cần từ counts server, phân biệt lịch sử toàn lớp, ghi danh hiện tại
+  và roster vật lý; null/mất quyền không hiện thành 0%. Roster tối đa 3 đồng thời.
+- Chi tiết lớp dùng sheet điểm danh MF3; readonly khóa nút ghi; lịch sử dùng cache báo cáo.
+- 9 test model/API/provider + 16 widget test; 9 golden đã tự review vi/en 320 chữ ×1,3.
+- `bash tool/check.sh`: **119 test pass**, analyze sạch; iOS Simulator build **10 giây**.
+- Chi tiết và các giới hạn UAT: `MF4_REVIEW.md`. Chưa đánh dấu Done server thật.
+- Tiếp theo: MF5 Tài liệu/Tải lên, MF6, Học viên S1–S5, MF7 và phát hành.

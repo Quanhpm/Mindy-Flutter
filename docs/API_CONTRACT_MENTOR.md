@@ -139,7 +139,12 @@ rate:number|null}`. Các count không âm; rate 0..100 hoặc null (chưa có bu
 Không hiển thị null thành 0% hoặc tự tạo % hoàn thành học tập.
 Nếu cần % theo buổi, đọc roster của buổi đã chốt (tối đa 3 request đồng thời, cache
 theo phiên); phân biệt số điểm danh vật lý với tín chỉ học bù của báo cáo.
-Các số tổng trình bày trên UI cần đặc tả rõ cách gộp trước khi triển khai MF4.
+MF4 chọn theo ủy quyền: tổng chuyên cần lớp = sum(present)/sum(finalizedEligibleCount),
+gồm toàn bộ enrollment trong class summary; lượt vắng = sum(absent); buổi đã chốt =
+số session COMPLETED trong workspace / visibleSessionCount. Danh sách học viên chỉ
+aggregate trên các enrollment hiện tại trong roster, còn summary cá nhân dùng toàn
+lịch sử STUDENT_CLASS_HISTORY. Không đồng nhất ba phạm vi này. Per-session là roster
+vật lý, null khi eligible=0 hoặc unmarked>0. Nguồn/bằng chứng: `MF4_REVIEW.md`.
 
 `GET mentor/classes/:classId/students/:studentId/attendance?from&to&page&pageSize`:
 `Page<History> + {classId,readonly,asOf,timeZone}`.

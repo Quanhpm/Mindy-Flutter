@@ -33,6 +33,11 @@ class Json {
   String? uuidOrNull(String key) => _map[key] == null ? null : uuid(key);
 
   int integer(String key) => _map[key] is int ? _map[key] as int : fail();
+  double number(String key) {
+    final value = _map[key];
+    return value is num && value.isFinite ? value.toDouble() : fail();
+  }
+
   bool boolean(String key) => _map[key] is bool ? _map[key] as bool : fail();
 
   /// Số tiền nguyên VND, 0..1e12

@@ -15,7 +15,6 @@ import 'package:mindy_flutter/core/utils/format.dart';
 import 'package:mindy_flutter/features/mentor/home/next_session_card.dart';
 import 'package:mindy_flutter/features/mentor/attendance/attendance_api.dart';
 import 'package:mindy_flutter/features/mentor/attendance/attendance_sheet.dart';
-import 'package:mindy_flutter/features/mentor/schedule/schedule_providers.dart';
 import 'package:mindy_flutter/features/mentor/mentor_home_screen.dart';
 import 'package:mindy_flutter/features/mentor/mentor_pages.dart';
 import 'package:mindy_flutter/features/mentor/mentor_providers.dart';
@@ -29,6 +28,11 @@ import 'package:mindy_flutter/features/notifications/notifications_panel.dart';
 
 import 'preview/mentor_fixtures.dart';
 import 'preview/attendance_fixtures.dart';
+import 'preview/classes_fixtures.dart';
+import 'package:mindy_flutter/features/mentor/classes/classes_screen.dart';
+import 'package:mindy_flutter/features/mentor/classes/class_detail_screen.dart';
+import 'package:mindy_flutter/features/mentor/reports/attendance_report_screen.dart';
+import 'package:mindy_flutter/features/mentor/students/students_screen.dart';
 
 Future<void> main() async {
   if (!kDebugMode) throw StateError('UI preview is debug-only');
@@ -41,10 +45,10 @@ Future<void> main() async {
       overrides: [
         initialLocaleProvider.overrideWithValue(locale),
         sessionProvider.overrideWith(_PreviewSession.new),
-        mentorClockProvider.overrideWithValue(() => previewNow),
         mentorAttendanceApiProvider.overrideWithValue(MemoryAttendanceRouter()),
         mentorSubstituteOnlyProvider.overrideWith((ref) async => false),
         mentorFavoritesProvider.overrideWith(_PreviewFavorites.new),
+        ...classesPreviewOverrides(),
       ],
       child: const MentorPreviewApp(),
     ),
@@ -97,9 +101,13 @@ class _MentorPreviewAppState extends ConsumerState<MentorPreviewApp> {
   double _scale = 1;
 
   late final _router = GoRouter(
-    initialLocation: Routes.mentor,
+    initialLocation: const String.fromEnvironment('PREVIEW_ROUTE', defaultValue: Routes.mentor),
     routes: [
       GoRoute(path: Routes.mentor, builder: (_, _) => _listen(_home)),
+      GoRoute(
+        path: Routes.mentorClassDetailPath,
+        builder: (_, st) => MentorClassDetailScreen(classId: st.pathParameters['classId']!),
+      ),
       GoRoute(
         path: Routes.mentorUtilities,
         builder: (_, _) => MentorUtilitiesScreen(
@@ -119,6 +127,9 @@ class _MentorPreviewAppState extends ConsumerState<MentorPreviewApp> {
           () => switch (state.pathParameters['key']) {
             'schedule' => _scheduleScreen(),
             'substitute' => _substituteScreen(),
+            'classes' => const MentorClassesScreen(),
+            'attendance' => const MentorAttendanceReportScreen(),
+            'students' => MentorStudentsScreen(classId: state.uri.queryParameters['classId']),
             _ => MentorPlaceholderPage(utilKey: state.pathParameters['key']!),
           },
         ),
@@ -315,6 +326,19 @@ class _MentorPreviewAppState extends ConsumerState<MentorPreviewApp> {
                         },
                       ),
                       TextButton(onPressed: () => _router.go(Routes.mentor), child: Text(t('mentor.preview.home'))),
+                      TextButton(
+                        key: const ValueKey('previewClasses'),
+                        onPressed: () => _router.go(Routes.mentorPage('classes')),
+                        child: Text(t('mentor.classes.title')),
+                      ),
+                      TextButton(
+                        onPressed: () => _router.go(Routes.mentorPage('attendance')),
+                        child: Text(t('mentor.reports.title')),
+                      ),
+                      TextButton(
+                        onPressed: () => _router.go(Routes.mentorPage('students')),
+                        child: Text(t('mentor.students.title')),
+                      ),
                       TextButton(
                         onPressed: () => _router.go(Routes.mentorPage('schedule')),
                         child: Text(t('mentor.preview.schedule')),

@@ -63,7 +63,8 @@
     "INVALID_CREDENTIALS": "The email or password is incorrect.",
     "MAIL_DELIVERY_UNAVAILABLE": "Email is temporarily unavailable. Please try again.",
     "NETWORK_UNAVAILABLE": "You are offline. Check your connection and try again.",
-    "RATE_LIMIT_EXCEEDED": "Too many requests. Please try again later."
+    "RATE_LIMIT_EXCEEDED": "Too many requests. Please try again later.",
+    "ACCESS_DENIED": "You do not have permission to view this or perform this action."
   },
   "auth": {
     "brandName": "Mindy Coding",
@@ -753,7 +754,7 @@
       "actionError": "Could not mark as read"
     },
     "preview": {
-      "title": "MF2 preview · sample data",
+      "title": "Mentor preview · sample data",
       "home": "Home",
       "schedule": "Schedule",
       "substitute": "Substitute",
@@ -826,6 +827,105 @@
         "ABSENT": "Absent"
       },
       "startUnavailable": "This session has not started and attendance cannot be opened now. Check the teaching day or contact a manager."
+    },
+    "classes": {
+      "title": "My classes",
+      "subtitle": "Classes where you are the primary mentor",
+      "groups": {
+        "active": "Teaching",
+        "upcoming": "Upcoming",
+        "ended": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "status": {
+        "DRAFT": "Draft",
+        "OPEN": "Open",
+        "IN_PROGRESS": "In progress",
+        "COMPLETED": "Completed",
+        "CANCELLED": "Cancelled"
+      },
+      "empty": "No classes yet",
+      "emptyDescription": "Assigned classes will appear here.",
+      "loadError": "Could not load classes",
+      "detailsUnavailable": "Class overview is unavailable.",
+      "counts": "{{units}} units · {{sessions}} sessions · {{students}} enrollments",
+      "structure": "{{units}} units · {{sessions}} sessions",
+      "thisWeek": "This week",
+      "noWeekSessions": "No sessions this week.",
+      "noNext": "No upcoming session",
+      "next": "Next · {{date}}",
+      "contextRestricted": "Another mentor teaches this session; room and roster access is restricted.",
+      "roomUnavailable": "Room information is unavailable",
+      "viewDetail": "View class details ›",
+      "detail": "Class details",
+      "readonly": "This class is read only; changes are disabled.",
+      "viewStudents": "View {{count}} enrollments ›",
+      "upcoming": "Upcoming",
+      "past": "Past sessions",
+      "noSessions": "No sessions",
+      "noSessionsDescription": "Matching sessions will appear here.",
+      "unitUnavailable": "Unit information unavailable",
+      "sessionTitle": "Session {{number}} · {{unit}}"
+    },
+    "reports": {
+      "title": "Attendance report",
+      "subtitle": "Attendance across your classes",
+      "loadError": "Could not load report",
+      "average": "Rate",
+      "completed": "Finalized sessions",
+      "absent": "Absences",
+      "aggregateNote": "Present credits / finalized eligible records, including makeup credits and past enrollments. —: no rate yet.",
+      "physical": "Presence in each session",
+      "physicalNote": "Uses the session attendance list, including makeup guests. Unmarked or no eligible students: —.",
+      "empty": "No finalized sessions",
+      "emptyDescription": "Session reports appear after attendance is finalized.",
+      "rowError": "Could not load this session",
+      "sessionCounts": "{{present}}/{{eligible}} present · {{unmarked}} unmarked"
+    },
+    "students": {
+      "title": "Students",
+      "subtitle": "Enrollments and attendance",
+      "filterTitle": "Filter students",
+      "filters": {
+        "all": "All",
+        "attention": "Needs attention",
+        "regular": "Regular attendance"
+      },
+      "threshold": "Needs attention: below 80%. Regular: at least 80%. Students without a rate appear under All.",
+      "apply": "Apply",
+      "reset": "Reset filter",
+      "detail": "History and stored records",
+      "loadError": "Could not load students",
+      "registered": "Enrolled",
+      "historyScope": "Includes the student’s entire enrollment history in this class and makeup credits; it may differ from the current enrollment row.",
+      "history": "Attendance history",
+      "noHistory": "No attendance history.",
+      "applicability": {
+        "ELIGIBLE": "Eligible for attendance",
+        "NOT_STARTED": "Session has not started",
+        "NOT_ELIGIBLE": "Not eligible for attendance",
+        "PAYMENT_PENDING": "Payment pending",
+        "LEGACY_NO_DATA": "Historical data unavailable",
+        "MAKEUP_PENDING": "Makeup pending",
+        "MAKEUP_CREDITED": "Makeup result credited"
+      },
+      "physicalStatus": "At session: {{status}}",
+      "creditStatus": "Makeup result: {{status}}",
+      "excluded": "Excluded from the attendance denominator.",
+      "storedProgress": "Stored unit records",
+      "progressNote": "No course completion policy is defined. These are stored values, not measured learning progress.",
+      "noProgress": "No unit records.",
+      "untracked": "Not tracked",
+      "invalidProgress": "Stored value is invalid; no rate is available.",
+      "storedValue": "Stored value: {{value}}",
+      "storedDate": "Stored completion date: {{date}}",
+      "currentScope": "Includes pending, active and completed enrollments. Attendance uses finalized eligible records.",
+      "search": "Search student names",
+      "empty": "No matching students",
+      "emptyDescription": "Try another class, search or filter.",
+      "presentCounts": "{{present}}/{{eligible}} eligible records present",
+      "pendingPayment": "Payment pending",
+      "attentionCount": "Below 80%"
     }
   }
 }

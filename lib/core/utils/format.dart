@@ -8,6 +8,9 @@ void initTimeZones() => tzdata.initializeTimeZones();
 /// `1.500.000 VND` - `shared/utilities/formatVnd.ts`
 String formatVnd(int amount) => '${NumberFormat.decimalPattern('vi_VN').format(amount)} VND';
 
+String formatPercent(double? value, String language) =>
+    value == null ? '—' : '${NumberFormat('0.#', language).format(value)}%';
+
 /// Thời gian luôn hiển thị theo `timeZone` của response, KHÔNG theo múi giờ máy.
 /// Port từ `modules/schedule/calendar.ts`.
 class Dates {
@@ -52,8 +55,7 @@ class Dates {
   }
 
   /// `18:30`
-  static String time(DateTime instant, String timeZone) =>
-      DateFormat('HH:mm').format(inZone(instant, timeZone));
+  static String time(DateTime instant, String timeZone) => DateFormat('HH:mm').format(inZone(instant, timeZone));
 
   /// `02/11/2026 18:30`
   static String instant(DateTime instant, String timeZone) =>
