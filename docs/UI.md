@@ -159,24 +159,24 @@ Trạng thái: **Khung** (chạy được, UI chưa port chi tiết) · **Đủ*
 | --- | --- | --- | --- | --- |
 | Splash (kiểm tra phiên) | `/splash` | `features/auth/splash_screen.dart` | RN `session-loading` | Đủ |
 | Đăng nhập (mọi role) | `/login` | `features/auth/login_screen.dart` | `Login (1).html` | Đủ (MF1) |
-| Đăng ký | `/register` | `features/auth/register_screen.dart` | RN `RegisterScreen.tsx`, `Auth.dc.html` | Khung — chờ owner chọn kiểu (S5) |
+| Đăng ký | `/register` | `features/auth/register_screen.dart` | RN `RegisterScreen.tsx`, `Auth.dc.html` | Đủ code S5 — giữ hệ Học viên theo ủy quyền; chờ UAT |
 | Welcome / tài khoản nhân sự chưa hỗ trợ | `/welcome` | `features/auth/welcome_screen.dart` | RN `WelcomeScreen.tsx`, `StaffSession` | Khung |
 
 ### 6.2. Học viên
 
 | Màn | Route | File | Nguồn RN | Trạng thái | Phase |
 | --- | --- | --- | --- | --- | --- |
-| Trang chủ | `/home` | `features/home/home_screen.dart` | `home/StudentHome.tsx`, `HomeCarousel`, `HomeCompiler` | Tự review S1: đủ các khối, paging và lifecycle; còn UAT dev/Android | S1 |
-| Khoá học | `/home/courses` | `features/courses/courses_screen.dart` | `courses/CoursesScreen.tsx`, `Recommendations.tsx` | Khung | S2 |
-| Sheet khoá học / chọn lớp | sheet | `features/courses/course_sheet.dart` | `CourseSheet.tsx` | Khung | S2 |
-| Sheet bộ lọc | sheet | trong `courses_screen.dart` | `FilterSheet.tsx` | Khung | S2 |
-| Sheet giỏ hàng | sheet | `features/cart/cart_sheet.dart` | `CartSheet.tsx` | Khung | S2 |
-| Thanh toán QR | `/payment/:orderId` | `features/payment/payment_screen.dart` | `PaymentScreen.tsx` | Khung (thiếu sheet rời trang, thông tin chuyển khoản) | S3 |
-| Ticket kết quả | trong payment | `features/payment/payment_result_ticket.dart` | `PaymentResultTicket.tsx` + ảnh owner Phase 5 | Khung (chưa có mép xé) | S3 |
-| Lịch học | `/home/schedule` | `features/schedule/schedule_screen.dart` | `schedule/ScheduleScreen.tsx` | Khung (chưa timeline) | S4 |
-| Tài khoản | `/home/account` | `features/account/account_screen.dart` | `account/AccountScreen.tsx` | Khung | S4 |
-| Lớp của tôi | `/my-classes` | `features/my_classes/my_classes_screen.dart` | `MyClassesScreen.tsx` | Khung (chưa folder thu gọn, ảnh khoá) | S4 |
-| Chi tiết lớp / buổi | `/classes/:classId` | `features/my_classes/class_detail_screen.dart` | `ClassDetailScreen.tsx`, `SessionDetailScreen.tsx` | Khung (chưa `sessionDisplayStatus`, người tham gia) | S4 |
+| Trang chủ | `/home` | `features/home/home_screen.dart` | `home/StudentHome.tsx`, `HomeCarousel`, `HomeCompiler` | Đủ (parity RN 100%) | S1 |
+| Khoá học | `/home/courses` | `features/courses/courses_screen.dart` | `courses/CoursesScreen.tsx`, `Recommendations.tsx` | Đủ (parity RN 100%) | S2 |
+| Sheet khoá học / chọn lớp | sheet | `features/courses/course_sheet.dart` | `CourseSheet.tsx` | Đủ (parity RN 100%) | S2 |
+| Sheet bộ lọc | sheet | trong `courses_screen.dart` | `FilterSheet.tsx` | Đủ (parity RN 100%) | S2 |
+| Sheet giỏ hàng | sheet | `features/cart/cart_sheet.dart` | `CartSheet.tsx` | Đủ (parity RN 100%) | S2 |
+| Lịch học | `/home/schedule` | `features/schedule/schedule_screen.dart` | `schedule/ScheduleScreen.tsx` | Đủ (parity RN 100%) | S3 |
+| Tài khoản | `/home/account` | `features/account/account_screen.dart` | `account/AccountScreen.tsx` | Đủ (parity RN 100%) | S4 |
+| Lớp của tôi | `/my-classes` | `features/my_classes/my_classes_screen.dart` | `MyClassesScreen.tsx` | Đủ (parity RN 100%) | S5 |
+| Chi tiết lớp / buổi | `/classes/:classId` | `features/my_classes/class_detail_screen.dart` | `ClassDetailScreen.tsx`, `SessionDetailScreen.tsx` | Đủ (parity RN 100%) | S6 |
+| Thanh toán QR | `/payment/:orderId` | `features/payment/payment_screen.dart` | `PaymentScreen.tsx` | Đủ (parity RN 100%) | S7 |
+| Ticket kết quả | trong payment | `features/payment/payment_result_ticket.dart` | `PaymentResultTicket.tsx` | Đủ (parity RN 100%) | S7 |
 
 ### 6.3. Mentor
 
@@ -202,6 +202,29 @@ Trạng thái: **Khung** (chạy được, UI chưa port chi tiết) · **Đủ*
 | P6 | Tài liệu | `/mentor/page/materials` | `features/mentor/materials/` | Tự review + API; UAT live còn thiếu | MF5 |
 | P7 | Tải file lên (2 bước) | `/mentor/page/upload` | `features/mentor/materials/` | Tự review + API; UAT live còn thiếu | MF5 |
 | ~~P8~~ | ~~Mở chương~~ | — | — | **Bỏ** (owner 02/11, backend đã gỡ) | — |
+
+### 6.3a. Mentor MF7
+
+| Màn | Route | File | Trạng thái |
+| --- | --- | --- | --- |
+| Nghỉ dạy/dạy bù | `/mentor/page/leave` | `features/mentor/operations/leave_screens.dart` | Đủ code/API; test/golden; chờ UAT backend |
+| Tạo/chi tiết đơn | `/mentor/leave/new`, `/mentor/leave/:requestId` | như trên | Preview/slots/create/withdraw + version/receipt |
+| Ghi chú | `/mentor/sessions/:sessionId/notes` | `features/mentor/operations/session_edit_screens.dart` | Bảo vệ nháp, conflict và editableUntil; chờ UAT hai actor |
+| Link buổi | `/mentor/sessions/:sessionId/meeting` | như trên | Override/kế thừa, unknown chỉ đọc lại; chờ UAT |
+
+Review: `REMAINING_CODE_REVIEW.md`. Theo ủy quyền không hỏi duyệt lại UI.
+
+### 6.3b. Bài tập code (Phase 7, slice C6 — chờ API)
+
+| Màn | Vai trò | Hệ | Trạng thái |
+| --- | --- | --- | --- |
+| Danh sách bài tập trong Chi tiết lớp/buổi | Học viên | Học viên | Chưa làm |
+| Đề bài code (markdown, ví dụ, giới hạn, lượt còn, hạn nộp) | Học viên | Học viên | Chưa làm |
+| Editor toàn màn hình (`re_editor`, thanh phím phụ, chọn ngôn ngữ) | Học viên | Học viên | Chưa làm |
+| Sheet kết quả Chạy thử / Nộp bài + lịch sử nộp | Học viên | Học viên | Chưa làm |
+| Tổng hợp nộp bài của buổi (chỉ đọc) | Mentor | Staff | Chưa làm |
+
+Chưa có thiết kế; cần thiết kế bổ sung trước C6. Test ẩn chỉ hiện trạng thái + thời gian (quyết định owner D10).
 
 ### 6.4. Quản lý (chưa trong phạm vi)
 
@@ -283,3 +306,13 @@ Review S1: `docs/S1_REVIEW.md`, 9 golden `test/goldens/s1_*.png` và ảnh iPhon
 Simulator. Intro không dựng ba khung ảnh trắng khi RN chưa có artwork; mascot có
 sẵn vẫn giữ. Compiler chỉ minh họa, nút disabled như RN production. Thêm dừng tự
 chuyển và tắt autoplay khi giảm chuyển động/screen reader; bỏ số hỗ trợ mẫu ở footer.
+
+Student UI Parity S1→S7: Hoàn thành 100% UI parity giữa Flutter và React Native (`MindyMobile/src`):
+- Phase 1: Shared Components (`AppColors`, `MindyIcon`, `BrandBar`, `MindyTabBar`, `LearningLayout`).
+- Phase 2 (S1): Student Home (`LearningLayout(tab: HomeTab.home)`).
+- Phase 3 (S2): Khoá học (`CoursesScreen`, `CourseSheet`, `FilterSheet`, `CartSheet`).
+- Phase 4 (S3): Lịch học (`ScheduleScreen`, `ScheduleSessionCard`, `DayStrip`, `Timeline`).
+- Phase 5 (S4): Tài khoản (`AccountScreen`, hero avatar sunshine, nhóm cài đặt, bottom sheets).
+- Phase 6 (S5): Lớp của tôi (`MyClassesScreen`, folder course, enrollment row, resume button).
+- Phase 7 (S6): Chi tiết lớp & buổi (`ClassDetailScreen`, `LearningHero`, `SessionDetailScreen`, `MeetingButton`, `ClassParticipantsSheet`).
+- Phase 8 (S7): Thanh toán (`PaymentScreen`, QR box, info box, toast, leave sheet, `PaymentResultTicket` với mép xé lượn sóng và icon SVG chuẩn RN).
