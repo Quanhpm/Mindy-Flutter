@@ -18,6 +18,7 @@ class MindyButton extends StatelessWidget {
     this.minHeight,
     this.padding,
     this.radius,
+    this.backgroundColor,
   });
 
   final String label;
@@ -29,9 +30,11 @@ class MindyButton extends StatelessWidget {
   final double? minHeight;
   final EdgeInsetsGeometry? padding;
   final double? radius;
+  final Color? backgroundColor;
 
   bool get _darkText =>
-      variant == ButtonVariant.outline || variant == ButtonVariant.ghost || variant == ButtonVariant.action;
+      backgroundColor == null &&
+      (variant == ButtonVariant.outline || variant == ButtonVariant.ghost || variant == ButtonVariant.action);
 
   @override
   Widget build(BuildContext context) {
@@ -39,23 +42,25 @@ class MindyButton extends StatelessWidget {
     final textColor = _darkText ? AppColors.black : AppColors.canvas;
 
     final r = BorderRadius.all(Radius.circular(radius ?? 999));
-    final decoration = switch (variant) {
-      ButtonVariant.primary => BoxDecoration(
-          gradient: const LinearGradient(colors: [AppColors.mint, AppColors.forest]),
-          borderRadius: r,
-          boxShadow: const [BoxShadow(color: Color(0x401D5B57), blurRadius: 16, offset: Offset(0, 8))],
-        ),
-      ButtonVariant.outline => BoxDecoration(
-          color: AppColors.canvas,
-          border: Border.all(color: AppColors.banner, width: 1.5),
-          borderRadius: r,
-        ),
-      ButtonVariant.solid => BoxDecoration(
-          color: AppColors.forest, borderRadius: r),
-      ButtonVariant.action => BoxDecoration(
-          color: AppColors.action, borderRadius: r),
-      ButtonVariant.ghost => const BoxDecoration(),
-    };
+    final decoration = backgroundColor != null
+        ? BoxDecoration(color: backgroundColor, borderRadius: r)
+        : switch (variant) {
+            ButtonVariant.primary => BoxDecoration(
+                gradient: const LinearGradient(colors: [AppColors.mint, AppColors.forest]),
+                borderRadius: r,
+                boxShadow: const [BoxShadow(color: Color(0x401D5B57), blurRadius: 16, offset: Offset(0, 8))],
+              ),
+            ButtonVariant.outline => BoxDecoration(
+                color: AppColors.canvas,
+                border: Border.all(color: AppColors.banner, width: 1.5),
+                borderRadius: r,
+              ),
+            ButtonVariant.solid => BoxDecoration(
+                color: AppColors.forest, borderRadius: r),
+            ButtonVariant.action => BoxDecoration(
+                color: AppColors.action, borderRadius: r),
+            ButtonVariant.ghost => const BoxDecoration(),
+          };
 
     final content = Row(
       mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,

@@ -100,4 +100,15 @@ class SessionController extends Notifier<SessionState> {
   void expire() {
     if (state.user != null || !state.ready) _accept(null);
   }
+
+  /// Tải lại thông tin user hiện tại (ví dụ pull to refresh).
+  Future<void> reload() async {
+    final epoch = _api.sessionEpoch;
+    try {
+      final user = await _auth.me();
+      if (_api.sessionEpoch == epoch) _accept(user);
+    } catch (_) {
+      // Giữ phiên hiện tại nếu reload lỗi mạng
+    }
+  }
 }
