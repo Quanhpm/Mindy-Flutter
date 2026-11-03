@@ -31,6 +31,10 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Mentor dùng camera để chụp tài liệu tải lên lớp học.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Dùng Face ID để xác thực khi đăng nhập Mindy.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

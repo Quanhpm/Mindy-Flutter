@@ -6,6 +6,7 @@ import '../../../core/i18n/i18n.dart';
 import '../../../core/session/session_controller.dart';
 import '../../../core/session/session_user.dart';
 import '../../../core/ui/mdy/mdy.dart';
+import '../../../core/utils/mindy_haptics.dart';
 import 'account_page.dart';
 
 void _back(BuildContext context, SessionUser user) {
@@ -37,7 +38,11 @@ class StaffProfileScreen extends ConsumerWidget {
           margin: EdgeInsets.zero,
           gap: MdySpace.s10,
           children: [
-            MdyAvatar(key: const Key('profile-avatar'), name: user.displayName, profile: true),
+            MdyAvatar(
+              key: const Key('profile-avatar'),
+              name: user.displayName,
+              profile: true,
+            ),
             Text(
               user.displayName,
               key: const Key('profile-name'),
@@ -58,10 +63,20 @@ class StaffProfileScreen extends ConsumerWidget {
               constraints: const BoxConstraints(minHeight: MdySpace.s24),
               padding: const EdgeInsets.symmetric(horizontal: MdySpace.s10),
               alignment: Alignment.center,
-              decoration: BoxDecoration(color: c.tint2, borderRadius: BorderRadius.circular(MdyRadius.r99)),
+              decoration: BoxDecoration(
+                color: c.tint2,
+                borderRadius: BorderRadius.circular(MdyRadius.r99),
+              ),
               child: Text(
-                t(user.role == Role.MENTOR ? 'mdy.foundation.MENTOR' : 'mdy.foundation.MANAGER'),
-                style: MdyType.size(12, MdyType.w600).copyWith(color: c.primary),
+                t(
+                  user.role == Role.MENTOR
+                      ? 'mdy.foundation.MENTOR'
+                      : 'mdy.foundation.MANAGER',
+                ),
+                style: MdyType.size(
+                  12,
+                  MdyType.w600,
+                ).copyWith(color: c.primary),
               ),
             ),
           ],
@@ -81,7 +96,9 @@ class StaffProfileScreen extends ConsumerWidget {
                   key: const Key('profile-info-phone'),
                   icon: MdyIcons.call,
                   label: t('mdy.foundation.phone'),
-                  value: (user.phone ?? '').isEmpty ? t('mdy.foundation.phoneEmpty') : user.phone!,
+                  value: (user.phone ?? '').isEmpty
+                      ? t('mdy.foundation.phoneEmpty')
+                      : user.phone!,
                   empty: (user.phone ?? '').isEmpty,
                 ),
               ],
@@ -94,7 +111,13 @@ class StaffProfileScreen extends ConsumerWidget {
 }
 
 class _InformationRow extends StatelessWidget {
-  const _InformationRow({super.key, required this.icon, required this.label, required this.value, this.empty = false});
+  const _InformationRow({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.empty = false,
+  });
   final MdyIcons icon;
   final String label;
   final String value;
@@ -122,7 +145,10 @@ class _InformationRow extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label, style: MdyType.size(12).copyWith(color: c.secondary)),
+                  Text(
+                    label,
+                    style: MdyType.size(12).copyWith(color: c.secondary),
+                  ),
                   SelectableText(
                     value,
                     style: empty
@@ -144,7 +170,8 @@ class StaffSettingsScreen extends ConsumerStatefulWidget {
   const StaffSettingsScreen({super.key});
 
   @override
-  ConsumerState<StaffSettingsScreen> createState() => _StaffSettingsScreenState();
+  ConsumerState<StaffSettingsScreen> createState() =>
+      _StaffSettingsScreenState();
 }
 
 class _StaffSettingsScreenState extends ConsumerState<StaffSettingsScreen> {
@@ -163,7 +190,11 @@ class _StaffSettingsScreenState extends ConsumerState<StaffSettingsScreen> {
     if (ref.read(mdyThemeChoiceProvider) == value) return;
     ref.read(mdyThemeChoiceProvider.notifier).change(value);
     final t = ref.read(trProvider);
-    _toast(t('mdy.foundation.themeChanged', {'name': t('mdy.foundation.${value.name}')}));
+    _toast(
+      t('mdy.foundation.themeChanged', {
+        'name': t('mdy.foundation.${value.name}'),
+      }),
+    );
   }
 
   Future<void> _confirm(SessionUser user, bool all) async {
@@ -179,6 +210,28 @@ class _StaffSettingsScreenState extends ConsumerState<StaffSettingsScreen> {
     );
   }
 
+  Future<void> _toggleBiometric(bool enabled) async {
+    final t = ref.read(trProvider);
+    try {
+      final changed = await ref
+          .read(sessionProvider.notifier)
+          .setBiometricLogin(enabled, reason: t('auth.login.biometricReason'));
+      if (!mounted) return;
+      if (changed) await MindyHaptics.selection();
+      _toast(
+        t(
+          changed
+              ? (enabled
+                    ? 'auth.login.biometricEnabled'
+                    : 'auth.login.biometricDisabled')
+              : 'auth.login.biometricUnavailable',
+        ),
+      );
+    } catch (_) {
+      if (mounted) _toast(t('auth.login.biometricUnavailable'));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = ref.watch(trProvider);
@@ -186,6 +239,9 @@ class _StaffSettingsScreenState extends ConsumerState<StaffSettingsScreen> {
     if (user == null) return const SizedBox.shrink();
     final language = ref.watch(localeProvider).languageCode;
     final choice = ref.watch(mdyThemeChoiceProvider);
+    final biometricEnabled = ref.watch(
+      sessionProvider.select((s) => s.biometricEnabled),
+    );
     final c = context.mdy;
     return StaffAccountPage(
       page: 'settings',
@@ -229,7 +285,11 @@ class _StaffSettingsScreenState extends ConsumerState<StaffSettingsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: MdySpace.s8,
               children: [
-                for (final value in const [MdyThemeChoice.light, MdyThemeChoice.dark, MdyThemeChoice.system])
+                for (final value in const [
+                  MdyThemeChoice.light,
+                  MdyThemeChoice.dark,
+                  MdyThemeChoice.system,
+                ])
                   Expanded(
                     child: MdyThemeCard(
                       value: value,
@@ -249,9 +309,17 @@ class _StaffSettingsScreenState extends ConsumerState<StaffSettingsScreen> {
                   MdyIcon(MdyIcons.info, size: 16, color: c.link),
                   Expanded(
                     child: Text(
-                      t(choice == MdyThemeChoice.system ? 'mdy.foundation.themeNoteSystem' : 'mdy.foundation.themeNoteFixed'),
+                      t(
+                        choice == MdyThemeChoice.system
+                            ? 'mdy.foundation.themeNoteSystem'
+                            : 'mdy.foundation.themeNoteFixed',
+                      ),
                       key: const Key('settings-theme-note'),
-                      style: MdyType.size(12, MdyType.w400, 18).copyWith(color: c.secondary),
+                      style: MdyType.size(
+                        12,
+                        MdyType.w400,
+                        18,
+                      ).copyWith(color: c.secondary),
                     ),
                   ),
                 ],
@@ -287,13 +355,38 @@ class _StaffSettingsScreenState extends ConsumerState<StaffSettingsScreen> {
             ),
           ],
         ),
+        StaffAccountGroup(
+          label: t('auth.login.biometricGroup'),
+          children: [
+            StaffAccountList(
+              children: [
+                MdyRow(
+                  key: const Key('settings-biometric-login'),
+                  compact: true,
+                  chevron: false,
+                  code: 'BIO',
+                  label: t('auth.login.biometricSetting'),
+                  subtitle: t('auth.login.biometricSettingSub'),
+                  checked: biometricEnabled,
+                  onPress: _busy
+                      ? () {}
+                      : () => _toggleBiometric(!biometricEnabled),
+                ),
+              ],
+            ),
+          ],
+        ),
       ],
     );
   }
 }
 
 class _LogoutDialog extends ConsumerStatefulWidget {
-  const _LogoutDialog({required this.all, required this.email, required this.onBusy});
+  const _LogoutDialog({
+    required this.all,
+    required this.email,
+    required this.onBusy,
+  });
   final bool all;
   final String email;
   final ValueChanged<bool> onBusy;
@@ -317,7 +410,13 @@ class _LogoutDialogState extends ConsumerState<_LogoutDialog> {
     widget.onBusy(true);
     try {
       await session.logout(all: widget.all);
-      toast.show(t(widget.all ? 'mdy.foundation.signedOutAll' : 'mdy.foundation.signedOut'));
+      toast.show(
+        t(
+          widget.all
+              ? 'mdy.foundation.signedOutAll'
+              : 'mdy.foundation.signedOut',
+        ),
+      );
     } catch (_) {
       // Phiên đã hết hạn trong lúc gửi: router đã đưa về Login, không báo lỗi.
       if (ref.read(sessionProvider).user == null) return;
@@ -335,19 +434,30 @@ class _LogoutDialogState extends ConsumerState<_LogoutDialog> {
     final all = widget.all;
     return MdyConfirmationDialog(
       key: const Key('logout-sheet'),
-      title: t(all ? 'mdy.foundation.logoutAllTitle' : 'mdy.foundation.logoutTitle'),
+      title: t(
+        all ? 'mdy.foundation.logoutAllTitle' : 'mdy.foundation.logoutTitle',
+      ),
       icon: all ? MdyIcons.devices : MdyIcons.logout,
       busy: _busy,
       children: [
         Transform.translate(
           offset: const Offset(0, -MdySpace.s8),
           child: Text(
-            t(all ? 'mdy.foundation.logoutAllBody' : 'mdy.foundation.logoutBody', {'email': widget.email}),
+            t(
+              all
+                  ? 'mdy.foundation.logoutAllBody'
+                  : 'mdy.foundation.logoutBody',
+              {'email': widget.email},
+            ),
             textAlign: TextAlign.center,
             style: MdyType.text.copyWith(color: c.secondary),
           ),
         ),
-        if (_error) MdyAlert(t('mdy.foundation.logoutError'), key: const Key('logout-sheet-error')),
+        if (_error)
+          MdyAlert(
+            t('mdy.foundation.logoutError'),
+            key: const Key('logout-sheet-error'),
+          ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: MdySpace.s8,
@@ -356,7 +466,13 @@ class _LogoutDialogState extends ConsumerState<_LogoutDialog> {
               key: const Key('logout-sheet-confirm'),
               variant: MdyButtonVariant.danger,
               busy: _busy,
-              label: t(_busy ? 'mdy.foundation.loggingOut' : (all ? 'mdy.foundation.logoutAll' : 'mdy.foundation.logout')),
+              label: t(
+                _busy
+                    ? 'mdy.foundation.loggingOut'
+                    : (all
+                          ? 'mdy.foundation.logoutAll'
+                          : 'mdy.foundation.logout'),
+              ),
               onPressed: _submit,
             ),
             MdyButton(

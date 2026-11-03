@@ -12,6 +12,7 @@ import '../../core/ui/cover_image.dart';
 import '../../core/ui/icon.dart';
 import '../../core/ui/learning_layout.dart';
 import '../../core/ui/states.dart';
+import '../../core/utils/mindy_haptics.dart';
 
 /// Tài khoản học viên - port 1:1 từ `MindyMobile/src/modules/account/AccountScreen.tsx`.
 class AccountScreen extends ConsumerWidget {
@@ -20,7 +21,8 @@ class AccountScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = ref.watch(trProvider);
-    final user = ref.watch(sessionProvider).user;
+    final session = ref.watch(sessionProvider);
+    final user = session.user;
     final locale = ref.watch(localeProvider);
 
     return LearningLayout(
@@ -44,7 +46,14 @@ class AccountScreen extends ConsumerWidget {
                   _buildHero(context, t, user),
                   Transform.translate(
                     offset: const Offset(0, -28),
-                    child: _buildBody(context, ref, t, user, locale),
+                    child: _buildBody(
+                      context,
+                      ref,
+                      t,
+                      user,
+                      locale,
+                      session.biometricEnabled,
+                    ),
                   ),
                 ],
               ),
@@ -126,7 +135,8 @@ class AccountScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           InkWell(
             key: const Key('account-profile'),
-            onTap: () => _openSheet(context, _AccountSheetType.profile, user: user),
+            onTap: () =>
+                _openSheet(context, _AccountSheetType.profile, user: user),
             child: ConstrainedBox(
               constraints: const BoxConstraints(minHeight: 44),
               child: Center(
@@ -165,6 +175,7 @@ class AccountScreen extends ConsumerWidget {
     Translator t,
     SessionUser user,
     Locale locale,
+    bool biometricEnabled,
   ) {
     return Container(
       decoration: const BoxDecoration(
@@ -258,6 +269,21 @@ class AccountScreen extends ConsumerWidget {
                   ),
                 ),
                 _AccountRow(
+                  testId: 'account-biometric-login',
+                  icon: MindyIconName.lock,
+                  label: t('auth.login.biometricSetting'),
+                  onPress: () =>
+                      _toggleBiometric(context, ref, !biometricEnabled),
+                  trailing: Switch(
+                    value: biometricEnabled,
+                    onChanged: (enabled) =>
+                        _toggleBiometric(context, ref, enabled),
+                    inactiveTrackColor: AppColors.line,
+                    activeTrackColor: AppColors.mint,
+                    inactiveThumbColor: AppColors.canvas,
+                  ),
+                ),
+                _AccountRow(
                   testId: 'account-language',
                   icon: MindyIconName.globe,
                   label: t('account.language'),
@@ -266,7 +292,8 @@ class AccountScreen extends ConsumerWidget {
                         ? 'account.languages.vi-VN'
                         : 'account.languages.en-EN',
                   ),
-                  onPress: () => _openSheet(context, _AccountSheetType.language),
+                  onPress: () =>
+                      _openSheet(context, _AccountSheetType.language),
                 ),
                 _AccountRow(
                   testId: 'account-help',
@@ -303,6 +330,40 @@ class AccountScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _toggleBiometric(
+    BuildContext context,
+    WidgetRef ref,
+    bool enabled,
+  ) async {
+    final t = ref.read(trProvider);
+    try {
+      final changed = await ref
+          .read(sessionProvider.notifier)
+          .setBiometricLogin(enabled, reason: t('auth.login.biometricReason'));
+      if (!context.mounted) return;
+      if (changed) await MindyHaptics.selection();
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            t(
+              changed
+                  ? (enabled
+                        ? 'auth.login.biometricEnabled'
+                        : 'auth.login.biometricDisabled')
+                  : 'auth.login.biometricUnavailable',
+            ),
+          ),
+        ),
+      );
+    } catch (_) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(t('auth.login.biometricUnavailable'))),
+      );
+    }
   }
 
   void _openSheet(
@@ -581,14 +642,18 @@ class _LanguageSheetState extends ConsumerState<_LanguageSheet> {
         MindyButton(
           key: const Key('account-language-vi-VN'),
           label: t('account.languages.vi-VN'),
-          variant: currentLang == 'vi-VN' ? ButtonVariant.primary : ButtonVariant.outline,
+          variant: currentLang == 'vi-VN'
+              ? ButtonVariant.primary
+              : ButtonVariant.outline,
           onPressed: () => _changeLanguage('vi-VN'),
         ),
         const SizedBox(height: 12),
         MindyButton(
           key: const Key('account-language-en-EN'),
           label: t('account.languages.en-EN'),
-          variant: currentLang == 'en-EN' ? ButtonVariant.primary : ButtonVariant.outline,
+          variant: currentLang == 'en-EN'
+              ? ButtonVariant.primary
+              : ButtonVariant.outline,
           onPressed: () => _changeLanguage('en-EN'),
         ),
         if (_error != null) ...[

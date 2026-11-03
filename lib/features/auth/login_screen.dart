@@ -13,6 +13,7 @@ import '../../core/ui/staff/staff_input.dart';
 import '../../core/ui/staff/staff_theme.dart';
 import '../../core/ui/staff/staff_widgets.dart';
 import '../../core/ui/staff/sym.dart';
+import '../../core/utils/mindy_haptics.dart';
 import 'auth_validators.dart';
 
 /// Login dùng chung mọi role - thiết kế `MINDY-BE/Login (1).html` (quyết định owner 02/11).
@@ -34,6 +35,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Object? _failure;
   bool _pending = false;
   bool _remember = true;
+  bool _biometricFailure = false;
 
   @override
   void dispose() {
@@ -48,6 +50,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _emailError = AuthValidators.email(_email.text);
       _passwordError = AuthValidators.loginPassword(_password.text);
       _failure = null;
+      _biometricFailure = false;
     });
     if (_emailError != null || _passwordError != null) return;
 
@@ -55,13 +58,40 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     try {
       // Login xong router đổi màn ngay (widget này bị huỷ) nên đọc qua container, không qua ref.
       final container = ProviderScope.containerOf(context, listen: false);
-      final t = ref.read(trProvider), toast = ref.read(mdyToastProvider.notifier);
-      await ref.read(sessionProvider.notifier).login(_email.text.trim(), _password.text, remember: _remember);
+      final t = ref.read(trProvider),
+          toast = ref.read(mdyToastProvider.notifier);
+      await ref
+          .read(sessionProvider.notifier)
+          .login(_email.text.trim(), _password.text, remember: _remember);
+      await MindyHaptics.success();
       // App staff RN báo "Đăng nhập thành công" cho Mentor/Quản lý.
       final role = container.read(sessionProvider).user?.role;
-      if (role == Role.MENTOR || role == Role.MANAGER) toast.show(t('mdy.foundation.signedIn'));
+      if (role == Role.MENTOR || role == Role.MANAGER) {
+        toast.show(t('mdy.foundation.signedIn'));
+      }
     } catch (e) {
       if (mounted) setState(() => _failure = e);
+    } finally {
+      if (mounted) setState(() => _pending = false);
+    }
+  }
+
+  Future<void> _biometricSubmit() async {
+    if (_pending) return;
+    setState(() {
+      _pending = true;
+      _failure = null;
+      _biometricFailure = false;
+    });
+    try {
+      final t = ref.read(trProvider);
+      final signedIn = await ref
+          .read(sessionProvider.notifier)
+          .biometricLogin(reason: t('auth.login.biometricReason'));
+      if (signedIn) await MindyHaptics.success();
+      if (!signedIn && mounted) setState(() => _biometricFailure = true);
+    } catch (_) {
+      if (mounted) setState(() => _biometricFailure = true);
     } finally {
       if (mounted) setState(() => _pending = false);
     }
@@ -70,114 +100,202 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final t = ref.watch(trProvider);
+    final biometricRequired = ref.watch(
+      sessionProvider.select((s) => s.biometricRequired),
+    );
 
     return Scaffold(
       body: StaffBackground(
         child: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          child: Column(children: [
-            // ---- Header teal + ếch
-            StaffHeader(
+          child: Column(
+            children: [
+              // ---- Header teal + ếch
+              StaffHeader(
                 padding: const EdgeInsets.fromLTRB(24, 36, 16, 96),
-                child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Expanded(
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      const SizedBox(height: 24),
-                      Text(t('home.brand.name'),
-                          style: const TextStyle(
-                              fontFamily: StaffText.family, fontSize: 30, fontWeight: FontWeight.w700, color: Colors.white)),
-                      const SizedBox(height: 4),
-                      Text(t('auth.login.slogan'), style: StaffText.body.copyWith(color: StaffColors.onTealMuted)),
-                    ]),
-                  ),
-                  ExcludeSemantics(
-                    child: Image.asset('assets/illustrations/mindy-frog-teacher.png', height: 124),
-                  ),
-                ]),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 24),
+                          Text(
+                            t('home.brand.name'),
+                            style: const TextStyle(
+                              fontFamily: StaffText.family,
+                              fontSize: 30,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            t('auth.login.slogan'),
+                            style: StaffText.body.copyWith(
+                              color: StaffColors.onTealMuted,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ExcludeSemantics(
+                      child: Image.asset(
+                        'assets/illustrations/mindy-frog-teacher.png',
+                        height: 124,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            // ---- Thẻ form phủ lên header
-            Transform.translate(
-              offset: const Offset(0, -64),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: GlassCard(
-                  padding: const EdgeInsets.fromLTRB(16, 24, 16, 20),
-                  child: AutofillGroup(
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                      Text(t('auth.login.title'), style: StaffText.title.copyWith(fontSize: 20)),
-                      const SizedBox(height: 2),
-                      Text(t('auth.login.subtitle'), style: StaffText.caption),
-                      const SizedBox(height: 20),
-                      StaffInput(
-                        label: t('auth.fields.email'),
-                        controller: _email,
-                        icon: Sym.mail,
-                        hint: t('auth.placeholders.loginEmail'),
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        autofillHints: const [AutofillHints.email],
-                        error: _emailError != null ? t(_emailError!) : (_failure != null ? '' : null),
-                        enabled: !_pending,
-                        onChanged: (_) => setState(() {
-                          _emailError = null;
-                          _failure = null;
-                        }),
+              // ---- Thẻ form phủ lên header
+              Transform.translate(
+                offset: const Offset(0, -64),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: GlassCard(
+                    padding: const EdgeInsets.fromLTRB(16, 24, 16, 20),
+                    child: AutofillGroup(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            t('auth.login.title'),
+                            style: StaffText.title.copyWith(fontSize: 20),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            t('auth.login.subtitle'),
+                            style: StaffText.caption,
+                          ),
+                          const SizedBox(height: 20),
+                          if (biometricRequired) ...[
+                            StaffButton(
+                              key: const Key('login-biometric'),
+                              label: _pending
+                                  ? t('auth.login.biometricChecking')
+                                  : t('auth.login.biometricAction'),
+                              icon: Sym.fingerprint,
+                              loading: _pending,
+                              onPressed: _pending ? null : _biometricSubmit,
+                            ),
+                            if (_biometricFailure) ...[
+                              const SizedBox(height: 8),
+                              Text(
+                                t('auth.login.biometricUnavailable'),
+                                textAlign: TextAlign.center,
+                                style: StaffText.caption.copyWith(
+                                  color: StaffColors.redFg,
+                                ),
+                              ),
+                            ],
+                            const SizedBox(height: 16),
+                          ],
+                          StaffInput(
+                            label: t('auth.fields.email'),
+                            controller: _email,
+                            icon: Sym.mail,
+                            hint: t('auth.placeholders.loginEmail'),
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            autofillHints: const [AutofillHints.email],
+                            error: _emailError != null
+                                ? t(_emailError!)
+                                : (_failure != null ? '' : null),
+                            enabled: !_pending,
+                            onChanged: (_) => setState(() {
+                              _emailError = null;
+                              _failure = null;
+                              _biometricFailure = false;
+                            }),
+                          ),
+                          StaffInput(
+                            label: t('auth.fields.password'),
+                            controller: _password,
+                            icon: Sym.lock,
+                            password: true,
+                            hint: t('auth.placeholders.loginPassword'),
+                            textInputAction: TextInputAction.done,
+                            autofillHints: const [AutofillHints.password],
+                            error: _passwordError != null
+                                ? t(_passwordError!)
+                                : (_failure != null ? '' : null),
+                            enabled: !_pending,
+                            showPasswordLabel: t('common.showPassword'),
+                            hidePasswordLabel: t('common.hidePassword'),
+                            onSubmitted: (_) => _submit(),
+                            onChanged: (_) => setState(() {
+                              _passwordError = null;
+                              _failure = null;
+                              _biometricFailure = false;
+                            }),
+                          ),
+                          if (_failure != null) _errorBanner(t, _failure!),
+                          // Ghi nhớ đăng nhập (Quên mật khẩu? ẩn - chưa có API)
+                          Pressable(
+                            onTap: _pending
+                                ? null
+                                : () => setState(() => _remember = !_remember),
+                            selected: _remember,
+                            semanticLabel: t('auth.login.remember'),
+                            child: SizedBox(
+                              height: 44,
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    _remember
+                                        ? Sym.checkBox
+                                        : Sym.checkBoxOutlineBlank,
+                                    fill: _remember ? 1 : 0,
+                                    size: 22,
+                                    color: StaffColors.teal700,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    t('auth.login.remember'),
+                                    style: StaffText.label,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          StaffButton(
+                            label: _pending
+                                ? t('auth.login.submitting')
+                                : t('auth.login.submit'),
+                            loading: _pending,
+                            onPressed: _submit,
+                          ),
+                        ],
                       ),
-                      StaffInput(
-                        label: t('auth.fields.password'),
-                        controller: _password,
-                        icon: Sym.lock,
-                        password: true,
-                        hint: t('auth.placeholders.loginPassword'),
-                        textInputAction: TextInputAction.done,
-                        autofillHints: const [AutofillHints.password],
-                        error: _passwordError != null ? t(_passwordError!) : (_failure != null ? '' : null),
-                        enabled: !_pending,
-                        showPasswordLabel: t('common.showPassword'),
-                        hidePasswordLabel: t('common.hidePassword'),
-                        onSubmitted: (_) => _submit(),
-                        onChanged: (_) => setState(() {
-                          _passwordError = null;
-                          _failure = null;
-                        }),
-                      ),
-                      if (_failure != null) _errorBanner(t, _failure!),
-                      // Ghi nhớ đăng nhập (Quên mật khẩu? ẩn - chưa có API)
-                      Pressable(
-                        onTap: _pending ? null : () => setState(() => _remember = !_remember),
-                        selected: _remember,
-                        semanticLabel: t('auth.login.remember'),
-                        child: SizedBox(
-                          height: 44,
-                          child: Row(children: [
-                            Icon(_remember ? Sym.checkBox : Sym.checkBoxOutlineBlank,
-                                fill: _remember ? 1 : 0, size: 22, color: StaffColors.teal700),
-                            const SizedBox(width: 8),
-                            Text(t('auth.login.remember'), style: StaffText.label),
-                          ]),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      StaffButton(
-                        label: _pending ? t('auth.login.submitting') : t('auth.login.submit'),
-                        loading: _pending,
-                        onPressed: _submit,
-                      ),
-                    ]),
+                    ),
                   ),
                 ),
               ),
-            ),
-            // ---- Học viên vẫn tự đăng ký được (quyết định owner)
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(t('auth.login.registerPrompt'), style: StaffText.caption),
-              TextButton(
-                onPressed: _pending ? null : () => context.push(Routes.register),
-                child: Text(t('auth.login.registerAction'), style: StaffText.link),
+              // ---- Học viên vẫn tự đăng ký được (quyết định owner)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    t('auth.login.registerPrompt'),
+                    style: StaffText.caption,
+                  ),
+                  TextButton(
+                    onPressed: _pending
+                        ? null
+                        : () => context.push(Routes.register),
+                    child: Text(
+                      t('auth.login.registerAction'),
+                      style: StaffText.link,
+                    ),
+                  ),
+                ],
               ),
-            ]),
-            const SizedBox(height: 24),
-          ]),
+              const SizedBox(height: 24),
+            ],
+          ),
         ),
       ),
     );
@@ -190,17 +308,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: StaffColors.redBg, borderRadius: BorderRadius.circular(14)),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Icon(Sym.error, size: 20, color: StaffColors.redFg),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              id == null ? t(errorKey(e)) : '${t(errorKey(e))}\n${t('common.requestId', {'id': id})}',
-              style: StaffText.label.copyWith(color: StaffColors.redFg),
+        decoration: BoxDecoration(
+          color: StaffColors.redBg,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(Sym.error, size: 20, color: StaffColors.redFg),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                id == null
+                    ? t(errorKey(e))
+                    : '${t(errorKey(e))}\n${t('common.requestId', {'id': id})}',
+                style: StaffText.label.copyWith(color: StaffColors.redFg),
+              ),
             ),
-          ),
-        ]),
+          ],
+        ),
       ),
     );
   }

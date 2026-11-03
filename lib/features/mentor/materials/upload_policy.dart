@@ -6,7 +6,11 @@ enum UploadCategory { document, video, image }
 /// Port allowlist backend files/domain/file-upload-policy.ts. Chỉ khai báo trước;
 /// chữ ký binary và MIME thật vẫn do worker server xác minh sau upload.
 class UploadFileRule {
-  const UploadFileRule(this.mimeType, this.kind, {this.maxSize = 25 * 1024 * 1024});
+  const UploadFileRule(
+    this.mimeType,
+    this.kind, {
+    this.maxSize = 25 * 1024 * 1024,
+  });
   final String mimeType;
   final FileKind kind;
   final int maxSize;
@@ -23,14 +27,24 @@ const uploadFileRules = <String, UploadFileRule>{
   'png': UploadFileRule('image/png', FileKind.IMAGE),
   'jpg': UploadFileRule('image/jpeg', FileKind.IMAGE),
   'jpeg': UploadFileRule('image/jpeg', FileKind.IMAGE),
-  'docx': UploadFileRule('application/vnd.openxmlformats-officedocument.wordprocessingml.document', FileKind.DOCUMENT),
+  'docx': UploadFileRule(
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    FileKind.DOCUMENT,
+  ),
   'pptx': UploadFileRule(
     'application/vnd.openxmlformats-officedocument.presentationml.presentation',
     FileKind.PRESENTATION,
   ),
-  'xlsx': UploadFileRule('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', FileKind.SPREADSHEET),
+  'xlsx': UploadFileRule(
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    FileKind.SPREADSHEET,
+  ),
   'mp3': UploadFileRule('audio/mpeg', FileKind.AUDIO),
-  'mp4': UploadFileRule('video/mp4', FileKind.VIDEO, maxSize: 200 * 1024 * 1024),
+  'mp4': UploadFileRule(
+    'video/mp4',
+    FileKind.VIDEO,
+    maxSize: 200 * 1024 * 1024,
+  ),
   'txt': _text,
   'md': UploadFileRule('text/markdown', FileKind.SOURCE_CODE),
   'csv': UploadFileRule('text/csv', FileKind.SOURCE_CODE),
@@ -45,7 +59,12 @@ const uploadFileRules = <String, UploadFileRule>{
   'css': UploadFileRule('text/css', FileKind.SOURCE_CODE),
   'sql': _text,
 };
-UploadFileRule validateUploadFile(String name, int size, {String? declaredMimeType, UploadCategory? category}) {
+UploadFileRule validateUploadFile(
+  String name,
+  int size, {
+  String? declaredMimeType,
+  UploadCategory? category,
+}) {
   if (name.isEmpty ||
       name.length > 250 ||
       name != name.trim() ||
@@ -53,7 +72,8 @@ UploadFileRule validateUploadFile(String name, int size, {String? declaredMimeTy
       size < 1) {
     throw ApiError(status: 422, code: 'UPLOAD_FILE_INVALID');
   }
-  final dot = name.lastIndexOf('.'), extension = dot <= 0 ? '' : name.substring(dot + 1).toLowerCase();
+  final dot = name.lastIndexOf('.'),
+      extension = dot <= 0 ? '' : name.substring(dot + 1).toLowerCase();
   final rule = uploadFileRules[extension];
   if (rule == null ||
       (declaredMimeType != null && declaredMimeType != rule.mimeType) ||
@@ -67,9 +87,16 @@ UploadFileRule validateUploadFile(String name, int size, {String? declaredMimeTy
 }
 
 class PickedUploadFile {
-  const PickedUploadFile({required this.name, required this.size, required this.mimeType, required this.openRead});
+  const PickedUploadFile({
+    required this.name,
+    required this.size,
+    required this.mimeType,
+    required this.openRead,
+    this.localPath,
+  });
   final String name, mimeType;
   final int size;
+  final String? localPath;
 
   /// Mỗi lần PUT/retry dùng stream mới, không giữ cả video 200 MiB trong RAM.
   final Stream<List<int>> Function() openRead;

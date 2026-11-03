@@ -104,7 +104,16 @@
       "slogan": "Khởi đầu nhỏ. Bứt phá lớn.",
       "subtitle": "Đăng nhập bằng tài khoản Mindy của bạn",
       "remember": "Ghi nhớ đăng nhập",
-      "submitting": "Đang đăng nhập…"
+      "submitting": "Đang đăng nhập…",
+      "biometricGroup": "Đăng nhập sinh trắc học",
+      "biometricSetting": "Dùng Face ID / vân tay",
+      "biometricSettingSub": "Dùng bảo mật trên thiết bị để đăng nhập lần sau",
+      "biometricAction": "Tiếp tục bằng Face ID / vân tay",
+      "biometricChecking": "Đang xác thực…",
+      "biometricReason": "Xác thực để đăng nhập Mindy",
+      "biometricEnabled": "Đã bật đăng nhập sinh trắc học",
+      "biometricDisabled": "Đã tắt đăng nhập sinh trắc học",
+      "biometricUnavailable": "Thiết bị chưa thiết lập sinh trắc học hoặc thao tác chưa hoàn tất."
     },
     "register": {
       "title": "Tạo tài khoản",
@@ -1022,6 +1031,7 @@
       "fileLimits": "Tối đa 25 MiB/file; video MP4 tối đa 200 MiB. File mới được lưu thành nháp.",
       "chooseFile": "Chọn file",
       "changeFile": "Đổi file đã chọn",
+      "captureDocument": "Chụp tài liệu",
       "startUpload": "Tải lên và tạo nháp",
       "uploadIssue": "Tải file chưa hoàn tất",
       "checkResult": "Kiểm tra kết quả",

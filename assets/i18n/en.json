@@ -104,7 +104,16 @@
       "slogan": "Start small. Grow big.",
       "subtitle": "Sign in with your Mindy account",
       "remember": "Remember me",
-      "submitting": "Signing in…"
+      "submitting": "Signing in…",
+      "biometricGroup": "Biometric sign-in",
+      "biometricSetting": "Use Face ID / fingerprint",
+      "biometricSettingSub": "Use this device's biometrics next time you sign in",
+      "biometricAction": "Continue with Face ID / fingerprint",
+      "biometricChecking": "Authenticating…",
+      "biometricReason": "Authenticate to sign in to Mindy",
+      "biometricEnabled": "Biometric sign-in enabled",
+      "biometricDisabled": "Biometric sign-in disabled",
+      "biometricUnavailable": "Set up biometrics on this device or try again."
     },
     "register": {
       "title": "Create an account",
@@ -1022,6 +1031,7 @@
       "fileLimits": "Up to 25 MiB per file; MP4 up to 200 MiB. New files are saved as drafts.",
       "chooseFile": "Choose file",
       "changeFile": "Change selected file",
+      "captureDocument": "Capture document",
       "startUpload": "Upload and create draft",
       "uploadIssue": "Upload needs attention",
       "checkResult": "Check result",

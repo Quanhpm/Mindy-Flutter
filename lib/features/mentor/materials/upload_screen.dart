@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +14,7 @@ import '../../../core/ui/staff/staff_theme.dart';
 import '../../../core/ui/staff/staff_widgets.dart';
 import '../../../core/ui/staff/sym.dart';
 import '../../../core/utils/format.dart';
+import '../../../core/utils/mindy_haptics.dart';
 import '../classes/classes_providers.dart';
 import 'file_picker_service.dart';
 import 'material_actions.dart';
@@ -41,16 +44,22 @@ class _UploadClassScreen extends ConsumerStatefulWidget {
 }
 
 class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
-  final _title = TextEditingController(), _description = TextEditingController();
+  final _title = TextEditingController(),
+      _description = TextEditingController();
   final _scroll = ScrollController();
   PickedUploadFile? _file;
   String? _unitId;
   UploadCategory _category = UploadCategory.document;
   MaterialReviewStatus? _filter;
-  bool _picking = false, _allowPop = false, _confirming = false, _validate = false;
+  bool _picking = false,
+      _allowPop = false,
+      _confirming = false,
+      _validate = false;
   BuildContext? _confirmationContext;
-  MentorUploadController get _upload => ref.read(mentorUploadProvider(widget.classId).notifier);
-  MaterialActions get _actions => ref.read(materialActionsProvider(widget.classId).notifier);
+  MentorUploadController get _upload =>
+      ref.read(mentorUploadProvider(widget.classId).notifier);
+  MaterialActions get _actions =>
+      ref.read(materialActionsProvider(widget.classId).notifier);
   @override
   void dispose() {
     _title.dispose();
@@ -60,7 +69,9 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
   }
 
   Future<void> _pick() async {
-    final epoch = ref.read(sessionEpochProvider), picker = ref.read(mentorFilePickerProvider), category = _category;
+    final epoch = ref.read(sessionEpochProvider),
+        picker = ref.read(mentorFilePickerProvider),
+        category = _category;
     setState(() => _picking = true);
     try {
       final file = await picker.pick(category);
@@ -83,7 +94,38 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
     }
   }
 
-  Future<bool> _confirm(String title, String description, String confirm) async {
+  Future<void> _capture() async {
+    final epoch = ref.read(sessionEpochProvider),
+        picker = ref.read(mentorFilePickerProvider);
+    setState(() => _picking = true);
+    try {
+      final file = await picker.captureDocument();
+      if (!mounted || ref.read(sessionEpochProvider) != epoch || file == null) {
+        return;
+      }
+      setState(() {
+        _category = UploadCategory.image;
+        _file = file;
+        _title.text = file.name;
+        _validate = false;
+      });
+      await MindyHaptics.success();
+    } catch (error) {
+      if (mounted && ref.read(sessionEpochProvider) == epoch) {
+        showStaffToast(context, ref.read(trProvider)(materialErrorKey(error)));
+      }
+    } finally {
+      if (mounted && ref.read(sessionEpochProvider) == epoch) {
+        setState(() => _picking = false);
+      }
+    }
+  }
+
+  Future<bool> _confirm(
+    String title,
+    String description,
+    String confirm,
+  ) async {
     if (_confirming) {
       return false;
     }
@@ -99,7 +141,10 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
           children: [
             Text(description, style: StaffText.body),
             const SizedBox(height: 16),
-            StaffButton(label: confirm, onPressed: () => Navigator.of(ctx).pop(true)),
+            StaffButton(
+              label: confirm,
+              onPressed: () => Navigator.of(ctx).pop(true),
+            ),
             const SizedBox(height: 8),
             StaffButton(
               label: t('mentor.materials.cancel'),
@@ -136,7 +181,8 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
 
   Future<void> _leave() async {
     final value = ref.read(mentorUploadProvider(widget.classId));
-    final unsent = _file != null && !value.hasWork && value.step != UploadStep.done;
+    final unsent =
+        _file != null && !value.hasWork && value.step != UploadStep.done;
     if (!value.hasWork && !unsent) {
       _back();
       return;
@@ -144,8 +190,16 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
     final t = ref.read(trProvider), epoch = ref.read(sessionEpochProvider);
     if (!await _confirm(
       t('mentor.materials.leaveTitle'),
-      t(unsent ? 'mentor.materials.leaveUnsent' : 'mentor.materials.leaveDescription'),
-      t(unsent ? 'mentor.materials.leaveUnsentConfirm' : 'mentor.materials.leave'),
+      t(
+        unsent
+            ? 'mentor.materials.leaveUnsent'
+            : 'mentor.materials.leaveDescription',
+      ),
+      t(
+        unsent
+            ? 'mentor.materials.leaveUnsentConfirm'
+            : 'mentor.materials.leave',
+      ),
     )) {
       return;
     }
@@ -167,7 +221,11 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
     if (value.hasWork &&
         !await _confirm(
           t('mentor.materials.abandonTitle'),
-          t(value.requiresVerification ? 'mentor.materials.abandonUnconfirmed' : 'mentor.materials.abandonDescription'),
+          t(
+            value.requiresVerification
+                ? 'mentor.materials.abandonUnconfirmed'
+                : 'mentor.materials.abandonDescription',
+          ),
           t('mentor.materials.chooseAnother'),
         )) {
       return;
@@ -196,17 +254,23 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
       return;
     }
     if (success) {
+      await MindyHaptics.success();
+      if (!mounted) return;
       showStaffToast(context, t('mentor.materials.uploaded'));
     } else {
       final error = ref.read(mentorUploadProvider(widget.classId)).error;
       if (error != null) {
+        await MindyHaptics.error();
+        if (!mounted) return;
         showStaffToast(context, t(materialErrorKey(error)));
       }
     }
   }
 
   Future<void> _action(Future<bool> Function() action) async {
-    final epoch = ref.read(sessionEpochProvider), t = ref.read(trProvider), success = await action();
+    final epoch = ref.read(sessionEpochProvider),
+        t = ref.read(trProvider),
+        success = await action();
     if (!mounted || ref.read(sessionEpochProvider) != epoch) {
       return;
     }
@@ -217,6 +281,11 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
           ? t('mentor.materials.actionDone', {'count': state.changed})
           : t(materialErrorKey(state.error ?? Object())),
     );
+    if (success) {
+      await MindyHaptics.success();
+    } else {
+      await MindyHaptics.error();
+    }
   }
 
   @override
@@ -246,7 +315,10 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
     });
     final locked = upload.busy || action.locked || _picking;
     return PopScope(
-      canPop: _allowPop || (!upload.hasWork && (_file == null || upload.step == UploadStep.done)),
+      canPop:
+          _allowPop ||
+          (!upload.hasWork &&
+              (_file == null || upload.step == UploadStep.done)),
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) {
           _leave();
@@ -270,7 +342,10 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
             padding: const EdgeInsets.fromLTRB(16, 24, 16, 40),
             physics: const AlwaysScrollableScrollPhysics(),
             children: [
-              if (upload.hasWork || upload.step == UploadStep.done) ...[_progress(upload), const SizedBox(height: 20)],
+              if (upload.hasWork || upload.step == UploadStep.done) ...[
+                _progress(upload),
+                const SizedBox(height: 20),
+              ],
               MaterialActionNotice(classId: widget.classId),
               ...value.when(
                 skipLoadingOnRefresh: false,
@@ -281,20 +356,30 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
                     description: t(materialErrorKey(error)),
                     error: error,
                     onRetry: () {
-                      ref.invalidate(mentorPrimaryWorkspaceProvider(widget.classId));
+                      ref.invalidate(
+                        mentorPrimaryWorkspaceProvider(widget.classId),
+                      );
                       ref.invalidate(provider);
                     },
                   ),
                 ],
                 data: (data) {
-                  final writable = !data.workspace.readonly && data.workspace.authorMaterials;
+                  final writable =
+                      !data.workspace.readonly &&
+                      data.workspace.authorMaterials;
                   final own = [
                     for (final group in data.groups)
                       for (final material in group.items)
-                        if (material.classId == widget.classId && material.createdBy == actor?.id)
+                        if (material.classId == widget.classId &&
+                            material.createdBy == actor?.id)
                           (group.unit, material),
                   ]..sort((a, b) => b.$2.createdAt.compareTo(a.$2.createdAt));
-                  final filtered = own.where((row) => _filter == null || row.$2.reviewStatus == _filter).toList();
+                  final filtered = own
+                      .where(
+                        (row) =>
+                            _filter == null || row.$2.reviewStatus == _filter,
+                      )
+                      .toList();
                   final drafts = own
                       .map((row) => row.$2)
                       .where(
@@ -307,11 +392,17 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
                     Text(data.workspace.name, style: StaffText.section),
                     const SizedBox(height: 16),
                     if (!writable)
-                      Text(t('mentor.classes.readonly'), style: StaffText.caption)
+                      Text(
+                        t('mentor.classes.readonly'),
+                        style: StaffText.caption,
+                      )
                     else if (!upload.hasWork && upload.step != UploadStep.done)
                       _form(data, locked),
                     const SizedBox(height: 24),
-                    Text(t('mentor.materials.mySubmissions'), style: StaffText.section),
+                    Text(
+                      t('mentor.materials.mySubmissions'),
+                      style: StaffText.section,
+                    ),
                     const SizedBox(height: 12),
                     FilterChipsBar<MaterialReviewStatus?>(
                       items: [
@@ -330,20 +421,26 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: StaffButton(
-                          label: t('mentor.materials.submitAll', {'count': drafts.length}),
+                          label: t('mentor.materials.submitAll', {
+                            'count': drafts.length,
+                          }),
                           outlined: true,
                           onPressed: locked
                               ? null
                               : () async {
                                   if (await _confirm(
                                     t('mentor.materials.submitAllTitle'),
-                                    t('mentor.materials.submitAllDescription', {'count': drafts.length}),
+                                    t('mentor.materials.submitAllDescription', {
+                                      'count': drafts.length,
+                                    }),
                                     t('mentor.materials.submit'),
                                   )) {
                                     if (!mounted) {
                                       return;
                                     }
-                                    await _action(() => _actions.submit(drafts));
+                                    await _action(
+                                      () => _actions.submit(drafts),
+                                    );
                                   }
                                 },
                         ),
@@ -351,7 +448,9 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
                     if (filtered.isEmpty)
                       StaffDataState(
                         title: t('mentor.materials.noSubmissions'),
-                        description: t('mentor.materials.noSubmissionsDescription'),
+                        description: t(
+                          'mentor.materials.noSubmissionsDescription',
+                        ),
                       ),
                     for (final (unit, material) in filtered)
                       Padding(
@@ -359,29 +458,59 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
                         child: MaterialCard(
                           material: material,
                           unitTitle: unit.title,
-                          onOpen: () => showMentorMaterial(context, ref, widget.classId, material),
-                          onEdit: !locked && writable && material.ownEditable(actor?.id ?? '', widget.classId)
-                              ? () => showMaterialEditor(context, ref, widget.classId, material)
+                          onOpen: () => showMentorMaterial(
+                            context,
+                            ref,
+                            widget.classId,
+                            material,
+                          ),
+                          onEdit:
+                              !locked &&
+                                  writable &&
+                                  material.ownEditable(
+                                    actor?.id ?? '',
+                                    widget.classId,
+                                  )
+                              ? () => showMaterialEditor(
+                                  context,
+                                  ref,
+                                  widget.classId,
+                                  material,
+                                )
                               : null,
-                          onDelete: !locked && writable && material.ownEditable(actor?.id ?? '', widget.classId)
+                          onDelete:
+                              !locked &&
+                                  writable &&
+                                  material.ownEditable(
+                                    actor?.id ?? '',
+                                    widget.classId,
+                                  )
                               ? () async {
                                   if (await _confirm(
                                     t('mentor.materials.deleteTitle'),
-                                    t('mentor.materials.deleteDescription', {'title': material.title}),
+                                    t('mentor.materials.deleteDescription', {
+                                      'title': material.title,
+                                    }),
                                     t('mentor.materials.delete'),
                                   )) {
                                     if (!mounted) {
                                       return;
                                     }
-                                    await _action(() => _actions.delete(material));
+                                    await _action(
+                                      () => _actions.delete(material),
+                                    );
                                   }
                                 }
                               : null,
                           onSubmit:
                               !locked &&
                                   writable &&
-                                  material.reviewStatus == MaterialReviewStatus.DRAFT &&
-                                  material.ownEditable(actor?.id ?? '', widget.classId)
+                                  material.reviewStatus ==
+                                      MaterialReviewStatus.DRAFT &&
+                                  material.ownEditable(
+                                    actor?.id ?? '',
+                                    widget.classId,
+                                  )
                               ? () => _action(() => _actions.submit([material]))
                               : null,
                         ),
@@ -397,8 +526,10 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
   }
 
   Widget _form(MentorMaterials data, bool locked) {
-    final t = ref.watch(trProvider), units = data.groups.map((g) => g.unit).toList();
-    final unit = units.where((u) => u.id == _unitId).firstOrNull ?? units.firstOrNull;
+    final t = ref.watch(trProvider),
+        units = data.groups.map((g) => g.unit).toList();
+    final unit =
+        units.where((u) => u.id == _unitId).firstOrNull ?? units.firstOrNull;
     if (unit == null) {
       return StaffDataState(
         title: t('mentor.materials.noUnits'),
@@ -417,14 +548,21 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
             // ignore: deprecated_member_use
             value: unit.id,
             isExpanded: true,
-            icon: const RotatedBox(quarterTurns: 1, child: Icon(Sym.chevronRight, color: StaffColors.teal700)),
+            icon: const RotatedBox(
+              quarterTurns: 1,
+              child: Icon(Sym.chevronRight, color: StaffColors.teal700),
+            ),
             style: StaffText.body,
             decoration: const InputDecoration(border: OutlineInputBorder()),
             items: [
               for (final u in units)
                 DropdownMenuItem(
                   value: u.id,
-                  child: Text(u.title, maxLines: 2, overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    u.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
             ],
             onChanged: locked ? null : (id) => setState(() => _unitId = id),
@@ -433,7 +571,8 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
           FilterChipsBar<UploadCategory>(
             enabled: !locked,
             items: [
-              for (final category in UploadCategory.values) (category, t('mentor.materials.category.${category.name}')),
+              for (final category in UploadCategory.values)
+                (category, t('mentor.materials.category.${category.name}')),
             ],
             selected: _category,
             onSelected: (category) {
@@ -448,16 +587,52 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
           const SizedBox(height: 16),
           Text(t('mentor.materials.fileLimits'), style: StaffText.caption),
           const SizedBox(height: 12),
-          StaffButton(
-            label: t(_file == null ? 'mentor.materials.chooseFile' : 'mentor.materials.changeFile'),
-            icon: Sym.uploadFile,
-            outlined: true,
-            loading: _picking,
-            onPressed: locked ? null : _pick,
+          Row(
+            children: [
+              Expanded(
+                child: StaffButton(
+                  label: t(
+                    _file == null
+                        ? 'mentor.materials.chooseFile'
+                        : 'mentor.materials.changeFile',
+                  ),
+                  icon: Sym.uploadFile,
+                  outlined: true,
+                  loading: _picking,
+                  onPressed: locked ? null : _pick,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: StaffButton(
+                  key: const Key('mentor-capture-document'),
+                  label: t('mentor.materials.captureDocument'),
+                  icon: Sym.cameraAlt,
+                  outlined: true,
+                  loading: _picking,
+                  onPressed: locked ? null : _capture,
+                ),
+              ),
+            ],
           ),
           if (_file != null) ...[
             const SizedBox(height: 10),
-            Text('${_file!.name} · ${formatBytes(_file!.size, t.locale.languageCode)}', style: StaffText.caption),
+            if (_file!.localPath != null && _category == UploadCategory.image)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: Image.file(
+                  File(_file!.localPath!),
+                  height: 180,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                ),
+              ),
+            if (_file!.localPath != null && _category == UploadCategory.image)
+              const SizedBox(height: 10),
+            Text(
+              '${_file!.name} · ${formatBytes(_file!.size, t.locale.languageCode)}',
+              style: StaffText.caption,
+            ),
           ],
           if (_file != null) ...[
             const SizedBox(height: 16),
@@ -470,11 +645,18 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
                   setState(() {});
                 }
               },
-              error: _validate && (_title.text.trim().isEmpty || _title.text.trim().length > 250)
+              error:
+                  _validate &&
+                      (_title.text.trim().isEmpty ||
+                          _title.text.trim().length > 250)
                   ? t('mentor.materials.errors.metadata')
                   : null,
             ),
-            StaffTextArea(label: t('mentor.materials.description'), controller: _description, enabled: !locked),
+            StaffTextArea(
+              label: t('mentor.materials.description'),
+              controller: _description,
+              enabled: !locked,
+            ),
             StaffButton(
               label: t('mentor.materials.startUpload'),
               onPressed: locked || _file == null
@@ -485,7 +667,10 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
                           _title.text.trim().length > 250 ||
                           _description.text.length > 5000) {
                         if (_description.text.length > 5000) {
-                          showStaffToast(context, t('mentor.materials.errors.metadata'));
+                          showStaffToast(
+                            context,
+                            t('mentor.materials.errors.metadata'),
+                          );
                         }
                         return;
                       }
@@ -494,7 +679,9 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
                           file: _file!,
                           unit: unit,
                           title: _title.text,
-                          description: _description.text.isEmpty ? null : _description.text,
+                          description: _description.text.isEmpty
+                              ? null
+                              : _description.text,
                         ),
                       );
                     },
@@ -520,16 +707,24 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
           const SizedBox(height: 14),
           Semantics(
             liveRegion: true,
-            child: Text(t('mentor.materials.step.${upload.step.name}'), style: StaffText.bodyStrong),
+            child: Text(
+              t('mentor.materials.step.${upload.step.name}'),
+              style: StaffText.bodyStrong,
+            ),
           ),
           if (upload.busy) ...[
             const SizedBox(height: 12),
             LinearProgressIndicator(
-              value: upload.step == UploadStep.transfer ? upload.progress : null,
+              value: upload.step == UploadStep.transfer
+                  ? upload.progress
+                  : null,
               color: StaffColors.teal700,
             ),
             if (upload.step == UploadStep.transfer)
-              Text(formatPercent(upload.progress * 100, t.locale.languageCode), style: StaffText.caption),
+              Text(
+                formatPercent(upload.progress * 100, t.locale.languageCode),
+                style: StaffText.caption,
+              ),
           ],
           if (upload.error != null) ...[
             const SizedBox(height: 12),
@@ -537,8 +732,14 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
               title: t('mentor.materials.uploadIssue'),
               description: t(materialErrorKey(upload.error!)),
               error: upload.error,
-              retryLabel: t(upload.requiresVerification ? 'mentor.materials.checkResult' : 'common.retry'),
-              onRetry: upload.canRetry && !upload.busy ? () => _uploaded(_upload.retry) : null,
+              retryLabel: t(
+                upload.requiresVerification
+                    ? 'mentor.materials.checkResult'
+                    : 'common.retry',
+              ),
+              onRetry: upload.canRetry && !upload.busy
+                  ? () => _uploaded(_upload.retry)
+                  : null,
             ),
           ],
           const SizedBox(height: 16),
@@ -552,7 +753,11 @@ class _UploadClassScreenState extends ConsumerState<_UploadClassScreen> {
             )
           else
             StaffButton(
-              label: t(done ? 'mentor.materials.uploadAnother' : 'mentor.materials.chooseAnother'),
+              label: t(
+                done
+                    ? 'mentor.materials.uploadAnother'
+                    : 'mentor.materials.chooseAnother',
+              ),
               outlined: true,
               onPressed: _reset,
             ),
