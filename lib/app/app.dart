@@ -19,7 +19,11 @@ class MindyApp extends ConsumerWidget {
       themeMode: ThemeMode.light,
       routerConfig: ref.watch(routerProvider),
       // Bảng màu sáng/tối + toast của bộ UI clone RN (staff). Học viên không đọc palette này.
-      builder: (context, child) => MdyTheme(child: MdyToastHost(child: child ?? const SizedBox.shrink())),
+      // `Material` trong suốt ở gốc: mọi `Text` có DefaultTextStyle, không còn gạch chân vàng khi thiếu Scaffold.
+      builder: (context, child) => Material(
+        type: MaterialType.transparency,
+        child: MdyTheme(child: MdyToastHost(child: child ?? const SizedBox.shrink())),
+      ),
       locale: ref.watch(localeProvider),
       supportedLocales: I18n.supported,
       localizationsDelegates: const [

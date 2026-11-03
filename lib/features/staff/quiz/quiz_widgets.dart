@@ -277,7 +277,7 @@ class _QuizPageState extends ConsumerState<QuizPage> {
       onPopInvokedWithResult: (popped, _) {
         if (!popped) back();
       },
-      child: ColoredBox(
+      child: Material(
         color: c.bg,
         child: Stack(
           children: [

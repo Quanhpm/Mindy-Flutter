@@ -296,7 +296,7 @@ class _ScheduleCard extends ConsumerWidget {
         ),
         ScheduleActions(
           item: item,
-          onAttend: () => ref.read(mdyToastProvider.notifier).show(t('mdy.teaching.attendLater')),
+          onAttend: () => context.push(Routes.mentorAttendance(item.id)),
           onDetail: open,
         ),
       ],
